@@ -1,5 +1,0 @@
-obj\Debug\ResolveAssemblyReference.cache
-bin\Debug\AST.exe
-bin\Debug\AST.pdb
-obj\Debug\AST.exe
-obj\Debug\AST.pdb
