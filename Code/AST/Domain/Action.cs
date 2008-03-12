@@ -29,80 +29,74 @@ namespace AST.Domain{
             m_parameters = new List<Parameter>();
         }
 
-        public int Timeout
-        {
+        public int Timeout{
             get { return m_timeout; }
             set { m_timeout = value; }
         }
 
-        public ActionTypeEnum ActionType
-        {
+        public ActionTypeEnum ActionType{
             get { return m_type; }
             set { m_type = value; }
         }
 
-        public int Duration
-        {
+        public int Duration{
             get { return m_duration; }
             set { m_duration = value; }
         }
 
-        public List<EndStationSchedule> GetEndStations()
-        {
+        public List<EndStationSchedule> GetEndStations(){
             return m_endStations;
         }
 
-        public List<Parameter> GetParameters()
-        {
+        public List<Parameter> GetParameters(){
             return m_parameters;
         }
 
-        public void AddContent(EndStation.OSTypeEnum osType, String content)
-        {
+        public String GetContent(EndStation.OSTypeEnum osType){
+            return (String)m_content[osType];
+        }
+
+        public String GetValidityString(EndStation.OSTypeEnum osType){
+            return (String)m_validtyString[osType];
+        }
+
+        public void AddContent(EndStation.OSTypeEnum osType, String content){
             m_content.Add(osType, content);
         }
 
-        public void RemoveContent(EndStation.OSTypeEnum osType)
-        {
+        public void RemoveContent(EndStation.OSTypeEnum osType){
             m_content.Remove(osType);
         }
 
-        public void AddValidityString(EndStation.OSTypeEnum osType, String vs)
-        {
+        public void AddValidityString(EndStation.OSTypeEnum osType, String vs){
             m_validtyString.Add(osType, vs);
         }
 
-        public void RemoveValidityString(EndStation.OSTypeEnum osType)
-        {
+        public void RemoveValidityString(EndStation.OSTypeEnum osType){
             m_validtyString.Remove(osType);
         }
 
-        public void AddParameter(Parameter param)
-        {
+        public void AddParameter(Parameter param){
             m_parameters.Add(param);
         }
 
-        public void RemoveParameter(Parameter param)
-        {
+        public void RemoveParameter(Parameter param){
             m_parameters.Remove(param);
         }
 
-        public override void AddEndStation(EndStationSchedule es)
-        {
+        public override void AddEndStation(EndStationSchedule es){
             m_endStations.Add(es);
         }
 
-        public override void RemoveEndStation(EndStationSchedule es)
-        {
+        public override void RemoveEndStation(EndStationSchedule es){
             m_endStations.Remove(es);
         }
 
-        public String GenerateCommand(EndStation.OSTypeEnum osType)
-        {
-            String res = "";
+        public String GenerateCommand(EndStation.OSTypeEnum osType){
+            String res = (String)m_content[osType];
+            foreach (Parameter p in m_parameters)
+                res = res + " " + p.GetValue(osType) + " " + p.Input;
             return res;
         }
-
     }
-
 }

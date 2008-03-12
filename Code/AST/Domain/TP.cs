@@ -16,25 +16,21 @@ namespace AST.Domain {
             m_tsc = new List<TSC>();
         }
 
-        public List<TSC> GetTSCs()
-        {
+        public List<TSC> GetTSCs(){
             return m_tsc;
         }
 
-        public int NumberOfTimes
-        {
+        public int NumberOfTimes{
             get { return m_numberOfTimes; }
             set { m_numberOfTimes = value; }
         }
 
-        public override void AddEndStation(EndStationSchedule es)
-        {
+        public override void AddEndStation(EndStationSchedule es){
             foreach (TSC tsc in m_tsc)
                 tsc.AddEndStation(es);
         }
 
-        public override void RemoveEndStation(EndStationSchedule es)
-        {
+        public override void RemoveEndStation(EndStationSchedule es){
             foreach (TSC tsc in m_tsc)
                 tsc.RemoveEndStation(es);
         }
