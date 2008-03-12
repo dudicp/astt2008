@@ -14,22 +14,18 @@ namespace AST.Domain{
                 m_actions = new List<Action>();
         }
 
-        public List<Action> GetActions()
-        {
+        public List<Action> GetActions(){
             return m_actions;
         }
 
-        public override void AddEndStation(EndStationSchedule es)
-        {
+        public override void AddEndStation(EndStationSchedule es){
             foreach (Action a in m_actions)
                 a.AddEndStation(es);
         }
 
-        public override void RemoveEndStation(EndStationSchedule es)
-        {
+        public override void RemoveEndStation(EndStationSchedule es){
             foreach (Action a in m_actions)
                 a.RemoveEndStation(es);
         }
-
     }
 }

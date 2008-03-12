@@ -9,33 +9,28 @@ namespace AST.Domain{
         private bool m_status;
         private String m_message;
 
-        public Result(Action action,DateTime executionTime, bool status, String message)
-        {
+        public Result(Action action,DateTime executionTime, bool status, String message){
             m_action = action;
             m_executionTime = executionTime;
             m_status = status;
             m_message = message;
         }
 
-        public Action GetAction()
-        {
+        public Action GetAction(){
             return m_action;
         }
 
-        public DateTime ExecutionTime
-        {
+        public DateTime ExecutionTime{
             get { return m_executionTime; }
             set { m_executionTime = value; }
         }
 
-        public bool Status
-        {
+        public bool Status{
             get { return m_status; }
             set { m_status = value; }
         }
 
-        public String Message
-        {
+        public String Message{
             get { return m_message; }
             set { m_message = value; }
         }

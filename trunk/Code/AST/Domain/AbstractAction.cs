@@ -18,32 +18,27 @@ namespace AST.Domain{
             m_creationTime = creationTime;
         }
 
-        public String Name
-        {
+        public String Name{
             get { return this.m_name; }
             set { this.m_name = value; }
         }
 
-        public String Description
-        {
+        public String Description{
             get { return this.m_description; }
             set { this.m_description = value; }
         }
 
-        public int Delay
-        {
+        public int Delay{
             get { return this.m_delay; }
             set { this.m_delay = value; }
         }
 
-        public String CreatorName
-        {
+        public String CreatorName{
             get { return this.m_creatorName; }
             set { this.m_creatorName = value; }
         }
 
-        public DateTime CreationTime
-        {
+        public DateTime CreationTime{
             get { return this.m_creationTime; }
             set { this.m_creationTime = value; }
         }

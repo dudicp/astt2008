@@ -20,8 +20,7 @@ namespace AST.Domain{
         private String m_password;
         private StateEnum m_state;
 
-        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password)
-        {
+        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password){
             m_id = id;
             m_name = name;
             m_ip = ip;
@@ -38,54 +37,44 @@ namespace AST.Domain{
             set { m_id = value; }
         }
 
-        public String Name
-        {
+        public String Name{
             get { return m_name; }
             set { m_name = value; }
         }
 
-        public IPAddress IP
-        {
+        public IPAddress IP{
             get { return m_ip; }
             set { m_ip = value; }
         }
 
-        public String MAC
-        {
+        public String MAC{
             get { return m_mac; }
             set { m_mac = value; }
         }
 
-        public OSTypeEnum OSType
-        {
+        public OSTypeEnum OSType{
             get { return m_osType; }
             set { m_osType = value; }
         }
 
-        public OSVersionEnum OSVersion
-        {
+        public OSVersionEnum OSVersion{
             get { return m_osVersion; }
             set { m_osVersion = value; }
         }
 
-        public String Username
-        {
+        public String Username{
             get { return m_username; }
             set { m_username = value; }
         }
 
-        public String Password
-        {
+        public String Password{
             get { return m_password; }
             set { m_password = value; }
         }
 
-        public StateEnum State
-        {
+        public StateEnum State{
             get { return m_state; }
             set { m_state = value; }
         }
-
-
     }
 }
