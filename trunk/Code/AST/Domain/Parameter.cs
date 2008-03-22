@@ -5,7 +5,7 @@ namespace AST.Domain{
 
     public class Parameter{
 
-        public enum ParameterTypeEnum {Input, Option};
+        public enum ParameterTypeEnum {Input, Option, Both, None};
 
         private String m_name;
         private String m_description;
@@ -53,7 +53,12 @@ namespace AST.Domain{
         }
 
         public void AddValue(EndStation.OSTypeEnum osType, String value){
+            if (m_values.Contains(osType)) m_values.Remove(osType);
             m_values.Add(osType, value);
+        }
+
+        public void RemoveValue(EndStation.OSTypeEnum osType){
+            m_values.Remove(osType);
         }
 
         public bool ValidateValue(){

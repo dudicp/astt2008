@@ -37,6 +37,13 @@
   </Target>
   -->
   <ItemGroup>
+    <Compile Include="ASTMain.cs" />
+    <Compile Include="Builder.cs" />
+    <Compile Include="Database\DatabaseManager.cs" />
+    <Compile Include="Database\IDatabaseHandler.cs" />
+    <Compile Include="Database\IResultHandler.cs" />
+    <Compile Include="Database\SQLHandler.cs" />
+    <Compile Include="Database\XMLHandler.cs" />
     <Compile Include="Domain\AbstractAction.cs" />
     <Compile Include="Domain\Action.cs" />
     <Compile Include="Domain\EndStation.cs" />
@@ -44,17 +51,100 @@
     <Compile Include="Domain\Parameter.cs" />
     <Compile Include="Domain\Result.cs" />
     <Compile Include="Domain\TSC.cs" />
-    <Compile Include="Test.cs" />
+    <Compile Include="Management\ASTManager.cs" />
+    <Compile Include="Management\ASTOutputListener.cs" />
+    <Compile Include="Presentation\AboutDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\AboutDialog.Designer.cs">
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\ASTPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\ASTPanel.Designer.cs">
+      <DependentUpon>ASTPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Domain\TP.cs" />
+    <Compile Include="Presentation\CreateAdditionalActionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\CreateAdditionalActionPanel.Designer.cs">
+      <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\EditParametersDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\EditParametersDialog.Designer.cs">
+      <DependentUpon>EditParametersDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\BrowseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\BrowseDialog.Designer.cs">
+      <DependentUpon>BrowseDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\WelcomeScreen.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\WelcomeScreen.Designer.cs">
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Database\" />
-    <Folder Include="Management\" />
-    <Folder Include="Presentation\" />
+    <EmbeddedResource Include="Presentation\AboutDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>AboutDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\ASTPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ASTPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\CreateAdditionalActionPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\EditParametersDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditParametersDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\BrowseDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BrowseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\WelcomeScreen.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\coming-soon.gif" />
   </ItemGroup>
 </Project>

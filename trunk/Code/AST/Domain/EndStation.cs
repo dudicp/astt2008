@@ -6,7 +6,7 @@ namespace AST.Domain{
 
     public class EndStation{
 
-        public enum OSTypeEnum { WINDOWS, UNIX };//T.D
+        public enum OSTypeEnum { WINDOWS, UNIX, UNKNOWN };//T.D
         public enum OSVersionEnum { None, WIN2000, WINXP, VISTA };//T.D
         public enum StateEnum { Unknown, Idle, Hibernate, Sleep };//T.D
 
