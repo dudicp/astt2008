@@ -4,6 +4,8 @@ namespace AST.Domain{
 
     public abstract class AbstractAction{
 
+        public enum AbstractActionTypeEnum { ACTION, TSC, TP };
+
         protected String m_name;
         protected String m_description;
         protected int m_delay;

@@ -61,6 +61,7 @@ namespace AST.Domain{
         }
 
         public void AddContent(EndStation.OSTypeEnum osType, String content){
+            if (m_content.Contains(osType)) m_content.Remove(osType);
             m_content.Add(osType, content);
         }
 
@@ -69,6 +70,7 @@ namespace AST.Domain{
         }
 
         public void AddValidityString(EndStation.OSTypeEnum osType, String vs){
+            if (m_validtyString.Contains(osType)) m_validtyString.Remove(osType);
             m_validtyString.Add(osType, vs);
         }
 
@@ -77,7 +79,12 @@ namespace AST.Domain{
         }
 
         public void AddParameter(Parameter param){
-            m_parameters.Add(param);
+            if (m_parameters.Contains(param)){
+                int index = m_parameters.IndexOf(param);
+                m_parameters.Remove(param);
+                m_parameters.Insert(index, param);
+            }
+            else m_parameters.Add(param);
         }
 
         public void RemoveParameter(Parameter param){
@@ -85,6 +92,7 @@ namespace AST.Domain{
         }
 
         public override void AddEndStation(EndStationSchedule es){
+            if (m_endStations.Contains(es)) m_endStations.Remove(es);
             m_endStations.Add(es);
         }
 
