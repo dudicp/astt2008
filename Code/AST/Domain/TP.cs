@@ -34,5 +34,10 @@ namespace AST.Domain {
             foreach (TSC tsc in m_tsc)
                 tsc.RemoveEndStation(es);
         }
+
+        public override void ClearEndStations() {
+            foreach (TSC tsc in m_tsc)
+                tsc.ClearEndStations();
+        }
     }
 }

@@ -48,6 +48,8 @@ namespace AST.Domain{
         public abstract void AddEndStation(EndStationSchedule es);
 
         public abstract void RemoveEndStation(EndStationSchedule es);
+
+        public abstract void ClearEndStations();
     }
 
 }

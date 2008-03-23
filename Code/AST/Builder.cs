@@ -9,10 +9,12 @@ namespace AST{
     class Builder{
 
         private Hashtable m_actions;
+        private List<Parameter> m_params;
         private static Builder m_instance = null;
 
         private Builder(){
             this.m_actions = new Hashtable();
+            this.m_params = new List<Parameter>();
             this.Init();
         }
 
@@ -24,8 +26,18 @@ namespace AST{
         private void Init(){
             Action a1 = BuildAction("Action1");
             Action a2 = BuildAction("Action2");
+            Parameter p1 = BuildParameter("param1");
+            Parameter p2 = BuildParameter("param2");
+            Parameter p3 = BuildParameter("param3");
+            a1.AddParameter(p1);
+            a1.AddParameter(p2);
+
             m_actions.Add(a1.Name, a1);
             m_actions.Add(a2.Name, a2);
+            m_params.Add(p1);
+            m_params.Add(p2);
+            m_params.Add(p3);
+
         }
 
         public AbstractAction GetAction(String name, AbstractAction.AbstractActionTypeEnum type){
@@ -62,7 +74,7 @@ namespace AST{
 
         public List<Parameter> GetParameters(String name){
             if (!m_actions.Contains(name)) return null;
-            return ((Action)(m_actions[name])).GetParameters();
+            return this.m_params;
         }
 
         private Action BuildAction(String name){
@@ -78,13 +90,11 @@ namespace AST{
             a.AddValidityString(EndStation.OSTypeEnum.WINDOWS, "Validity String");
             a.AddContent(EndStation.OSTypeEnum.UNIX, "UnixContent");
             a.AddValidityString(EndStation.OSTypeEnum.UNIX,"Validity String");
-            a.AddParameter(BuildParameter("Param0"));
-            a.AddParameter(BuildParameter("Param1"));
-
             return a;
         }
 
         private Parameter BuildParameter(String name){
+            if (name.Equals("param1")) return new Parameter(name, "Description " + name, Parameter.ParameterTypeEnum.Input, "Validity Exp");
             return new Parameter(name, "Description "+name, Parameter.ParameterTypeEnum.Option, "Validity Exp");
         }
     }

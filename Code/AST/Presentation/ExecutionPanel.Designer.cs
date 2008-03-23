@@ -38,9 +38,12 @@ namespace AST.Presentation {
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ReportNameCheckBox = new System.Windows.Forms.CheckBox();
             this.ReportNameTextBox = new System.Windows.Forms.TextBox();
+            this.DurationCheckBox = new System.Windows.Forms.CheckBox();
+            this.DurationNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.executionDetailsBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DelayNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimesNumericUpDown)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DurationNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // Title
@@ -55,6 +58,8 @@ namespace AST.Presentation {
             // 
             // executionDetailsBox
             // 
+            this.executionDetailsBox.Controls.Add(this.DurationNumericUpDown);
+            this.executionDetailsBox.Controls.Add(this.DurationCheckBox);
             this.executionDetailsBox.Controls.Add(this.DelayNumericUpDown);
             this.executionDetailsBox.Controls.Add(this.DelayCheckBox);
             this.executionDetailsBox.Controls.Add(this.NumberOfTimesLabel);
@@ -74,7 +79,7 @@ namespace AST.Presentation {
             // 
             // DelayNumericUpDown
             // 
-            this.DelayNumericUpDown.Location = new System.Drawing.Point(325, 137);
+            this.DelayNumericUpDown.Location = new System.Drawing.Point(342, 135);
             this.DelayNumericUpDown.Name = "DelayNumericUpDown";
             this.DelayNumericUpDown.Size = new System.Drawing.Size(43, 21);
             this.DelayNumericUpDown.TabIndex = 18;
@@ -111,7 +116,7 @@ namespace AST.Presentation {
             // EditActionButton
             // 
             this.EditActionButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditActionButton.Location = new System.Drawing.Point(280, 95);
+            this.EditActionButton.Location = new System.Drawing.Point(292, 94);
             this.EditActionButton.Name = "EditActionButton";
             this.EditActionButton.Size = new System.Drawing.Size(76, 25);
             this.EditActionButton.TabIndex = 12;
@@ -199,6 +204,25 @@ namespace AST.Presentation {
             this.ReportNameTextBox.Size = new System.Drawing.Size(136, 24);
             this.ReportNameTextBox.TabIndex = 7;
             // 
+            // DurationCheckBox
+            // 
+            this.DurationCheckBox.AutoSize = true;
+            this.DurationCheckBox.Location = new System.Drawing.Point(268, 165);
+            this.DurationCheckBox.Name = "DurationCheckBox";
+            this.DurationCheckBox.Size = new System.Drawing.Size(68, 18);
+            this.DurationCheckBox.TabIndex = 19;
+            this.DurationCheckBox.Text = "Duration";
+            this.DurationCheckBox.UseVisualStyleBackColor = true;
+            this.DurationCheckBox.CheckedChanged += new System.EventHandler(this.DurationCheckBox_CheckedChanged);
+            // 
+            // DurationNumericUpDown
+            // 
+            this.DurationNumericUpDown.Location = new System.Drawing.Point(342, 164);
+            this.DurationNumericUpDown.Name = "DurationNumericUpDown";
+            this.DurationNumericUpDown.Size = new System.Drawing.Size(43, 21);
+            this.DurationNumericUpDown.TabIndex = 20;
+            this.DurationNumericUpDown.ValueChanged += new System.EventHandler(this.DurationNumericUpDown_ValueChanged);
+            // 
             // ExecutionPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -214,6 +238,7 @@ namespace AST.Presentation {
             this.executionDetailsBox.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DelayNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimesNumericUpDown)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.DurationNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -236,5 +261,7 @@ namespace AST.Presentation {
         private System.Windows.Forms.TextBox ReportNameTextBox;
         private System.Windows.Forms.NumericUpDown DelayNumericUpDown;
         private System.Windows.Forms.CheckBox DelayCheckBox;
+        private System.Windows.Forms.NumericUpDown DurationNumericUpDown;
+        private System.Windows.Forms.CheckBox DurationCheckBox;
     }
 }

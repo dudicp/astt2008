@@ -12,9 +12,11 @@ namespace AST.Presentation {
     public partial class ExecutionPanel : AST.Presentation.ASTPanel {
 
         private AbstractAction m_abstractAction;
+        private AbstractAction.AbstractActionTypeEnum m_type;
 
         public ExecutionPanel(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             this.m_abstractAction = a;
+            this.m_type = type;
             InitializeComponent();
             SetExecutionDetails(type);
         }
@@ -57,13 +59,34 @@ namespace AST.Presentation {
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e) {
             //Only for Action type by Hight and m_abstractAction type
-            this.DescriptionText.Text = this.m_abstractAction.Description;
             this.EditActionButton.Enabled = true;
+            this.DescriptionText.Text = this.m_abstractAction.Description;
         }
 
         private void EditActionButton_Click(object sender, EventArgs e) {
+            //this.EditActionButton.Enabled = false;
             EditActionDialog ea = new EditActionDialog((Action)this.m_abstractAction);
             if (ea.ShowDialog() == DialogResult.OK) {}
+        }
+
+        private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
+            if (this.DelayCheckBox.Checked)
+                this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
+        }
+
+        private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if (this.DelayCheckBox.Checked) this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
+            else this.m_abstractAction.Delay = 0;
+        }
+
+        private void DurationNumericUpDown_ValueChanged(object sender, EventArgs e) {
+            if ((this.DurationCheckBox.Checked)&&(this.m_type == AbstractAction.AbstractActionTypeEnum.ACTION))
+                ((Action)this.m_abstractAction).Duration = (int)this.DurationNumericUpDown.Value;
+        }
+
+        private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if ((this.DurationCheckBox.Checked) && (this.m_type == AbstractAction.AbstractActionTypeEnum.ACTION)) ((Action)this.m_abstractAction).Duration = (int)this.DelayNumericUpDown.Value;
+            else ((Action)this.m_abstractAction).Duration = 0;
         }
 
         private void ExecuteButton_Click(object sender, EventArgs e) {
@@ -91,16 +114,6 @@ namespace AST.Presentation {
             if (res == DialogResult.No) return;
 
             ASTManager.GetInstance().DisplayWelcomeScreen();
-        }
-
-        private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
-            if (this.DelayCheckBox.Checked)
-                this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
-        }
-
-        private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
-            if (this.DelayCheckBox.Checked) this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
-            else this.m_abstractAction.Delay = 0;
         }
     }
 }

@@ -30,21 +30,43 @@ namespace AST.Presentation {
             this.SetEndStationsDetails();
         }
 
+
         private void SetActionDetails(){
-            this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
-            this.m_selectedParameters = new List<Parameter>();
-            foreach (Parameter p in this.m_parameters)
-                this.ParameterListBox.Items.Add(p.Name);
+            this.m_parameters = new List<Parameter>();
+            this.m_selectedParameters = this.m_action.GetParameters();
+            List<Parameter> allParameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
+
+            //Filling the unselected parameters:
+            foreach (Parameter p in allParameters) {
+                if (!this.m_selectedParameters.Contains(p)) {
+                    this.m_parameters.Add(p);
+                    this.ParameterListBox.Items.Add(p.Name);
+                }
+            }
+            //Filling the selected parameters:
+            foreach (Parameter p in this.m_selectedParameters)
+                this.SelectedParametersListBox.Items.Add(p.Name);
         }
 
         private void SetEndStationsDetails() {
-            Hashtable endStations = ASTManager.GetInstance().GetEndStations();
             this.m_endStations = new List<EndStation>();
             this.m_selectedEndStations = new List<EndStation>();
-            ICollection names = endStations.Keys;
-            foreach (String name in names) {
-                this.m_endStations.Add((EndStation)endStations[name]);
-                this.EndStationsListBox.Items.Add(name);
+            
+            //Filling the selected end-stations:
+            List<EndStationSchedule> endStationInAction = this.m_action.GetEndStations();
+            foreach(EndStationSchedule ess in endStationInAction){
+                this.m_selectedEndStations.Add(ess.EndStation);
+                this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name + "(" + ess.EndStation.ID + ")");
+            }
+
+            ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
+
+            //Filling the unselected end-stations:
+            foreach (EndStation es in endStations) {
+                if (!this.m_selectedEndStations.Contains(es)) {
+                    this.m_endStations.Add(es);
+                    this.EndStationsListBox.Items.Add(es.Name+"("+es.ID+")");
+                }
             }
         }
 
@@ -57,6 +79,10 @@ namespace AST.Presentation {
                 !(this.m_parameters[this.ParameterListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both))
 
                 this.InputTextBox.Enabled = false;
+
+            else this.InputTextBox.Enabled = true;
+            
+            this.InputTextBox.Clear();
         }
 
         private void SelectedParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -67,6 +93,7 @@ namespace AST.Presentation {
             if (this.SelectedParametersListBox.SelectedIndex < (this.m_selectedParameters.Count-1)) this.MoveDownParameterButton.Enabled = true;
             else this.MoveDownParameterButton.Enabled = false;
             this.UnselectParameterButton.Enabled = true;
+            this.InputTextBox.Text = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Input;
             this.DescriptionText.Text = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Description;
         }
 
@@ -77,6 +104,8 @@ namespace AST.Presentation {
             }
             Parameter p = this.m_parameters[this.ParameterListBox.SelectedIndex];
             p.Input = this.InputTextBox.Text;
+            this.InputTextBox.Clear();
+
             this.m_selectedParameters.Add(p);
             this.SelectedParametersListBox.Items.Add(p.Name);
             this.m_parameters.Remove(p);
@@ -97,12 +126,114 @@ namespace AST.Presentation {
             this.SelectedParametersListBox.Items.Remove(p.Name);
             this.m_selectedParameters.Remove(p);
             if (SelectedParametersListBox.Items.Count == 0)
-                this.UnselectEndStationButton.Enabled = false;
+                this.UnselectParameterButton.Enabled = false;
             if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count))
                 this.MoveUpParameterButton.Enabled = false;
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count-1)))
                 this.MoveDownParameterButton.Enabled = false;
 
+        }
+
+        private void MoveUpParameterButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count))
+                return;
+            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1] = tmp;
+            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count)) this.MoveUpParameterButton.Enabled = false;
+
+            Parameter ptmp = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex];
+            this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex] = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex - 1];
+            this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex - 1] = ptmp;
+        }
+
+        private void MoveDownParameterButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count - 1)))
+                return;
+            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1] = tmp;
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count - 1))) this.MoveDownParameterButton.Enabled = false;
+
+            Parameter ptmp = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex];
+            this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex] = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex + 1];
+            this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex + 1] = ptmp;
+        }
+
+        private void EndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.SelectEndStationButton.Enabled = false;
+            if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) return;
+            this.SelectEndStationButton.Enabled = true;
+        }
+
+        private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.UnselectEndStationButton.Enabled = false;
+            if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count)) return;
+            if (this.SelectedEndStationsListBox.SelectedIndex > 0) this.MoveUpEndStationButton.Enabled = true;
+            else this.MoveUpEndStationButton.Enabled = false;
+            if (this.SelectedEndStationsListBox.SelectedIndex < (this.m_selectedEndStations.Count - 1)) this.MoveDownEndStationButton.Enabled = true;
+            else this.MoveDownEndStationButton.Enabled = false;
+            this.UnselectEndStationButton.Enabled = true;
+        }
+
+        private void SelectEndStationButton_Click(object sender, EventArgs e) {
+            if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) {
+                this.SelectEndStationButton.Enabled = false;
+                return;
+            }
+            EndStation es = this.m_endStations[this.EndStationsListBox.SelectedIndex];
+
+            this.m_selectedEndStations.Add(es);
+            this.SelectedEndStationsListBox.Items.Add(es.Name+"("+es.ID+")");
+            this.m_endStations.Remove(es);
+            this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            if (EndStationsListBox.Items.Count == 0)
+                this.SelectEndStationButton.Enabled = false;
+        }
+
+        private void UnselectEndStationButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count)) {
+                this.UnselectEndStationButton.Enabled = false;
+                return;
+            }
+
+            EndStation es = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex];
+            this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            this.m_endStations.Add(es);
+            this.SelectedEndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            this.m_selectedEndStations.Remove(es);
+            if (SelectedEndStationsListBox.Items.Count == 0)
+                this.UnselectEndStationButton.Enabled = false;
+            if ((this.SelectedEndStationsListBox.SelectedIndex <= 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count))
+                this.MoveUpEndStationButton.Enabled = false;
+            if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= (this.m_selectedEndStations.Count - 1)))
+                this.MoveDownEndStationButton.Enabled = false;
+        }
+
+        private void MoveUpEndStationButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedEndStationsListBox.SelectedIndex <= 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count))
+                return;
+            String tmp = (String)this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex];
+            this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex] = this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex - 1];
+            this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex - 1] = tmp;
+            if ((this.SelectedEndStationsListBox.SelectedIndex <= 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count)) this.MoveUpEndStationButton.Enabled = false;
+
+            EndStation estmp = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex];
+            this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex] = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex - 1];
+            this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex - 1] = estmp;
+        }
+
+        private void MoveDownEndStationButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= (this.m_selectedEndStations.Count - 1)))
+                return;
+            String tmp = (String)this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex];
+            this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex] = this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex + 1];
+            this.SelectedEndStationsListBox.Items[this.SelectedEndStationsListBox.SelectedIndex + 1] = tmp;
+            if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= (this.m_selectedEndStations.Count - 1))) this.MoveDownEndStationButton.Enabled = false;
+
+            EndStation estmp = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex];
+            this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex] = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex + 1];
+            this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex + 1] = estmp;
         }
 
         private void NewEndStationButton_Click(object sender, EventArgs e) {
@@ -115,22 +246,9 @@ namespace AST.Presentation {
             }
         }
 
-        private void MoveUpParameterButton_Click(object sender, EventArgs e) {
-            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count))
-                return;
-            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
-            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1];
-            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1] = tmp;
-            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count)) this.MoveUpParameterButton.Enabled = false;
-        }
-
-        private void MoveDownParameterButton_Click(object sender, EventArgs e) {
-            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count-1)))
-                return;
-            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
-            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1];
-            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1] = tmp;
-            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count-1))) this.MoveDownParameterButton.Enabled = false;
+        private void EditButton_Click(object sender, EventArgs e) {
+            EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+            if (esd.ShowDialog() == DialogResult.OK) { }
         }
 
         private void MyCancelButton_Click(object sender, EventArgs e) {
@@ -142,9 +260,15 @@ namespace AST.Presentation {
         }
 
         private void okButton_Click(object sender, EventArgs e) {
-            //Return to Execution Screen
+            //Updating action's parameters
+            for (int i = 0; i < this.m_selectedParameters.Count; i++)
+                this.m_action.AddParameter(this.m_selectedParameters[i]);
+
+            //Updating action's end-stations
+            for (int i = 0; i < this.m_selectedEndStations.Count; i++)
+                this.m_action.AddEndStation(new EndStationSchedule(this.m_selectedEndStations[i]));
+
             this.DialogResult = DialogResult.OK;
         }
-
     }
 }
