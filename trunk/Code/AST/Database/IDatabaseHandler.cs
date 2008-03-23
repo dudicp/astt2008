@@ -15,5 +15,7 @@ namespace AST.Database{
         void Delete(String name, AbstractAction.AbstractActionTypeEnum type);
 
         Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type);
+
+        List<Parameter> GetParameters(String actionName);
     }
 }

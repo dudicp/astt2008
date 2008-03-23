@@ -68,7 +68,6 @@ namespace AST.Presentation{
                 if (res == DialogResult.No) return;
 
                 ASTManager.GetInstance().DeleteAbstractAction(name, AbstractAction.AbstractActionTypeEnum.ACTION);
-                MessageBox.Show(name+" Deleted Successfully.", "Delete Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -93,6 +92,23 @@ namespace AST.Presentation{
             if (res == DialogResult.No) return;
             
             ASTManager.GetInstance().Exit();
+        }
+
+        private void ExecuteSingleActionMenuItem_Click(object sender, EventArgs e) {
+            BrowseDialog bd = new BrowseDialog(AbstractAction.AbstractActionTypeEnum.ACTION);
+            if (bd.ShowDialog() == DialogResult.OK) {
+                String name = bd.GetAbstractActionName();
+                if ((name == null) || (name.Length == 0)) {
+                    MessageBox.Show("No Action Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                Action a = (Action)ASTManager.GetInstance().Load(name, AbstractAction.AbstractActionTypeEnum.ACTION);
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel(a, AbstractAction.AbstractActionTypeEnum.ACTION);
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+            }
         }
 
     }

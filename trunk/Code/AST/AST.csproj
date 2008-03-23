@@ -72,6 +72,12 @@
     <Compile Include="Presentation\CreateAdditionalActionPanel.Designer.cs">
       <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\EditActionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\EditActionDialog.Designer.cs">
+      <DependentUpon>EditActionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\EditParametersDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -83,6 +89,18 @@
     </Compile>
     <Compile Include="Presentation\BrowseDialog.Designer.cs">
       <DependentUpon>BrowseDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\EndStationDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\EndStationDialog.Designer.cs">
+      <DependentUpon>EndStationDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\ExecutionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\ExecutionPanel.Designer.cs">
+      <DependentUpon>ExecutionPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentation\MainForm.cs">
       <SubType>Form</SubType>
@@ -122,6 +140,10 @@
       <SubType>Designer</SubType>
       <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\EditActionDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditActionDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\EditParametersDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditParametersDialog.cs</DependentUpon>
@@ -129,6 +151,14 @@
     <EmbeddedResource Include="Presentation\BrowseDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>BrowseDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\EndStationDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EndStationDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\ExecutionPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExecutionPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\MainForm.resx">
       <SubType>Designer</SubType>

@@ -76,6 +76,10 @@ namespace AST.Database
             return this.m_reportsNames;
         }
 
+        public List<Parameter> GetParameters(String actionName) {
+            return this.m_DBHandler.GetParameters(actionName);
+        }
+
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type){
             return this.m_DBHandler.Load(name, type);
         }

@@ -186,6 +186,7 @@ namespace AST.Presentation{
 
             this.m_action.Description = this.DescriptionText.Text;
             ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION);
+            ASTManager.GetInstance().DisplayWelcomeScreen();
         }
 
         private void MyCancelButton_Click(object sender, EventArgs e){
