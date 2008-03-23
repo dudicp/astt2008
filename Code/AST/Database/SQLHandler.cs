@@ -35,5 +35,9 @@ namespace AST.Database{
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type) {
             return Builder.GetInstance().GetInfo(type);
         }
+
+        public List<Parameter> GetParameters(String actionName) {
+            return Builder.GetInstance().GetParameters(actionName);
+        }
     }
 }

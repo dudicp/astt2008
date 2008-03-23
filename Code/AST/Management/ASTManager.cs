@@ -41,6 +41,8 @@ namespace AST.Management {
 
         public void DeleteAbstractAction(String name, AbstractAction.AbstractActionTypeEnum type) {
             this.m_databaseManager.DeleteAbstractAction(name, type);
+            foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayInfoMessage(name + " Deleted Successfully.");
         }
 
         public void DeleteReport(String reportName) {
@@ -55,6 +57,14 @@ namespace AST.Management {
             return this.m_databaseManager.GetReportsNames();
         }
 
+        public List<Parameter> GetParameters(String actionName) {
+            return this.m_databaseManager.GetParameters(actionName);
+        }
+
+        public Hashtable GetEndStations() {
+            return this.m_endStations;
+        }
+
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
             return this.m_databaseManager.Load(name, type);
         }
@@ -65,6 +75,8 @@ namespace AST.Management {
 
         public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             this.m_databaseManager.Save(a, type);
+            foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayInfoMessage(a.Name + " Saved Successfully.");
         }
 
         public void SaveResult(Result res, String reportName) {
@@ -80,7 +92,9 @@ namespace AST.Management {
             this.m_endStations.Remove(es.ID);
         }
 
-        public void Execute(AbstractAction a, String executionName) {  }
+        public void Execute(AbstractAction a, String executionName) {
+            Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
+        }
 
         public void AddOutputListener(ASTOutputListener o) {
             this.m_outputListeners.Add(o);

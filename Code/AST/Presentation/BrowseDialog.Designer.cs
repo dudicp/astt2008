@@ -80,7 +80,7 @@ namespace AST.Presentation
             // okButton
             // 
             this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(152, 201);
+            this.okButton.Location = new System.Drawing.Point(73, 201);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 14;
@@ -91,7 +91,7 @@ namespace AST.Presentation
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(72, 201);
+            this.MyCancelButton.Location = new System.Drawing.Point(154, 201);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 15;

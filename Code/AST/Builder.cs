@@ -60,9 +60,9 @@ namespace AST{
             return info;
         }
 
-        public List<Parameter> GetParameters(Action a){
-            if (!m_actions.Contains(a.Name)) return null;
-            return ((Action)(m_actions[a.Name])).GetParameters();
+        public List<Parameter> GetParameters(String name){
+            if (!m_actions.Contains(name)) return null;
+            return ((Action)(m_actions[name])).GetParameters();
         }
 
         private Action BuildAction(String name){
@@ -85,7 +85,7 @@ namespace AST{
         }
 
         private Parameter BuildParameter(String name){
-            return new Parameter(name, "Description", Parameter.ParameterTypeEnum.Input, "Validity Exp");
+            return new Parameter(name, "Description "+name, Parameter.ParameterTypeEnum.Option, "Validity Exp");
         }
     }
 }
