@@ -91,6 +91,10 @@ namespace AST.Domain{
             m_parameters.Remove(param);
         }
 
+        public void ClearParameters() {
+            m_parameters.Clear();
+        }
+
         public override void AddEndStation(EndStationSchedule es){
             if (m_endStations.Contains(es)) m_endStations.Remove(es);
             m_endStations.Add(es);
@@ -98,6 +102,10 @@ namespace AST.Domain{
 
         public override void RemoveEndStation(EndStationSchedule es){
             m_endStations.Remove(es);
+        }
+
+        public override void ClearEndStations() {
+            m_endStations.Clear();
         }
 
         public String GenerateCommand(EndStation.OSTypeEnum osType){

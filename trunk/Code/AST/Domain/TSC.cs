@@ -27,5 +27,10 @@ namespace AST.Domain{
             foreach (Action a in m_actions)
                 a.RemoveEndStation(es);
         }
+
+        public override void ClearEndStations() {
+            foreach (Action a in m_actions)
+                a.ClearEndStations();
+        }
     }
 }
