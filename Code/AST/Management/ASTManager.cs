@@ -17,10 +17,13 @@ namespace AST.Management {
         private Hashtable m_endStations;
         private DatabaseManager m_databaseManager;
         private List<ASTOutputListener> m_outputListeners;
-
+        private ExecutionManager m_executionManager;
+        private NetworkBrowser m_networkBrowser;
+        
         private ASTManager() {
             this.m_endStations = new Hashtable();
             this.m_outputListeners = new List<ASTOutputListener>();
+            this.m_executionManager = new ExecutionManager();
         }
 
         public static ASTManager GetInstance() {
@@ -92,8 +95,10 @@ namespace AST.Management {
             this.m_endStations.Remove(es.ID);
         }
 
-        public void Execute(AbstractAction a, String executionName) {
+        public void Execute(AbstractAction a, String executionName) 
+        {
             Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
+            m_executionManager.Execute(a, executionName);
         }
 
         public void AddOutputListener(ASTOutputListener o) {
@@ -112,5 +117,11 @@ namespace AST.Management {
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayWelcomeScreen();
         }
+
+        public ArrayList GetComputerList()
+        {
+            return m_networkBrowser.getNetworkComputers();
+        }
+
     }
 }

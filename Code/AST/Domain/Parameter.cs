@@ -6,7 +6,6 @@ namespace AST.Domain{
     public class Parameter{
 
         public enum ParameterTypeEnum {Input, Option, Both, None};
-
         private String m_name;
         private String m_description;
         private ParameterTypeEnum m_type;
