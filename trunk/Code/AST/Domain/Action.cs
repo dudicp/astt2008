@@ -6,8 +6,7 @@ namespace AST.Domain{
 
     public class Action : AbstractAction{
         
-        public enum ActionTypeEnum { COMMAND_LINE, SCRIPT, TEST_SCRIPT };
-
+        public enum ActionTypeEnum { COMMAND_LINE, SCRIPT, TEST_SCRIPT }; 
         private int m_timeout;
         private Hashtable m_content;
         private ActionTypeEnum m_type;

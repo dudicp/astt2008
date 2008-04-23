@@ -53,6 +53,11 @@
     <Compile Include="Domain\TSC.cs" />
     <Compile Include="Management\ASTManager.cs" />
     <Compile Include="Management\ASTOutputListener.cs" />
+    <Compile Include="Management\Executer.cs" />
+    <Compile Include="Management\ExecutionManager.cs" />
+    <Compile Include="Management\IServiceProvider.cs" />
+    <Compile Include="Management\NetWorkBrowser.cs" />
+    <Compile Include="Management\WindowsPlatformProvider.cs" />
     <Compile Include="Presentation\AboutDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -176,5 +181,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\coming-soon.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
 </Project>
