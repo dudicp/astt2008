@@ -36,6 +36,8 @@ namespace AST.Presentation {
             this.UsernameTextBox = new System.Windows.Forms.TextBox();
             this.PasswordTextBox = new System.Windows.Forms.TextBox();
             this.IPTextBox = new System.Windows.Forms.TextBox();
+            this.OSComboBox = new System.Windows.Forms.ComboBox();
+            this.OSLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // NameLabel
@@ -60,7 +62,7 @@ namespace AST.Presentation {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(112, 229);
+            this.MyCancelButton.Location = new System.Drawing.Point(112, 246);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 19;
@@ -71,7 +73,7 @@ namespace AST.Presentation {
             // okButton
             // 
             this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(27, 229);
+            this.okButton.Location = new System.Drawing.Point(27, 246);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(72, 23);
             this.okButton.TabIndex = 20;
@@ -163,11 +165,34 @@ namespace AST.Presentation {
             this.IPTextBox.Size = new System.Drawing.Size(100, 21);
             this.IPTextBox.TabIndex = 29;
             // 
+            // OSComboBox
+            // 
+            this.OSComboBox.FormattingEnabled = true;
+            this.OSComboBox.Items.AddRange(new object[] {
+            "Windows",
+            "Unix"});
+            this.OSComboBox.Location = new System.Drawing.Point(83, 209);
+            this.OSComboBox.Name = "OSComboBox";
+            this.OSComboBox.Size = new System.Drawing.Size(100, 21);
+            this.OSComboBox.TabIndex = 30;
+            // 
+            // OSLabel
+            // 
+            this.OSLabel.AutoSize = true;
+            this.OSLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OSLabel.Location = new System.Drawing.Point(12, 211);
+            this.OSLabel.Name = "OSLabel";
+            this.OSLabel.Size = new System.Drawing.Size(54, 15);
+            this.OSLabel.TabIndex = 31;
+            this.OSLabel.Text = "OS Type:";
+            // 
             // EndStationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(209, 264);
+            this.ClientSize = new System.Drawing.Size(209, 287);
+            this.Controls.Add(this.OSLabel);
+            this.Controls.Add(this.OSComboBox);
             this.Controls.Add(this.IPTextBox);
             this.Controls.Add(this.PasswordTextBox);
             this.Controls.Add(this.UsernameTextBox);
@@ -203,5 +228,7 @@ namespace AST.Presentation {
         private System.Windows.Forms.TextBox UsernameTextBox;
         private System.Windows.Forms.TextBox PasswordTextBox;
         private System.Windows.Forms.TextBox IPTextBox;
+        private System.Windows.Forms.ComboBox OSComboBox;
+        private System.Windows.Forms.Label OSLabel;
     }
 }

@@ -93,6 +93,14 @@ namespace AST.Presentation {
             if (this.SelectedParametersListBox.SelectedIndex < (this.m_selectedParameters.Count-1)) this.MoveDownParameterButton.Enabled = true;
             else this.MoveDownParameterButton.Enabled = false;
             this.UnselectParameterButton.Enabled = true;
+
+            if (!(this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) &&
+                !(this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both))
+
+                this.InputTextBox.Enabled = false;
+
+            else this.InputTextBox.Enabled = true;
+
             this.InputTextBox.Text = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Input;
             this.DescriptionText.Text = this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Description;
         }
@@ -164,6 +172,7 @@ namespace AST.Presentation {
             this.SelectEndStationButton.Enabled = false;
             if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) return;
             this.SelectEndStationButton.Enabled = true;
+            this.EditButton.Enabled = true;
         }
 
         private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -187,8 +196,10 @@ namespace AST.Presentation {
             this.SelectedEndStationsListBox.Items.Add(es.Name+"("+es.ID+")");
             this.m_endStations.Remove(es);
             this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
-            if (EndStationsListBox.Items.Count == 0)
+            if (EndStationsListBox.Items.Count == 0){
                 this.SelectEndStationButton.Enabled = false;
+                this.EditButton.Enabled = false;
+            }
         }
 
         private void UnselectEndStationButton_Click(object sender, EventArgs e) {

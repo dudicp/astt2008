@@ -20,13 +20,13 @@ namespace AST.Management
                 m_instance = new WindowsPlatformProvider();
             return m_instance;
         }
-
+        
         public void ExecuteCmd(IPAddress ip, String username, String password, String cmd)
         {
-            String str = "D:\\Project\\PsTools\\psexec.exe" ;
-            String args = " \\\\192.168.1.100 -u Administrator -p 123456 explorer.exe";
+            String str = "D:\\PsTools\\psexec.exe" ;
+            String args = " \\\\" + ip.ToString() + " -i "+ cmd;
             Console.WriteLine(str + args); 
-          Process.Start(str, args);
+            Process.Start(str, args);
         }
 
         public void ExecuteScript(IPAddress ip, String username, String password, String filename)
