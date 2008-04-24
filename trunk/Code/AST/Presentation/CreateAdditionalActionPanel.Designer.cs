@@ -283,6 +283,7 @@ namespace AST.Presentation
             // 
             // BrowseButton
             // 
+            this.BrowseButton.Enabled = false;
             this.BrowseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BrowseButton.Location = new System.Drawing.Point(303, 61);
             this.BrowseButton.Name = "BrowseButton";

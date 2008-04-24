@@ -76,5 +76,9 @@ namespace AST.Domain{
             get { return m_state; }
             set { m_state = value; }
         }
+
+        public String ToString(){
+            return this.ID + " " + this.m_name + " " + this.m_ip.ToString() + " " + this.m_mac + " " + this.m_osType + " " + this.m_osVersion + " " + this.m_username + " " + this.m_password + " " + this.m_state;
+        }
     }
 }

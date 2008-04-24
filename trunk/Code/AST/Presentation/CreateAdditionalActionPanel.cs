@@ -13,15 +13,22 @@ namespace AST.Presentation{
     public partial class CreateAdditionalActionPanel : AST.Presentation.ASTPanel{
 
         private Action m_action;
+        private List<Parameter> m_parameters;
+        private List<Parameter> m_changedParameters;
+        private List<Parameter> m_removedParameters;
 
         public CreateAdditionalActionPanel(Action a){
             m_action = a;
+            m_changedParameters = new List<Parameter>();
+            m_removedParameters = new List<Parameter>();
             InitializeComponent();
             if (a != null) {
+                this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
                 Title.Text = "Edit Additional Action";
                 SetActionAttributes();
             }
             else {
+                this.m_parameters = new List<Parameter>();
                 this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
                 Title.Text = "Create Additional Action";
             }
@@ -69,10 +76,9 @@ namespace AST.Presentation{
 
         private void SetActionParameters(int selectedIndex)
         {
-            List<Parameter> parameters = m_action.GetParameters();
-            String[] names = new String[parameters.Count];
+            String[] names = new String[this.m_parameters.Count];
             for (int i = 0; i < names.Length; i++)
-                names[i] = parameters[i].Name;
+                names[i] = this.m_parameters[i].Name;
             ParametersComboBox.Items.Clear();
             ParametersComboBox.Items.AddRange(names);
             if (names.Length != 0)
@@ -132,8 +138,9 @@ namespace AST.Presentation{
         private void RemoveParameterButton_Click(object sender, EventArgs e)
         {
             int paramIndex = ParametersComboBox.SelectedIndex;
-            m_action.RemoveParameter(m_action.GetParameters()[paramIndex]);
-            SetActionParameters(paramIndex);
+            this.m_removedParameters.Add(this.m_parameters[paramIndex]); //Added to the remove parameters
+            this.m_parameters.Remove(this.m_parameters[paramIndex]); //Removed from screen
+            SetActionParameters(0);
         }
 
         private void BrowseButton_Click(object sender, EventArgs e)
@@ -145,10 +152,11 @@ namespace AST.Presentation{
 
         private void EditParameterButton_Click(object sender, EventArgs e)
         {
-            EditParametersDialog ed = new EditParametersDialog(m_action.GetParameters()[ParametersComboBox.SelectedIndex]);
+            EditParametersDialog ed = new EditParametersDialog(this.m_parameters[ParametersComboBox.SelectedIndex]);
             if (ed.ShowDialog() == DialogResult.OK)
             {
-                m_action.AddParameter(ed.GetParameter());
+                this.m_parameters[ParametersComboBox.SelectedIndex] = ed.GetParameter();
+                this.m_changedParameters.Add(ed.GetParameter());//Added to the changed parameters
                 SetActionParameters(ParametersComboBox.SelectedIndex);
             }
         }
@@ -157,21 +165,25 @@ namespace AST.Presentation{
             EditParametersDialog ed = new EditParametersDialog(null);
             if (ed.ShowDialog() == DialogResult.OK)
             {
-                m_action.AddParameter(ed.GetParameter());
+                this.m_parameters.Add(ed.GetParameter());
+                this.m_changedParameters.Add(ed.GetParameter());//Added to the changed parameters
                 SetActionParameters(0);
             }
         }
 
         private void CommandLineRadio_CheckedChanged(object sender, EventArgs e){
             ContentLabel.Text = "Command Line:";
+            BrowseButton.Enabled = false;
         }
 
         private void ScriptRadio_CheckedChanged(object sender, EventArgs e){
             ContentLabel.Text = "Script Filename:";
+            BrowseButton.Enabled = true;
         }
 
         private void TestScriptRadio_CheckedChanged(object sender, EventArgs e){
             ContentLabel.Text = "Script Filename:";
+            BrowseButton.Enabled = true;
         }
 
         private void okButton_Click(object sender, EventArgs e){
@@ -185,7 +197,14 @@ namespace AST.Presentation{
             else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
 
             this.m_action.Description = this.DescriptionText.Text;
-            ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION);
+            ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION);//Save Action Created/Modified
+
+            foreach (Parameter p in this.m_changedParameters)
+                ASTManager.GetInstance().Save(p,this.m_action);//Save Parameters Created/Modified
+
+            foreach (Parameter p in this.m_removedParameters)
+                ASTManager.GetInstance().Delete(p, this.m_action);//Delete Parameters Removed
+
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
 

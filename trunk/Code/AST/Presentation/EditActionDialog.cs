@@ -51,6 +51,7 @@ namespace AST.Presentation {
         private void SetEndStationsDetails() {
             this.m_endStations = new List<EndStation>();
             this.m_selectedEndStations = new List<EndStation>();
+            this.EndStationsListBox.Items.Clear();
             
             //Filling the selected end-stations:
             List<EndStationSchedule> endStationInAction = this.m_action.GetEndStations();
@@ -259,7 +260,9 @@ namespace AST.Presentation {
 
         private void EditButton_Click(object sender, EventArgs e) {
             EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-            if (esd.ShowDialog() == DialogResult.OK) { }
+            if (esd.ShowDialog() == DialogResult.OK) {
+                SetEndStationsDetails();
+            }
         }
 
         private void MyCancelButton_Click(object sender, EventArgs e) {

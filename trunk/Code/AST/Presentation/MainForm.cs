@@ -12,6 +12,8 @@ namespace AST.Presentation{
 
     public partial class MainForm : Form , ASTOutputListener{
         public MainForm(){
+            this.MaximizeBox = false;
+            
             InitializeComponent();
             this.astPanel.Dispose();
             this.astPanel = new AST.Presentation.WelcomeScreen();
