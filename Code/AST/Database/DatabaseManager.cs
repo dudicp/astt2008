@@ -9,6 +9,7 @@ namespace AST.Database
 {
     class DatabaseManager
     {
+        private Hashtable m_endStations;
         private Hashtable m_actionInfo;
         private Hashtable m_TSCInfo;
         private Hashtable m_TPInfo;
@@ -17,6 +18,7 @@ namespace AST.Database
         private IResultHandler m_resultHandler;
 
         public DatabaseManager(IDatabaseHandler DBhandler, IResultHandler resultHandler){
+            this.m_endStations = new Hashtable();
             this.m_actionInfo = new Hashtable();
             this.m_TSCInfo = new Hashtable();
             this.m_TPInfo = new Hashtable();
@@ -26,6 +28,7 @@ namespace AST.Database
         }
 
         public void Init(){
+            this.m_endStations = this.m_DBHandler.GetAllEndStations();
             this.m_actionInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
             this.m_TSCInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
             this.m_TPInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
@@ -80,6 +83,10 @@ namespace AST.Database
             return this.m_DBHandler.GetParameters(actionName);
         }
 
+        public Hashtable GetAllEndStations(){
+            return this.m_endStations;
+        }
+
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type){
             return this.m_DBHandler.Load(name, type);
         }
@@ -121,6 +128,26 @@ namespace AST.Database
             else this.m_reportsNames.Add(reportName);
 
             this.m_resultHandler.Save(res, reportName);
+        }
+
+        public void AddEndStation(EndStation es){
+            if (this.m_endStations.Contains(es.ID)) this.m_endStations.Remove(es.ID);
+            this.m_endStations.Add(es.ID, es);
+
+            this.m_DBHandler.Save(es);
+        }
+
+        public void Delete(EndStation es){
+            this.m_endStations.Remove(es.ID);
+            this.m_DBHandler.Delete(es);
+        }
+
+        public void Save(Parameter p, String actionName) {
+            this.m_DBHandler.Save(p, actionName);
+        }
+
+        public void Delete(Parameter p, String actionName) {
+            this.m_DBHandler.Delete(p, actionName);
         }
     }
 }

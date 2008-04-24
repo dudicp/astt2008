@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using AST.Management;
 using AST.Domain;
+using System.Diagnostics;
 
 namespace AST.Presentation
 {
@@ -48,7 +49,8 @@ namespace AST.Presentation
         }
 
         private void listBox_SelectedIndexChanged(object sender, EventArgs e) {
-            this.DescriptionText.Text = (String)this.m_info[this.listBox.SelectedItem];
+           if(this.listBox.SelectedItem!=null)
+                this.DescriptionText.Text = (String)this.m_info[this.listBox.SelectedItem];
         }
     }
 }

@@ -16,11 +16,11 @@ namespace AST.Database{
         }
 
         public void Save(Result res, String reportName){
-            Console.WriteLine(reportName + " Updated.");
+            //Console.WriteLine(reportName + " Updated.");
         }
 
         public void Delete(String reportName){
-            Console.WriteLine(reportName + " Deleted.");
+            //Console.WriteLine(reportName + " Deleted.");
         }
 
         public List<String> GetNames(){

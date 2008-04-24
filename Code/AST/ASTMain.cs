@@ -5,6 +5,7 @@ using System.Net;
 using System.Windows.Forms;
 using AST.Presentation;
 using AST.Management;
+using System.Diagnostics;
 
 namespace AST{
 
@@ -13,7 +14,10 @@ namespace AST{
         [STAThread]
         static void Main(){
             //Creating the ASTManager and initiliaze it.
-            ASTManager.GetInstance().Init(new IPAddress(0x2414188f),1000);
+            ASTManager.GetInstance().Init("Server=SEPROJ\\SQLEXPRESS;Database=ASTDB;Integrated Security=True;");
+
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
         }
         // --------------------------------------------------------------------

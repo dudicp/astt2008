@@ -14,16 +14,14 @@ namespace AST.Management {
     class ASTManager {
 
         private static ASTManager m_instance = null;
-        private Hashtable m_endStations;
         private DatabaseManager m_databaseManager;
         private List<ASTOutputListener> m_outputListeners;
         private ExecutionManager m_executionManager;
-        private NetworkBrowser m_networkBrowser;
+        //private NetworkBrowser m_networkBrowser;
         
         private ASTManager() {
-            this.m_endStations = new Hashtable();
             this.m_outputListeners = new List<ASTOutputListener>();
-            this.m_executionManager = new ExecutionManager();
+            this.m_executionManager = new ExecutionManager(10);
         }
 
         public static ASTManager GetInstance() {
@@ -31,15 +29,15 @@ namespace AST.Management {
             return m_instance;
         }
 
-        public void Init(IPAddress ip, int port) {
-            SQLHandler sql = new SQLHandler();
-            sql.Connect(ip, port);
+        public void Init(String connectionString) {
+            SQLHandler sql = new SQLHandler(connectionString);
             m_databaseManager = new DatabaseManager(sql, new XMLHandler());
             m_databaseManager.Init();
         }
 
         public void Exit() {
             Application.Exit();
+            Environment.Exit(0);
         }
 
         public void DeleteAbstractAction(String name, AbstractAction.AbstractActionTypeEnum type) {
@@ -65,7 +63,7 @@ namespace AST.Management {
         }
 
         public Hashtable GetEndStations() {
-            return this.m_endStations;
+            return this.m_databaseManager.GetAllEndStations();
         }
 
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
@@ -87,17 +85,16 @@ namespace AST.Management {
         }
 
         public void AddEndStation(EndStation es) {
-            if (this.m_endStations.Contains(es.ID)) this.m_endStations.Remove(es.ID);
-            this.m_endStations.Add(es.ID,es);
+            this.m_databaseManager.AddEndStation(es);
         }
 
         public void RemoveEndStation(EndStation es) {
-            this.m_endStations.Remove(es.ID);
+            this.m_databaseManager.Delete(es);
         }
 
         public void Execute(AbstractAction a, String executionName) 
         {
-            Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
+            //Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
             m_executionManager.Execute(a, executionName);
         }
 
@@ -118,9 +115,16 @@ namespace AST.Management {
                 o.DisplayWelcomeScreen();
         }
 
-        public ArrayList GetComputerList()
-        {
+        /*public ArrayList GetComputerList(){
             return m_networkBrowser.getNetworkComputers();
+        }*/
+
+        public void Save(Parameter p, Action a) {
+            this.m_databaseManager.Save(p, a.Name);
+        }
+
+        public void Delete(Parameter p, Action a) {
+            this.m_databaseManager.Delete(p, a.Name);
         }
 
     }

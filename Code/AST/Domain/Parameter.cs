@@ -51,6 +51,10 @@ namespace AST.Domain{
             return (String)m_values[osType];
         }
 
+        public Hashtable GetAllValues() {
+            return this.m_values;
+        }
+
         public void AddValue(EndStation.OSTypeEnum osType, String value){
             if (m_values.Contains(osType)) m_values.Remove(osType);
             m_values.Add(osType, value);

@@ -55,6 +55,10 @@ namespace AST.Domain{
             return (String)m_content[osType];
         }
 
+        public Hashtable GetAllContents() {
+            return this.m_content;
+        }
+
         public String GetValidityString(EndStation.OSTypeEnum osType){
             return (String)m_validtyString[osType];
         }
