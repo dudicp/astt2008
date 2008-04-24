@@ -16,12 +16,11 @@ namespace AST.Management
         private bool m_isRunning;
         private Executer m_executer;
 
-        public ExecutionManager()
+        public ExecutionManager(int poolSize)
         {
             m_isRunning = true;
             m_executionThread = new Thread(new ThreadStart(MyThreadFunc));
             m_executionThread.Start();
-            m_executer = new Executer();
         }
 
         public ICollection<Result> Results
@@ -32,9 +31,9 @@ namespace AST.Management
 
         public void Execute(AbstractAction action, String name)
         {
-            
-            m_executionThread.Resume();            
+            m_executer = new Executer((Action)action, ((Action)action).GetEndStations()[0].EndStation);
             System.Threading.Thread.Sleep(100);
+            m_executionThread.Resume();      
         }
 
         private void MyThreadFunc()
@@ -43,8 +42,8 @@ namespace AST.Management
             {
                 m_executionThread.Suspend();
 
-                Console.WriteLine("Thread func");
-                m_executer.Execute("", null);
+                //Console.WriteLine("Thread func");
+                m_executer.Execute();
                 System.Threading.Thread.Sleep(100);
             }
         }

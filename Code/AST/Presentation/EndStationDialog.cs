@@ -24,7 +24,8 @@ namespace AST.Presentation {
             }else{
                 int id = ASTManager.GetInstance().GetEndStations().Count;
                 this.IDTextBox.Text = ""+id;
-                this.m_es = new EndStation(id,"",new IPAddress(0x00000000) ,EndStation.OSTypeEnum.UNKNOWN,"","");
+                this.m_es = new EndStation(id,"",new IPAddress(0x00000000) ,EndStation.OSTypeEnum.WINDOWS,"","");
+                this.SetOSType();
             }
         }
 
@@ -34,6 +35,13 @@ namespace AST.Presentation {
             this.IPTextBox.Text = this.m_es.IP.ToString();
             this.UsernameTextBox.Text = this.m_es.Username;
             this.PasswordTextBox.Text = this.m_es.Password;
+            SetOSType();
+        }
+
+        private void SetOSType() {
+            if (this.m_es.OSType == EndStation.OSTypeEnum.WINDOWS) this.OSComboBox.SelectedIndex = 0;
+            else if (this.m_es.OSType == EndStation.OSTypeEnum.UNIX) this.OSComboBox.SelectedIndex = 1;
+            else this.OSComboBox.SelectedIndex = 0;//for UNKNOWN Type
         }
 
         public EndStation GetEndStation() {
@@ -49,6 +57,10 @@ namespace AST.Presentation {
             this.m_es.IP = IPAddress.Parse(this.IPTextBox.Text);
             this.m_es.Username = this.UsernameTextBox.Text;
             this.m_es.Password = this.PasswordTextBox.Text;
+            if (this.OSComboBox.SelectedItem.Equals("Windows"))
+                this.m_es.OSType = EndStation.OSTypeEnum.WINDOWS;
+            else if(this.OSComboBox.SelectedItem.Equals("Unix"))
+                this.m_es.OSType = EndStation.OSTypeEnum.UNIX;
             
             DialogResult = DialogResult.OK;
         }
