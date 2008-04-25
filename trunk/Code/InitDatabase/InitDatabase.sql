@@ -31,7 +31,7 @@ CREATE PROCEDURE [dbo].[sp_GetParameterContents]
 @ActionName varchar(20),
 @ParameterName varchar(20)
 AS
-SELECT * FROM ParametersValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+SELECT * FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
 GO
 /****** Object:  Table [dbo].[EndStations]    Script Date: 04/25/2008 11:53:50 ******/
 SET ANSI_NULLS ON
