@@ -9,37 +9,24 @@ namespace AST.Management
     class Executer
     {
         private Action m_action;
-        private EndStation m_endstation;
-        private Thread m_executionThread;
-        private bool m_isRunning;
+        private int m_endstationIndex;
+        ManualResetEvent m_doneEvent;
 
-        public Executer(Action a, EndStation es)
+        public Executer(Action a, int endstationIndex, ManualResetEvent doneEvent)
         {
             m_action = a;
-            m_endstation = es;
-            m_isRunning = true;
-            m_executionThread = new Thread(new ThreadStart(ThreadFunc));
-            m_executionThread.Start();
+            m_endstationIndex = endstationIndex;
+            m_doneEvent = doneEvent; 
         }
 
-        private void ThreadFunc()
+
+        public void ExecuterCallback(Object threadContext)
         {
-            while (m_isRunning) {
-
-                m_executionThread.Suspend();
-                
-                IServiceProvider provider = WindowsPlatformProvider.GetInstance();
-
-                String command = m_action.GenerateCommand(m_endstation.OSType);
-
-                provider.ExecuteCmd(m_endstation.IP, m_endstation.Username, m_endstation.Password, command);
-
-            }
-        }
-
-        public void Execute()
-        {
-           m_executionThread.Resume();
+            EndStation endstation = m_action.GetEndStations()[m_endstationIndex].EndStation;
+            IServiceProvider provider = WindowsPlatformProvider.GetInstance();
+            String command = m_action.GenerateCommand(endstation.OSType);
+            provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command);
+            m_doneEvent.Set();
         }
 
     }
