@@ -22,6 +22,7 @@ namespace AST.Presentation{
             this.ResumeLayout(false);
 
             ASTManager.GetInstance().AddOutputListener(this);
+
         }
 
         private void AboutMenuItem_Click(object sender, EventArgs e){

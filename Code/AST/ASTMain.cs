@@ -14,7 +14,7 @@ namespace AST{
         [STAThread]
         static void Main(){
             //Creating the ASTManager and initiliaze it.
-            ASTManager.GetInstance().Init("Server=SEPROJ\\SQLEXPRESS;Database=ASTDB;Integrated Security=True;");
+            ASTManager.GetInstance().Init("Server=YANIV\\SQLEXPRESS;Database=ASTDB;Integrated Security=True;");
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
