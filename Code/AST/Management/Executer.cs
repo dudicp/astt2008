@@ -23,7 +23,7 @@ namespace AST.Management
         public void ExecuterCallback(Object threadContext)
         {
             EndStation endstation = m_action.GetEndStations()[m_endstationIndex].EndStation;
-            IServiceProvider provider = WindowsPlatformProvider.GetInstance();
+            IServiceProvider provider = ProviderFactory.GetServiceProvider(EndStation.OSTypeEnum.WINDOWS);
             String command = m_action.GenerateCommand(endstation.OSType);
             provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command);
             m_doneEvent.Set();
