@@ -261,6 +261,8 @@ namespace AST.Presentation {
         private void EditButton_Click(object sender, EventArgs e) {
             EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
             if (esd.ShowDialog() == DialogResult.OK) {
+                EndStation es = esd.GetEndStation();
+                ASTManager.GetInstance().AddEndStation(es);
                 SetEndStationsDetails();
             }
         }
