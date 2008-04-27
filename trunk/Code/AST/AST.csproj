@@ -59,6 +59,7 @@
     <Compile Include="Management\ExecutionManager.cs" />
     <Compile Include="Management\IServiceProvider.cs" />
     <Compile Include="Management\NetWorkBrowser.cs" />
+    <Compile Include="Management\ProviderFactory.cs" />
     <Compile Include="Management\WindowsPlatformProvider.cs" />
     <Compile Include="Presentation\AboutDialog.cs">
       <SubType>Form</SubType>
