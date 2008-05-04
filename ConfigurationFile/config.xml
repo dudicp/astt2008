@@ -1,0 +1,5 @@
+<Configuration>
+	<DatabaseConnectionString>Server=THEDUDE-PC\SQLEXPRESS;Database=ASTDB;Integrated Security=True;</DatabaseConnectionString>
+	<MaxThreadPoolSize>10</MaxThreadPoolSize>
+	<PSToolsPath>C:\PSTools</PSToolsPath>
+</Configuration>

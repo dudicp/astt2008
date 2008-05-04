@@ -23,7 +23,8 @@ namespace AST.Management
         
         public void ExecuteCmd(IPAddress ip, String username, String password, String cmd)
         {
-            String str = "D:\\Project\\PsTools\\psexec.exe" ;
+            String PSToolsPath = ConfigurationReader.GetPSToolsFullPath();
+            String str = PSToolsPath + "\\psexec.exe" ;
             String args = " \\\\" + ip.ToString() + " -i "+ cmd;
             Console.WriteLine(str + args); 
             Process.Start(str, args);
