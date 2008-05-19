@@ -11,7 +11,6 @@ namespace AST.Domain{
         private Hashtable m_content;
         private ActionTypeEnum m_type;
         private int m_duration;
-        private List<EndStationSchedule> m_endStations;
         private Hashtable m_validtyString;
         private List<Parameter> m_parameters;
 
@@ -23,7 +22,6 @@ namespace AST.Domain{
             m_duration = duration;
 
             m_content = new Hashtable();
-            m_endStations = new List<EndStationSchedule>();
             m_validtyString = new Hashtable();
             m_parameters = new List<Parameter>();
         }
@@ -41,10 +39,6 @@ namespace AST.Domain{
         public int Duration{
             get { return m_duration; }
             set { m_duration = value; }
-        }
-
-        public List<EndStationSchedule> GetEndStations(){
-            return m_endStations;
         }
 
         public List<Parameter> GetParameters(){

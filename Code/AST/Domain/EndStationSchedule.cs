@@ -34,5 +34,13 @@ namespace AST.Domain{
             get { return m_delay; }
             set { m_delay = value; }
         }
+
+        public override bool Equals(Object o) {
+            //if (o.GetType() != EndStationSchedule) return false;
+            if (((EndStationSchedule)o).EndStation != this.EndStation) return false;
+            if (((EndStationSchedule)o).ExecutionOrder != this.ExecutionOrder) return false;
+            if (((EndStationSchedule)o).Delay != this.Delay) return false;
+            return true;
+        }
     }
 }

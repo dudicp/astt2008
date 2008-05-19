@@ -78,7 +78,7 @@ namespace AST.Presentation
             this.FileDeleteStripMenuItem,
             this.ExitMenuItem});
             this.FileStripMenuItem.Name = "FileStripMenuItem";
-            this.FileStripMenuItem.Size = new System.Drawing.Size(40, 20);
+            this.FileStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.FileStripMenuItem.Text = "File";
             // 
             // FileNewStripMenuItem
@@ -88,29 +88,29 @@ namespace AST.Presentation
             this.NewTestScenarioMenuItem,
             this.NewTestPlanMenuItem});
             this.FileNewStripMenuItem.Name = "FileNewStripMenuItem";
-            this.FileNewStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.FileNewStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileNewStripMenuItem.Text = "New";
             // 
             // NewAdditionalActionMenuItem
             // 
             this.NewAdditionalActionMenuItem.Name = "NewAdditionalActionMenuItem";
-            this.NewAdditionalActionMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.NewAdditionalActionMenuItem.Size = new System.Drawing.Size(167, 22);
             this.NewAdditionalActionMenuItem.Text = "Additional Action";
             this.NewAdditionalActionMenuItem.Click += new System.EventHandler(this.NewAdditionalActionMenuItem_Click);
             // 
             // NewTestScenarioMenuItem
             // 
-            this.NewTestScenarioMenuItem.Enabled = false;
             this.NewTestScenarioMenuItem.Name = "NewTestScenarioMenuItem";
-            this.NewTestScenarioMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.NewTestScenarioMenuItem.Size = new System.Drawing.Size(167, 22);
             this.NewTestScenarioMenuItem.Text = "Test Scenario";
+            this.NewTestScenarioMenuItem.Click += new System.EventHandler(this.NewTestScenarioMenuItem_Click);
             // 
             // NewTestPlanMenuItem
             // 
-            this.NewTestPlanMenuItem.Enabled = false;
             this.NewTestPlanMenuItem.Name = "NewTestPlanMenuItem";
-            this.NewTestPlanMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.NewTestPlanMenuItem.Size = new System.Drawing.Size(167, 22);
             this.NewTestPlanMenuItem.Text = "Test Plan";
+            this.NewTestPlanMenuItem.Click += new System.EventHandler(this.NewTestPlanMenuItem_Click);
             // 
             // FileOpenStripMenuItem
             // 
@@ -119,29 +119,29 @@ namespace AST.Presentation
             this.OpenTestScenarioMenuItem,
             this.OpenTestPlanMenuItem});
             this.FileOpenStripMenuItem.Name = "FileOpenStripMenuItem";
-            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileOpenStripMenuItem.Text = "Open";
             // 
             // OPenAdditionalActionMenuItem
             // 
             this.OPenAdditionalActionMenuItem.Name = "OPenAdditionalActionMenuItem";
-            this.OPenAdditionalActionMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.OPenAdditionalActionMenuItem.Size = new System.Drawing.Size(167, 22);
             this.OPenAdditionalActionMenuItem.Text = "Additional Action";
             this.OPenAdditionalActionMenuItem.Click += new System.EventHandler(this.OpenAdditionalActionMenuItem_Click);
             // 
             // OpenTestScenarioMenuItem
             // 
-            this.OpenTestScenarioMenuItem.Enabled = false;
             this.OpenTestScenarioMenuItem.Name = "OpenTestScenarioMenuItem";
-            this.OpenTestScenarioMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.OpenTestScenarioMenuItem.Size = new System.Drawing.Size(167, 22);
             this.OpenTestScenarioMenuItem.Text = "Test Scenario";
+            this.OpenTestScenarioMenuItem.Click += new System.EventHandler(this.OpenTestScenarioMenuItem_Click);
             // 
             // OpenTestPlanMenuItem
             // 
-            this.OpenTestPlanMenuItem.Enabled = false;
             this.OpenTestPlanMenuItem.Name = "OpenTestPlanMenuItem";
-            this.OpenTestPlanMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.OpenTestPlanMenuItem.Size = new System.Drawing.Size(167, 22);
             this.OpenTestPlanMenuItem.Text = "Test Plan";
+            this.OpenTestPlanMenuItem.Click += new System.EventHandler(this.OpenTestPlanMenuItem_Click);
             // 
             // FileDeleteStripMenuItem
             // 
@@ -150,34 +150,34 @@ namespace AST.Presentation
             this.DeleteTestScenarioMenuItem,
             this.DeleteTestPlanMenuItem});
             this.FileDeleteStripMenuItem.Name = "FileDeleteStripMenuItem";
-            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileDeleteStripMenuItem.Text = "Delete";
             // 
             // DeleteAdditionalActionMenuItem
             // 
             this.DeleteAdditionalActionMenuItem.Name = "DeleteAdditionalActionMenuItem";
-            this.DeleteAdditionalActionMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.DeleteAdditionalActionMenuItem.Size = new System.Drawing.Size(167, 22);
             this.DeleteAdditionalActionMenuItem.Text = "Additional Action";
             this.DeleteAdditionalActionMenuItem.Click += new System.EventHandler(this.DeleteAdditionalActionMenuItem_Click);
             // 
             // DeleteTestScenarioMenuItem
             // 
-            this.DeleteTestScenarioMenuItem.Enabled = false;
             this.DeleteTestScenarioMenuItem.Name = "DeleteTestScenarioMenuItem";
-            this.DeleteTestScenarioMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.DeleteTestScenarioMenuItem.Size = new System.Drawing.Size(167, 22);
             this.DeleteTestScenarioMenuItem.Text = "Test Scenario";
+            this.DeleteTestScenarioMenuItem.Click += new System.EventHandler(this.DeleteTestScenarioMenuItem_Click);
             // 
             // DeleteTestPlanMenuItem
             // 
-            this.DeleteTestPlanMenuItem.Enabled = false;
             this.DeleteTestPlanMenuItem.Name = "DeleteTestPlanMenuItem";
-            this.DeleteTestPlanMenuItem.Size = new System.Drawing.Size(171, 22);
+            this.DeleteTestPlanMenuItem.Size = new System.Drawing.Size(167, 22);
             this.DeleteTestPlanMenuItem.Text = "Test Plan";
+            this.DeleteTestPlanMenuItem.Click += new System.EventHandler(this.DeleteTestPlanMenuItem_Click);
             // 
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(112, 22);
+            this.ExitMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -187,7 +187,7 @@ namespace AST.Presentation
             this.ExecuteStripMenuItem,
             this.ReportStripMenuItem});
             this.ToolsStripMenuItem.Name = "ToolsStripMenuItem";
-            this.ToolsStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.ToolsStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.ToolsStripMenuItem.Text = "Tools";
             // 
             // ExecuteStripMenuItem
@@ -197,13 +197,13 @@ namespace AST.Presentation
             this.ExecuteTestScenarioMenuItem,
             this.ExecuteTestPlanMenuItem});
             this.ExecuteStripMenuItem.Name = "ExecuteStripMenuItem";
-            this.ExecuteStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.ExecuteStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.ExecuteStripMenuItem.Text = "Execute";
             // 
             // ExecuteSingleActionMenuItem
             // 
             this.ExecuteSingleActionMenuItem.Name = "ExecuteSingleActionMenuItem";
-            this.ExecuteSingleActionMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.ExecuteSingleActionMenuItem.Size = new System.Drawing.Size(144, 22);
             this.ExecuteSingleActionMenuItem.Text = "Single Action";
             this.ExecuteSingleActionMenuItem.Click += new System.EventHandler(this.ExecuteSingleActionMenuItem_Click);
             // 
@@ -211,14 +211,14 @@ namespace AST.Presentation
             // 
             this.ExecuteTestScenarioMenuItem.Enabled = false;
             this.ExecuteTestScenarioMenuItem.Name = "ExecuteTestScenarioMenuItem";
-            this.ExecuteTestScenarioMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.ExecuteTestScenarioMenuItem.Size = new System.Drawing.Size(144, 22);
             this.ExecuteTestScenarioMenuItem.Text = "Test Scenario";
             // 
             // ExecuteTestPlanMenuItem
             // 
             this.ExecuteTestPlanMenuItem.Enabled = false;
             this.ExecuteTestPlanMenuItem.Name = "ExecuteTestPlanMenuItem";
-            this.ExecuteTestPlanMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.ExecuteTestPlanMenuItem.Size = new System.Drawing.Size(144, 22);
             this.ExecuteTestPlanMenuItem.Text = "Test Plan";
             // 
             // ReportStripMenuItem
@@ -228,19 +228,19 @@ namespace AST.Presentation
             this.DeleteReportMenuItem});
             this.ReportStripMenuItem.Enabled = false;
             this.ReportStripMenuItem.Name = "ReportStripMenuItem";
-            this.ReportStripMenuItem.Size = new System.Drawing.Size(120, 22);
+            this.ReportStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.ReportStripMenuItem.Text = "Reports";
             // 
             // GenerateReportMenuItem
             // 
             this.GenerateReportMenuItem.Name = "GenerateReportMenuItem";
-            this.GenerateReportMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.GenerateReportMenuItem.Size = new System.Drawing.Size(159, 22);
             this.GenerateReportMenuItem.Text = "Generate Report";
             // 
             // DeleteReportMenuItem
             // 
             this.DeleteReportMenuItem.Name = "DeleteReportMenuItem";
-            this.DeleteReportMenuItem.Size = new System.Drawing.Size(170, 22);
+            this.DeleteReportMenuItem.Size = new System.Drawing.Size(159, 22);
             this.DeleteReportMenuItem.Text = "Delete Report";
             // 
             // HelpStripMenuItem
@@ -249,13 +249,13 @@ namespace AST.Presentation
             this.AboutMenuItem,
             this.HelpMenuItem});
             this.HelpStripMenuItem.Name = "HelpStripMenuItem";
-            this.HelpStripMenuItem.Size = new System.Drawing.Size(45, 20);
+            this.HelpStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.HelpStripMenuItem.Text = "Help";
             // 
             // AboutMenuItem
             // 
             this.AboutMenuItem.Name = "AboutMenuItem";
-            this.AboutMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.AboutMenuItem.Size = new System.Drawing.Size(107, 22);
             this.AboutMenuItem.Text = "About";
             this.AboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
@@ -263,7 +263,7 @@ namespace AST.Presentation
             // 
             this.HelpMenuItem.Enabled = false;
             this.HelpMenuItem.Name = "HelpMenuItem";
-            this.HelpMenuItem.Size = new System.Drawing.Size(109, 22);
+            this.HelpMenuItem.Size = new System.Drawing.Size(107, 22);
             this.HelpMenuItem.Text = "Help";
             // 
             // astPanel

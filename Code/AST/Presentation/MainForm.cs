@@ -38,41 +38,7 @@ namespace AST.Presentation{
             this.ResumeLayout(false);
         }
 
-        private void OpenAdditionalActionMenuItem_Click(object sender, EventArgs e){
-            //browsing for the action
-            BrowseDialog bd = new BrowseDialog(AbstractAction.AbstractActionTypeEnum.ACTION);
-            if (bd.ShowDialog() == DialogResult.OK) {
-                String name = bd.GetAbstractActionName();
-                if ((name == null) || (name.Length == 0)) {
-                    MessageBox.Show("No Action Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                Action a = (Action)ASTManager.GetInstance().Load(name, AbstractAction.AbstractActionTypeEnum.ACTION);
-                this.astPanel.Dispose();
-                this.astPanel = new AST.Presentation.CreateAdditionalActionPanel(a);
-                this.SuspendLayout();
-                this.Controls.Add(this.astPanel);
-                this.ResumeLayout(false);
-            }
-        }
 
-        private void DeleteAdditionalActionMenuItem_Click(object sender, EventArgs e){
-            BrowseDialog bd = new BrowseDialog(AbstractAction.AbstractActionTypeEnum.ACTION);
-            if (bd.ShowDialog() == DialogResult.OK)
-            {
-                //Delete Action
-                String name = bd.GetAbstractActionName();
-                if ((name == null) || (name.Length == 0)) {
-                    MessageBox.Show("No Action Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (res == DialogResult.No) return;
-
-                ASTManager.GetInstance().DeleteAbstractAction(name, AbstractAction.AbstractActionTypeEnum.ACTION);
-            }
-        }
 
         public void DisplayWelcomeScreen() {
             this.astPanel.Dispose();
@@ -111,6 +77,97 @@ namespace AST.Presentation{
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
+            }
+        }
+
+        private void NewTestScenarioMenuItem_Click(object sender, EventArgs e) {
+            this.astPanel.Dispose();
+            this.astPanel = new AST.Presentation.CreateTSCPanel(null, AbstractAction.AbstractActionTypeEnum.TSC);
+            this.SuspendLayout();
+            this.Controls.Add(this.astPanel);
+            this.ResumeLayout(false);
+        }
+
+        private void NewTestPlanMenuItem_Click(object sender, EventArgs e) {
+            this.astPanel.Dispose();
+            this.astPanel = new AST.Presentation.CreateTSCPanel(null, AbstractAction.AbstractActionTypeEnum.TP);
+            this.SuspendLayout();
+            this.Controls.Add(this.astPanel);
+            this.ResumeLayout(false);
+        }
+
+        private void OpenAdditionalActionMenuItem_Click(object sender, EventArgs e) {
+            OpenAbstractAction(AbstractAction.AbstractActionTypeEnum.ACTION);
+        }
+
+        private void OpenTestScenarioMenuItem_Click(object sender, EventArgs e) {
+            OpenAbstractAction(AbstractAction.AbstractActionTypeEnum.TSC);
+        }
+
+        private void OpenTestPlanMenuItem_Click(object sender, EventArgs e) {
+            OpenAbstractAction(AbstractAction.AbstractActionTypeEnum.TP);
+        }
+
+        private void OpenAbstractAction(AbstractAction.AbstractActionTypeEnum type) {
+            //browsing for the action
+            BrowseDialog bd = new BrowseDialog(type);
+            if (bd.ShowDialog() == DialogResult.OK) {
+                String name = bd.GetAbstractActionName();
+                if ((name == null) || (name.Length == 0)) {
+                    MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                AbstractAction a = ASTManager.GetInstance().Load(name, type);
+                this.astPanel.Dispose();
+
+                switch (type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION:
+                        this.astPanel = new AST.Presentation.CreateAdditionalActionPanel((Action)a);
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TSC:
+                        this.astPanel = new AST.Presentation.CreateTSCPanel(a, type);
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TP:
+                        this.astPanel = new AST.Presentation.CreateTSCPanel(a,type);
+                        break;
+                    default:
+                        this.DisplayErrorMessage("Error: Wrong type selected.");
+                        break;
+                }
+                
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+            }
+        }
+
+
+        private void DeleteAdditionalActionMenuItem_Click(object sender, EventArgs e) {
+            DeleteAbstractAction(AbstractAction.AbstractActionTypeEnum.ACTION);
+        }
+
+        private void DeleteTestScenarioMenuItem_Click(object sender, EventArgs e) {
+            DeleteAbstractAction(AbstractAction.AbstractActionTypeEnum.TSC);
+        }
+
+        private void DeleteTestPlanMenuItem_Click(object sender, EventArgs e) {
+            DeleteAbstractAction(AbstractAction.AbstractActionTypeEnum.TP);
+        }
+
+        private void DeleteAbstractAction(AbstractAction.AbstractActionTypeEnum type) {
+            BrowseDialog bd = new BrowseDialog(type);
+            if (bd.ShowDialog() == DialogResult.OK) {
+                //Delete Action
+                String name = bd.GetAbstractActionName();
+                if ((name == null) || (name.Length == 0)) {
+                    MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return;
+
+                ASTManager.GetInstance().DeleteAbstractAction(name, type);
             }
         }
 
