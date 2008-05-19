@@ -25,11 +25,9 @@ namespace AST.Presentation {
         private void InitializeComponent() {
             this.Title = new System.Windows.Forms.Label();
             this.executionDetailsBox = new System.Windows.Forms.GroupBox();
-            this.DelayNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.DelayCheckBox = new System.Windows.Forms.CheckBox();
             this.NumberOfTimesLabel = new System.Windows.Forms.Label();
             this.TimesNumericUpDown = new System.Windows.Forms.NumericUpDown();
-            this.EditActionButton = new System.Windows.Forms.Button();
+            this.SettingsButton = new System.Windows.Forms.Button();
             this.treeView = new System.Windows.Forms.TreeView();
             this.DescriptionText = new System.Windows.Forms.RichTextBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
@@ -38,12 +36,8 @@ namespace AST.Presentation {
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ReportNameCheckBox = new System.Windows.Forms.CheckBox();
             this.ReportNameTextBox = new System.Windows.Forms.TextBox();
-            this.DurationCheckBox = new System.Windows.Forms.CheckBox();
-            this.DurationNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.executionDetailsBox.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DelayNumericUpDown)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimesNumericUpDown)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DurationNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // Title
@@ -58,13 +52,9 @@ namespace AST.Presentation {
             // 
             // executionDetailsBox
             // 
-            this.executionDetailsBox.Controls.Add(this.DurationNumericUpDown);
-            this.executionDetailsBox.Controls.Add(this.DurationCheckBox);
-            this.executionDetailsBox.Controls.Add(this.DelayNumericUpDown);
-            this.executionDetailsBox.Controls.Add(this.DelayCheckBox);
             this.executionDetailsBox.Controls.Add(this.NumberOfTimesLabel);
             this.executionDetailsBox.Controls.Add(this.TimesNumericUpDown);
-            this.executionDetailsBox.Controls.Add(this.EditActionButton);
+            this.executionDetailsBox.Controls.Add(this.SettingsButton);
             this.executionDetailsBox.Controls.Add(this.treeView);
             this.executionDetailsBox.Controls.Add(this.DescriptionText);
             this.executionDetailsBox.Controls.Add(this.descriptionLabel);
@@ -76,25 +66,6 @@ namespace AST.Presentation {
             this.executionDetailsBox.TabIndex = 3;
             this.executionDetailsBox.TabStop = false;
             this.executionDetailsBox.Text = "Execution Details";
-            // 
-            // DelayNumericUpDown
-            // 
-            this.DelayNumericUpDown.Location = new System.Drawing.Point(342, 135);
-            this.DelayNumericUpDown.Name = "DelayNumericUpDown";
-            this.DelayNumericUpDown.Size = new System.Drawing.Size(43, 21);
-            this.DelayNumericUpDown.TabIndex = 18;
-            this.DelayNumericUpDown.ValueChanged += new System.EventHandler(this.DelayNumericUpDown_ValueChanged);
-            // 
-            // DelayCheckBox
-            // 
-            this.DelayCheckBox.AutoSize = true;
-            this.DelayCheckBox.Location = new System.Drawing.Point(268, 138);
-            this.DelayCheckBox.Name = "DelayCheckBox";
-            this.DelayCheckBox.Size = new System.Drawing.Size(51, 18);
-            this.DelayCheckBox.TabIndex = 17;
-            this.DelayCheckBox.Text = "Delay";
-            this.DelayCheckBox.UseVisualStyleBackColor = true;
-            this.DelayCheckBox.CheckedChanged += new System.EventHandler(this.DelayCheckBox_CheckedChanged);
             // 
             // NumberOfTimesLabel
             // 
@@ -113,16 +84,16 @@ namespace AST.Presentation {
             this.TimesNumericUpDown.Size = new System.Drawing.Size(40, 21);
             this.TimesNumericUpDown.TabIndex = 15;
             // 
-            // EditActionButton
+            // SettingsButton
             // 
-            this.EditActionButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditActionButton.Location = new System.Drawing.Point(292, 94);
-            this.EditActionButton.Name = "EditActionButton";
-            this.EditActionButton.Size = new System.Drawing.Size(76, 25);
-            this.EditActionButton.TabIndex = 12;
-            this.EditActionButton.Text = "Edit Action";
-            this.EditActionButton.UseVisualStyleBackColor = true;
-            this.EditActionButton.Click += new System.EventHandler(this.EditActionButton_Click);
+            this.SettingsButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SettingsButton.Location = new System.Drawing.Point(268, 78);
+            this.SettingsButton.Name = "SettingsButton";
+            this.SettingsButton.Size = new System.Drawing.Size(75, 25);
+            this.SettingsButton.TabIndex = 12;
+            this.SettingsButton.Text = "Settings";
+            this.SettingsButton.UseVisualStyleBackColor = true;
+            this.SettingsButton.Click += new System.EventHandler(this.EditActionButton_Click);
             // 
             // treeView
             // 
@@ -204,25 +175,6 @@ namespace AST.Presentation {
             this.ReportNameTextBox.Size = new System.Drawing.Size(136, 24);
             this.ReportNameTextBox.TabIndex = 7;
             // 
-            // DurationCheckBox
-            // 
-            this.DurationCheckBox.AutoSize = true;
-            this.DurationCheckBox.Location = new System.Drawing.Point(268, 165);
-            this.DurationCheckBox.Name = "DurationCheckBox";
-            this.DurationCheckBox.Size = new System.Drawing.Size(68, 18);
-            this.DurationCheckBox.TabIndex = 19;
-            this.DurationCheckBox.Text = "Duration";
-            this.DurationCheckBox.UseVisualStyleBackColor = true;
-            this.DurationCheckBox.CheckedChanged += new System.EventHandler(this.DurationCheckBox_CheckedChanged);
-            // 
-            // DurationNumericUpDown
-            // 
-            this.DurationNumericUpDown.Location = new System.Drawing.Point(342, 164);
-            this.DurationNumericUpDown.Name = "DurationNumericUpDown";
-            this.DurationNumericUpDown.Size = new System.Drawing.Size(43, 21);
-            this.DurationNumericUpDown.TabIndex = 20;
-            this.DurationNumericUpDown.ValueChanged += new System.EventHandler(this.DurationNumericUpDown_ValueChanged);
-            // 
             // ExecutionPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -236,9 +188,7 @@ namespace AST.Presentation {
             this.Size = new System.Drawing.Size(434, 559);
             this.executionDetailsBox.ResumeLayout(false);
             this.executionDetailsBox.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.DelayNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TimesNumericUpDown)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.DurationNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -252,16 +202,12 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label TreeViewLabel;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.TreeView treeView;
-        private System.Windows.Forms.Button EditActionButton;
+        private System.Windows.Forms.Button SettingsButton;
         private System.Windows.Forms.NumericUpDown TimesNumericUpDown;
         private System.Windows.Forms.Label NumberOfTimesLabel;
         private System.Windows.Forms.Button ExecuteButton;
         private System.Windows.Forms.Button MyCancelButton;
         private System.Windows.Forms.CheckBox ReportNameCheckBox;
         private System.Windows.Forms.TextBox ReportNameTextBox;
-        private System.Windows.Forms.NumericUpDown DelayNumericUpDown;
-        private System.Windows.Forms.CheckBox DelayCheckBox;
-        private System.Windows.Forms.NumericUpDown DurationNumericUpDown;
-        private System.Windows.Forms.CheckBox DurationCheckBox;
     }
 }

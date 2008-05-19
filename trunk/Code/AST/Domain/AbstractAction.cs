@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace AST.Domain{
 
@@ -11,6 +12,7 @@ namespace AST.Domain{
         protected int m_delay;
         protected String m_creatorName;
         protected DateTime m_creationTime;
+        protected List<EndStationSchedule> m_endStations;
 
         public AbstractAction(String name, String description, int delay, String creatorName, DateTime creationTime){
             m_name = name;
@@ -18,6 +20,7 @@ namespace AST.Domain{
             m_delay = delay;
             m_creatorName = creatorName;
             m_creationTime = creationTime;
+            m_endStations = new List<EndStationSchedule>();
         }
 
         public String Name{
@@ -43,6 +46,10 @@ namespace AST.Domain{
         public DateTime CreationTime{
             get { return this.m_creationTime; }
             set { this.m_creationTime = value; }
+        }
+
+        public List<EndStationSchedule> GetEndStations() {
+            return m_endStations;
         }
 
         public abstract void AddEndStation(EndStationSchedule es);

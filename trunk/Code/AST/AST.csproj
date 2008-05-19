@@ -81,11 +81,23 @@
     <Compile Include="Presentation\CreateAdditionalActionPanel.Designer.cs">
       <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\CreateTSCPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\CreateTSCPanel.Designer.cs">
+      <DependentUpon>CreateTSCPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\EditActionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentation\EditActionDialog.Designer.cs">
       <DependentUpon>EditActionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\EditActionESDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\EditActionESDialog.Designer.cs">
+      <DependentUpon>EditActionESDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentation\EditParametersDialog.cs">
       <SubType>Form</SubType>
@@ -116,6 +128,12 @@
     </Compile>
     <Compile Include="Presentation\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\SettingsDialog.Designer.cs">
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentation\WelcomeScreen.cs">
       <SubType>UserControl</SubType>
@@ -150,9 +168,17 @@
       <SubType>Designer</SubType>
       <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\CreateTSCPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CreateTSCPanel.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\EditActionDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditActionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\EditActionESDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>EditActionESDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\EditParametersDialog.resx">
       <SubType>Designer</SubType>
@@ -173,6 +199,10 @@
     <EmbeddedResource Include="Presentation\MainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\SettingsDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\WelcomeScreen.resx">
       <SubType>Designer</SubType>

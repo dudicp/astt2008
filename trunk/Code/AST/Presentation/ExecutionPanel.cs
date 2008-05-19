@@ -41,7 +41,7 @@ namespace AST.Presentation {
         private void SetSingleActionDetails() {
             this.Title.Text = "Execute Single Action";
             this.TimesNumericUpDown.Enabled = false;
-            this.EditActionButton.Enabled = false;
+            this.SettingsButton.Enabled = false;
             System.Windows.Forms.TreeNode actionNode = new System.Windows.Forms.TreeNode(this.m_abstractAction.Name);
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] { actionNode });
         }
@@ -49,44 +49,30 @@ namespace AST.Presentation {
         private void SetTSCDetails() {
             this.Title.Text = "Execute Test Scenario";
             this.TimesNumericUpDown.Enabled = false;
-            this.EditActionButton.Enabled = false;
+            this.SettingsButton.Enabled = false;
         }
 
         private void SetTPDetails() {
             this.Title.Text = "Execute Test Plan";
-            this.EditActionButton.Enabled = false;
+            this.SettingsButton.Enabled = false;
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e) {
             //Only for Action type by Hight and m_abstractAction type
-            this.EditActionButton.Enabled = true;
+            this.SettingsButton.Enabled = true;
             this.DescriptionText.Text = this.m_abstractAction.Description;
         }
 
         private void EditActionButton_Click(object sender, EventArgs e) {
             //this.EditActionButton.Enabled = false;
-            EditActionDialog ea = new EditActionDialog((Action)this.m_abstractAction);
+            SettingsDialog ea = new SettingsDialog((Action)this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.ACTION);
             if (ea.ShowDialog() == DialogResult.OK) {}
         }
 
-        private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
-            if (this.DelayCheckBox.Checked)
-                this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
-        }
-
-        private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
-            if (this.DelayCheckBox.Checked) this.m_abstractAction.Delay = (int)this.DelayNumericUpDown.Value;
-            else this.m_abstractAction.Delay = 0;
-        }
-
-        private void DurationNumericUpDown_ValueChanged(object sender, EventArgs e) {
-            if ((this.DurationCheckBox.Checked)&&(this.m_type == AbstractAction.AbstractActionTypeEnum.ACTION))
-                ((Action)this.m_abstractAction).Duration = (int)this.DurationNumericUpDown.Value;
-        }
-
-        private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
-            if ((this.DurationCheckBox.Checked) && (this.m_type == AbstractAction.AbstractActionTypeEnum.ACTION)) ((Action)this.m_abstractAction).Duration = (int)this.DelayNumericUpDown.Value;
-            else ((Action)this.m_abstractAction).Duration = 0;
+        private void EditESButton_Click(object sender, EventArgs e) {
+            //this.EditESButton.Enabled = false;
+            EditActionESDialog ea = new EditActionESDialog(this.m_abstractAction);
+            if (ea.ShowDialog() == DialogResult.OK) { }
         }
 
         private void ExecuteButton_Click(object sender, EventArgs e) {
