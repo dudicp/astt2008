@@ -34,7 +34,7 @@ namespace AST.Presentation {
             if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
                 TSCDetailsBox.Text = "TP Details";
                 ActionsBox.Text = "TSC's";
-                TSCNameLabel.Text = "Plane Name:";
+                TSCNameLabel.Text = "Plan Name:";
                 ActionNameLabel.Text = "TSC Name:";
                 SelectedActionsLabel.Text = "Selected TSC's:";
             }
