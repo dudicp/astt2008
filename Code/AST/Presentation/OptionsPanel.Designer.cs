@@ -284,9 +284,9 @@ namespace AST.Presentation {
             this.DBConnectionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.DBConnectionLabel.Location = new System.Drawing.Point(8, 49);
             this.DBConnectionLabel.Name = "DBConnectionLabel";
-            this.DBConnectionLabel.Size = new System.Drawing.Size(159, 15);
+            this.DBConnectionLabel.Size = new System.Drawing.Size(93, 15);
             this.DBConnectionLabel.TabIndex = 31;
-            this.DBConnectionLabel.Text = "Database Connection String:";
+            this.DBConnectionLabel.Text = "Database Name:";
             // 
             // OptionsPanel
             // 
