@@ -55,7 +55,7 @@
     <Compile Include="Domain\TSC.cs" />
     <Compile Include="Management\ASTManager.cs" />
     <Compile Include="Management\ASTOutputListener.cs" />
-    <Compile Include="Management\ConfigurationReader.cs" />
+    <Compile Include="Management\ConfigurationManager.cs" />
     <Compile Include="Management\Executer.cs" />
     <Compile Include="Management\ExecutionManager.cs" />
     <Compile Include="Management\IServiceProvider.cs" />
@@ -129,6 +129,12 @@
     <Compile Include="Presentation\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentation\OptionsPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\OptionsPanel.Designer.cs">
+      <DependentUpon>OptionsPanel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -199,6 +205,10 @@
     <EmbeddedResource Include="Presentation\MainForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\OptionsPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OptionsPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\SettingsDialog.resx">
       <SubType>Designer</SubType>

@@ -23,6 +23,8 @@ namespace AST.Presentation{
 
             ASTManager.GetInstance().AddOutputListener(this);
 
+            ASTManager.GetInstance().Init();
+
         }
 
         private void AboutMenuItem_Click(object sender, EventArgs e){
@@ -64,9 +66,6 @@ namespace AST.Presentation{
         }
 
         private void ExitMenuItem_Click(object sender, FormClosedEventArgs e) {
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
-
             ASTManager.GetInstance().Exit();
         }
 
@@ -176,6 +175,14 @@ namespace AST.Presentation{
 
                 ASTManager.GetInstance().DeleteAbstractAction(name, type);
             }
+        }
+
+        private void SettingsToolStripMenuItem_Click(object sender, EventArgs e) {
+            this.astPanel.Dispose();
+            this.astPanel = new AST.Presentation.OptionsPanel();
+            this.SuspendLayout();
+            this.Controls.Add(this.astPanel);
+            this.ResumeLayout(false);
         }
 
     }
