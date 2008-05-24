@@ -75,6 +75,7 @@ namespace AST.Presentation {
             // 
             this.OSTypeText.AutoSize = true;
             this.OSTypeText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OSTypeText.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.OSTypeText.Location = new System.Drawing.Point(301, 97);
             this.OSTypeText.Name = "OSTypeText";
             this.OSTypeText.Size = new System.Drawing.Size(0, 15);
@@ -84,6 +85,7 @@ namespace AST.Presentation {
             // 
             this.UsernameText.AutoSize = true;
             this.UsernameText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.UsernameText.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.UsernameText.Location = new System.Drawing.Point(312, 77);
             this.UsernameText.Name = "UsernameText";
             this.UsernameText.Size = new System.Drawing.Size(0, 15);
@@ -93,6 +95,7 @@ namespace AST.Presentation {
             // 
             this.IPText.AutoSize = true;
             this.IPText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IPText.ForeColor = System.Drawing.SystemColors.HotTrack;
             this.IPText.Location = new System.Drawing.Point(266, 57);
             this.IPText.Name = "IPText";
             this.IPText.Size = new System.Drawing.Size(0, 15);

@@ -75,6 +75,7 @@
       <DependentUpon>ASTPanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Domain\TP.cs" />
+    <Compile Include="Presentation\ASTNode.cs" />
     <Compile Include="Presentation\CreateAdditionalActionPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>

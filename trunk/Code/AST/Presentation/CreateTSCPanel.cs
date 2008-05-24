@@ -15,7 +15,6 @@ namespace AST.Presentation {
         private AbstractAction m_abstractAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
         private Hashtable m_actions;
-        private List<AbstractAction> m_selectedActions;
 
         public CreateTSCPanel(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             m_abstractAction = a;
@@ -76,31 +75,34 @@ namespace AST.Presentation {
         private void Init() {
 
             this.ActionsListBox.Items.Clear();
-            this.SelectedActionsListBox.Items.Clear();
+            this.SelectedTreeView.Nodes.Clear();
 
-            this.m_selectedActions = new List<AbstractAction>();
-
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                this.m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
-                List<Action> tmpList = ((TSC)this.m_abstractAction).GetActions();
-                foreach (Action a in tmpList)
-                    this.m_selectedActions.Add(a);
-            }
-            else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
-                this.m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
-                List<TSC> tmpList = ((TP)this.m_abstractAction).GetTSCs();
-                foreach (TSC a in tmpList)
-                    this.m_selectedActions.Add(a);
-            }
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
+            else m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
 
             //Filling the unselected abstract actions:
             ICollection names = this.m_actions.Keys;
             foreach (String name in names)
                 this.ActionsListBox.Items.Add(name);
 
-            //Filling the selected abstract actions:
-            foreach (AbstractAction a in this.m_selectedActions)
-                this.SelectedActionsListBox.Items.Add(a.Name);
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+                List<Action> actions = ((TSC)m_abstractAction).GetActions();
+
+                //Filling the selected abstract actions:
+                foreach (Action a in actions) {
+                    ASTNode node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION); // TSC contains only actions.
+                    this.SelectedTreeView.Nodes.Add(node);
+                }
+            }
+            else {
+                List<TSC> TSCs = ((TP)m_abstractAction).GetTSCs();
+
+                //Filling the selected abstract actions:
+                foreach (TSC a in TSCs) {
+                    ASTNode node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.TSC); // TP contains only TSC's.
+                    this.SelectedTreeView.Nodes.Add(node);
+                }
+            }
         }
 
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -110,17 +112,17 @@ namespace AST.Presentation {
             }
         }
 
-        private void SelectedActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+        private void SelectedTreeView_AfterSelect(object sender, TreeViewEventArgs e) {
             this.UnselectActionButton.Enabled = false;
             this.SettingsButton.Enabled = false;
-            if ((this.SelectedActionsListBox.SelectedIndex < 0) || (this.SelectedActionsListBox.SelectedIndex >= this.m_selectedActions.Count)) return;
-            if (this.SelectedActionsListBox.SelectedIndex > 0) this.MoveUpActionButton.Enabled = true;
+            if (this.SelectedTreeView.SelectedNode == null) return;
+            if (SelectedTreeView.Nodes.IndexOf(SelectedTreeView.SelectedNode) > 0) this.MoveUpActionButton.Enabled = true;
             else this.MoveUpActionButton.Enabled = false;
-            if (this.SelectedActionsListBox.SelectedIndex < (this.m_selectedActions.Count - 1)) this.MoveDownActionButton.Enabled = true;
+            if (SelectedTreeView.Nodes.IndexOf(SelectedTreeView.SelectedNode) < this.SelectedTreeView.Nodes.Count - 1) this.MoveDownActionButton.Enabled = true;
             else this.MoveDownActionButton.Enabled = false;
             this.UnselectActionButton.Enabled = true;
 
-            this.ActionDescriptionText.Text = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex].Description;
+            this.ActionDescriptionText.Text = ((ASTNode)(this.SelectedTreeView.SelectedNode)).Value.Description;
             this.SettingsButton.Enabled = true;
         }
 
@@ -130,78 +132,77 @@ namespace AST.Presentation {
                 this.SelectActionButton.Enabled = false;
                 return;
             }
-            //T.D. loads fail??
-            Action a = (Action)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
 
-            this.m_selectedActions.Add(a);
-            this.SelectedActionsListBox.Items.Add(a.Name);
+            //T.D. loads fail??
+            AbstractAction a;
+            ASTNode node;
+            if(m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+                a = (Action)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+                node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION); // TSC contains only actions.
+            }
+            else {
+                a = (TSC)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+                node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.TSC); // TP contains only TSC's.
+            }
+
+            this.SelectedTreeView.Nodes.Add(node);
+            this.SettingsButton.Enabled = true;
         }
 
         private void UnselectActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
-            if ((this.SelectedActionsListBox.SelectedIndex < 0) || (this.SelectedActionsListBox.SelectedIndex >= this.m_selectedActions.Count)) {
+            if (this.SelectedTreeView.SelectedNode == null) {
                 this.UnselectActionButton.Enabled = false;
                 return;
             }
 
-            AbstractAction a = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex];
+            this.SelectedTreeView.Nodes.Remove(this.SelectedTreeView.SelectedNode);
 
-            this.SelectedActionsListBox.Items.Remove(a.Name);
-            this.m_selectedActions.Remove(a);
-            if (SelectedActionsListBox.Items.Count == 0)
+            if (SelectedTreeView.Nodes.Count == 0) {
                 this.UnselectActionButton.Enabled = false;
-            if ((this.SelectedActionsListBox.SelectedIndex <= 0) || (this.SelectedActionsListBox.SelectedIndex >= this.m_selectedActions.Count))
+                this.SettingsButton.Enabled = false;
+            }
+            if(SelectedTreeView.Nodes.IndexOf(SelectedTreeView.SelectedNode) == 0)
                 this.MoveUpActionButton.Enabled = false;
-            if ((this.SelectedActionsListBox.SelectedIndex < 0) || (this.SelectedActionsListBox.SelectedIndex >= (this.m_selectedActions.Count - 1)))
+            if (SelectedTreeView.Nodes.IndexOf(SelectedTreeView.SelectedNode) == SelectedTreeView.Nodes.Count -1)
                 this.MoveDownActionButton.Enabled = false;
         }
 
         private void MoveUpActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
-            if ((this.SelectedActionsListBox.SelectedIndex <= 0) || (this.SelectedActionsListBox.SelectedIndex >= this.m_selectedActions.Count))
-                return;
+            if (this.SelectedTreeView.SelectedNode == null) return;
 
-            //Changing the list box view order
-            String tmp = (String)this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex];
-            this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex] = this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex - 1];
-            this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex - 1] = tmp;
-            if ((this.SelectedActionsListBox.SelectedIndex <= 0) || (this.SelectedActionsListBox.SelectedIndex >= this.m_selectedActions.Count)) this.MoveUpActionButton.Enabled = false;
+            //Changing the tree view order
+            ASTNode upperNode = ((ASTNode)(this.SelectedTreeView.SelectedNode));
+            int index = this.SelectedTreeView.Nodes.IndexOf(upperNode);
+            ASTNode lowerNode = ((ASTNode)this.SelectedTreeView.Nodes[index -1]);
 
-            //Changing the real container order
-            AbstractAction atmp = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex];
-            this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex] = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex - 1];
-            this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex - 1] = atmp;
+            this.SelectedTreeView.Nodes.RemoveAt(index);
+            this.SelectedTreeView.Nodes.RemoveAt(index-1);
+            this.SelectedTreeView.Nodes.Insert(index - 1, lowerNode);
+            this.SelectedTreeView.Nodes.Insert(index - 1, upperNode);
+
+            if (this.SelectedTreeView.Nodes.IndexOf(this.SelectedTreeView.SelectedNode) == 0) this.MoveUpActionButton.Enabled = false;
         }
 
         private void MoveDownActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
-            if ((this.SelectedActionsListBox.SelectedIndex < 0) || (this.SelectedActionsListBox.SelectedIndex >= (this.m_selectedActions.Count - 1)))
-                return;
+            if (this.SelectedTreeView.SelectedNode == null) return;
 
-            //Changing the list box view order
-            String tmp = (String)this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex];
-            this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex] = this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex + 1];
-            this.SelectedActionsListBox.Items[this.SelectedActionsListBox.SelectedIndex + 1] = tmp;
-            if ((this.SelectedActionsListBox.SelectedIndex < 0) || (this.SelectedActionsListBox.SelectedIndex >= (this.m_selectedActions.Count - 1))) this.MoveDownActionButton.Enabled = false;
+            //Changing the tree view order
+            ASTNode lowerNode = ((ASTNode)(this.SelectedTreeView.SelectedNode));
+            int index = this.SelectedTreeView.Nodes.IndexOf(lowerNode);
+            ASTNode upperNode = ((ASTNode)this.SelectedTreeView.Nodes[index + 1]);
 
-            //Changing the real container order
-            AbstractAction atmp = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex];
-            this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex] = this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex + 1];
-            this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex + 1] = atmp;
+            this.SelectedTreeView.Nodes.RemoveAt(index + 1);
+            this.SelectedTreeView.Nodes.RemoveAt(index);
+            this.SelectedTreeView.Nodes.Insert(index, lowerNode);
+            this.SelectedTreeView.Nodes.Insert(index, upperNode);
         }
 
         private void SettingsButton_Click(object sender, EventArgs e) {
             SettingsDialog sd;
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                sd = new SettingsDialog((Action)this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex], AbstractAction.AbstractActionTypeEnum.ACTION);
-            }
-            else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
-                sd = new SettingsDialog((TSC)this.m_selectedActions[this.SelectedActionsListBox.SelectedIndex], AbstractAction.AbstractActionTypeEnum.TSC);
-            }
-            else {
-                //T.D. error??
-                return;
-            }
+            sd = new SettingsDialog(((ASTNode)(this.SelectedTreeView.SelectedNode)).Value, ((ASTNode)(this.SelectedTreeView.SelectedNode)).Type);
 
             if (sd.ShowDialog() == DialogResult.OK) { }
         }
@@ -223,13 +224,17 @@ namespace AST.Presentation {
 
             //Update the abstract action object with actions/tsc's
             if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                foreach (Action a in this.m_selectedActions)
+                foreach (TreeNode node in this.SelectedTreeView.Nodes) {
+                    Action a = ((Action)(((ASTNode)(node)).Value));
                     ((TSC)(this.m_abstractAction)).AddAction(a);
+                }
                 ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TSC);
             }
             else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
-                foreach (TSC tsc in this.m_selectedActions)
+                foreach (TreeNode node in this.SelectedTreeView.Nodes) {
+                    TSC tsc = ((TSC)(((ASTNode)(node)).Value));
                     ((TP)(this.m_abstractAction)).AddTSC(tsc);
+                }
                 ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TP);
             }
 
@@ -247,7 +252,7 @@ namespace AST.Presentation {
                 message += "Creator name\n";
                 res = false;
             }
-            if (this.m_selectedActions.Count == 0) {
+            if (this.SelectedTreeView.Nodes.Count == 0) {
                 if(m_type == AbstractAction.AbstractActionTypeEnum.TP) message += "No Selected Test Scenarios\n";
                 else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) message += "No Selected Actions\n";
                 res = false;
@@ -256,14 +261,15 @@ namespace AST.Presentation {
             // Checks the constrain that each TSC should have at least one test action
             if (this.m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
                 bool hasTest = false;
-                foreach (Action a in this.m_selectedActions) {
+                foreach (TreeNode node in this.SelectedTreeView.Nodes) {
+                    Action a = ((Action)(((ASTNode)(node)).Value));
                     if (a.ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
                         hasTest = true;
                         break;
                     }
                 }
                 if (!hasTest) {
-                    message += "TSC Missing Test Action\n";
+                    message += "TSC missing test action\n";
                     res = false;
                 }
             }
