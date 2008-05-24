@@ -63,6 +63,13 @@ namespace AST.Presentation{
             ASTManager.GetInstance().Exit();
         }
 
+        private void ExitMenuItem_Click(object sender, FormClosedEventArgs e) {
+            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.No) return;
+
+            ASTManager.GetInstance().Exit();
+        }
+
         private void ExecuteSingleActionMenuItem_Click(object sender, EventArgs e) {
             BrowseDialog bd = new BrowseDialog(AbstractAction.AbstractActionTypeEnum.ACTION);
             if (bd.ShowDialog() == DialogResult.OK) {
