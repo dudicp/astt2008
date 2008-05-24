@@ -29,10 +29,27 @@ namespace AST.Management {
             return m_instance;
         }
 
-        public void Init(String connectionString) {
-            SQLHandler sql = new SQLHandler(connectionString);
-            m_databaseManager = new DatabaseManager(sql, new XMLHandler());
-            m_databaseManager.Init();
+        public void Init() {
+            int res = ConfigurationManager.ReadConfiguration(ConfigurationManager.Configuration_Filename);
+            switch (res) {
+                case ConfigurationManager.SUCCESS: 
+                    SQLHandler sql = new SQLHandler(ConfigurationManager.GetDBConnectionString());
+                    m_databaseManager = new DatabaseManager(sql, new XMLHandler());
+                    m_databaseManager.Init();
+                    break;
+                case ConfigurationManager.ERROR_READING:
+                    this.DisplayErrorMessage("Can't access " + ConfigurationManager.Configuration_Filename + " or invliad XML format.");
+                    this.Exit();
+                    break;
+                case ConfigurationManager.ERROR_BAD_FORMAT:
+                    this.DisplayErrorMessage("Configuration file " + ConfigurationManager.Configuration_Filename + " has bad format.");
+                    this.Exit();
+                    break;
+                default: 
+                    this.DisplayErrorMessage("Unexpected error while reading the configuration file.");
+                    this.Exit();
+                    break;
+            }
         }
 
         public void Exit() {
@@ -113,6 +130,16 @@ namespace AST.Management {
         public void DisplayWelcomeScreen() {
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayWelcomeScreen();
+        }
+
+        private void DisplayErrorMessage(String message) {
+            foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayErrorMessage(message);
+        }
+
+        private void DisplayInfoMessage(String message) {
+            foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayInfoMessage(message);
         }
 
         /*public ArrayList GetComputerList(){

@@ -15,10 +15,6 @@ namespace AST{
         static void Main(){
             //Creating the ASTManager and initiliaze it.
 
-            ConfigurationReader.ReadConfiguration(ConfigurationReader.Configuration_Filename);
-
-            ASTManager.GetInstance().Init(ConfigurationReader.GetDBConnectionString());
-
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new MainForm());
