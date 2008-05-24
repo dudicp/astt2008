@@ -25,7 +25,11 @@ namespace AST.Management
         {
             String PSToolsPath = ConfigurationManager.GetPSToolsFullPath();
             String str = PSToolsPath + "\\psexec.exe" ;
-            String args = " \\\\" + ip.ToString() + " -i "+ cmd;
+            String args;
+            if(username.Equals(""))
+                args = " \\\\" + ip.ToString() +  " -i "+ cmd;
+            else
+                args = " \\\\" + ip.ToString() + " -u " + username + " -p " + password + " -i "+ cmd;
             Console.WriteLine(str + args); 
             Process.Start(str, args);
         }
