@@ -34,7 +34,7 @@ namespace AST.Presentation {
         }
 
         private void InitConfiguration() {
-            this.DBConnectionText.Text = ConfigurationManager.GetDBConnectionString();
+            this.DBConnectionText.Text = ConfigurationManager.GetDatabaseName();
             this.PSToolsPathText.Text = ConfigurationManager.GetPSToolsFullPath();
             this.MaxThreadPoolText.Value = ConfigurationManager.GetMaxThreadPoolSize();
         }

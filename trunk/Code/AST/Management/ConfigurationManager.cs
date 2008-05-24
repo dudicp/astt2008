@@ -9,6 +9,7 @@ namespace AST.Management {
 
         public const String Configuration_Filename = "config.xml";
         private static String m_databaseConnectionStr = "";
+        private static String m_databaseName = "";
         private static String m_PSToolsFullPath = "";
         private static int m_threadPoolSize = 0;
 
@@ -25,6 +26,7 @@ namespace AST.Management {
                 // Initilize to default values when file doesn't exist.
 
                 m_databaseConnectionStr = "Server=" + System.Environment.MachineName + "\\SQLEXPRESS;Database=ASTDB;Integrated Security=True;";
+                m_databaseName = System.Environment.MachineName + "\\SQLEXPRESS";
                 m_threadPoolSize = 10;
                 m_PSToolsFullPath = ".//";
 
@@ -40,7 +42,10 @@ namespace AST.Management {
 
                 //Reading Database connection string
                 XmlNodeList list = xmlDoc.GetElementsByTagName("DatabaseConnectionString");
-                if (list.Count > 0) m_databaseConnectionStr = list[0].InnerText;
+                if (list.Count > 0) {
+                    m_databaseConnectionStr = list[0].InnerText;
+                    m_databaseName = ResolveDatabaseName(m_databaseConnectionStr);
+                }
                 else return ERROR_BAD_FORMAT;
 
                 //Reading max thread pool size
@@ -63,9 +68,12 @@ namespace AST.Management {
             }
         }
 
-        public static int WriteConfiguration(String DBConnectionString, String PSToolsPath, int maxTheardPoolSize) {
+        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize) {
 
             try {
+
+                String DBConnectionString = "Server=" + databaseName + ";Database=ASTDB;Integrated Security=True;";
+
                 XmlTextWriter textWriter = new XmlTextWriter(Configuration_Filename, null);
                 textWriter.WriteStartDocument();
 
@@ -92,6 +100,7 @@ namespace AST.Management {
                 textWriter.Close();
 
                 m_databaseConnectionStr = DBConnectionString;
+                m_databaseName = databaseName;
                 m_PSToolsFullPath = PSToolsPath;
                 m_threadPoolSize = maxTheardPoolSize;
 
@@ -118,12 +127,24 @@ namespace AST.Management {
             return m_databaseConnectionStr;
         }
 
+        public static String GetDatabaseName() {
+            return m_databaseName;
+        }
+
         public static int GetMaxThreadPoolSize() {
             return m_threadPoolSize;
         }
 
         public static String GetPSToolsFullPath() {
             return m_PSToolsFullPath;
+        }
+
+        private static String ResolveDatabaseName(String connectionString) {
+            // Server=CPUNAME\SQLEXPRESS;Database=ASTDB;Integrated Security=True;
+            int startIndex = connectionString.IndexOf("=");
+            int endIndex = connectionString.IndexOf(";");
+            if ((startIndex > 0) && (endIndex > 0)) return connectionString.Substring(startIndex+1, endIndex - startIndex -1);
+            else return connectionString;
         }
 
     }
