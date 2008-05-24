@@ -88,7 +88,7 @@ namespace AST.Presentation
             this.NewTestScenarioMenuItem,
             this.NewTestPlanMenuItem});
             this.FileNewStripMenuItem.Name = "FileNewStripMenuItem";
-            this.FileNewStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileNewStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.FileNewStripMenuItem.Text = "New";
             // 
             // NewAdditionalActionMenuItem
@@ -119,7 +119,7 @@ namespace AST.Presentation
             this.OpenTestScenarioMenuItem,
             this.OpenTestPlanMenuItem});
             this.FileOpenStripMenuItem.Name = "FileOpenStripMenuItem";
-            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.FileOpenStripMenuItem.Text = "Open";
             // 
             // OPenAdditionalActionMenuItem
@@ -150,7 +150,7 @@ namespace AST.Presentation
             this.DeleteTestScenarioMenuItem,
             this.DeleteTestPlanMenuItem});
             this.FileDeleteStripMenuItem.Name = "FileDeleteStripMenuItem";
-            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.FileDeleteStripMenuItem.Text = "Delete";
             // 
             // DeleteAdditionalActionMenuItem
@@ -177,7 +177,7 @@ namespace AST.Presentation
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ExitMenuItem.Size = new System.Drawing.Size(107, 22);
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -283,6 +283,7 @@ namespace AST.Presentation
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "Automatic Software Testing Tool";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ExitMenuItem_Click);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.ResumeLayout(false);
