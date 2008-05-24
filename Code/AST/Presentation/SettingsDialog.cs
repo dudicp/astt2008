@@ -44,8 +44,17 @@ namespace AST.Presentation {
 
         private void InitEditParametersTab() {
 
+            this.Title1.Text = "Edit Action - " + this.m_action.Name;
+
             this.m_parameters = new List<Parameter>();
-            this.m_selectedParameters = ((Action)this.m_action).GetParameters();
+            this.m_selectedParameters = new List<Parameter>();
+
+            //Filling the selected parameters:
+            foreach (Parameter p in ((Action)this.m_action).GetParameters()){
+                this.m_selectedParameters.Add(p);
+                this.SelectedParametersListBox.Items.Add(p.Name);
+            }
+            
             List<Parameter> allParameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
 
             //Filling the unselected parameters:
@@ -54,10 +63,7 @@ namespace AST.Presentation {
                     this.m_parameters.Add(p);
                     this.ParameterListBox.Items.Add(p.Name);
                 }
-            }
-            //Filling the selected parameters:
-            foreach (Parameter p in this.m_selectedParameters)
-                this.SelectedParametersListBox.Items.Add(p.Name);
+            }   
         }
 
         private void ParameterListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -163,6 +169,9 @@ namespace AST.Presentation {
 ////////////////////////////////////////
 
         private void InitEditEndStationTab() {
+
+            this.Title2.Text = "Edit End-Stations - " + this.m_action.Name;
+
             this.m_endStations = new List<EndStation>();
             this.m_selectedEndStations = new List<EndStation>();
             this.EndStationsListBox.Items.Clear();
@@ -324,6 +333,9 @@ namespace AST.Presentation {
 ////////////////////////////////////////
 
         private void InitMiscTab() {
+
+            this.Title3.Text = "Misc - " + this.m_action.Name;
+
             if (this.m_action.Delay != 0) {
                 this.DelayCheckBox.Checked = true;
                 this.DelayNumericUpDown.Value = this.m_action.Delay;
