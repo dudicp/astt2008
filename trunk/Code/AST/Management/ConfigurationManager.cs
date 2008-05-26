@@ -64,6 +64,7 @@ namespace AST.Management {
                 return SUCCESS;
             }catch(System.Xml.XmlException e){
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: can't access " + Configuration_Filename + " or XML bad format.");
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_READING;
             }
         }
@@ -111,14 +112,17 @@ namespace AST.Management {
             }
             catch (System.InvalidOperationException e) {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: failed to write to " + Configuration_Filename);
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_UNEXPECTED;
             }
             catch (System.ArgumentException e) {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: Invalid arguments.");
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_INVALID_ARGUMENTS;
             }
             catch (System.Exception e) {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: failed to save " + Configuration_Filename);
+                System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_WRITING;
             }
         }

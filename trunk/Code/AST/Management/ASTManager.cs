@@ -91,8 +91,8 @@ namespace AST.Management {
             return this.m_databaseManager.LoadReport(reportName);
         }
 
-        public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
-            this.m_databaseManager.Save(a, type);
+        public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew) {
+            this.m_databaseManager.Save(a, type, isNew);
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayInfoMessage(a.Name + " Saved Successfully.");
         }
@@ -101,8 +101,8 @@ namespace AST.Management {
             this.m_databaseManager.SaveResult(res, reportName);
         }
 
-        public void AddEndStation(EndStation es) {
-            this.m_databaseManager.AddEndStation(es);
+        public void AddEndStation(EndStation es, bool isNew) {
+            this.m_databaseManager.AddEndStation(es, isNew);
         }
 
         public void RemoveEndStation(EndStation es) {
@@ -127,6 +127,18 @@ namespace AST.Management {
             this.m_outputListeners.Clear();
         }
 
+        public void AddExecutionManagerOutputListener(ExecutionManagerOutputListener o) {
+            this.m_executionManager.AddOutputListener(o);
+        }
+
+        public void RemoveExecutionManagerOutputListener(ExecutionManagerOutputListener o) {
+            this.m_executionManager.RemoveOutputListener(o);
+        }
+
+        public void RemoveAllExecutionManagerOutputListeners() {
+            this.m_executionManager.RemoveAllOutputListeners();
+        }
+
         public void DisplayWelcomeScreen() {
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayWelcomeScreen();
@@ -146,8 +158,8 @@ namespace AST.Management {
             return m_networkBrowser.getNetworkComputers();
         }*/
 
-        public void Save(Parameter p, Action a) {
-            this.m_databaseManager.Save(p, a.Name);
+        public void Save(Parameter p, Action a, bool isNew) {
+            this.m_databaseManager.Save(p, a.Name, isNew);
         }
 
         public void Delete(Parameter p, Action a) {
