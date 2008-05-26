@@ -16,10 +16,12 @@ namespace AST.Management
         private bool m_isRunning;
         private Action m_action;
         private String m_reportName;
+        private List<ExecutionManagerOutputListener> m_outputListeners;
 
 
         public ExecutionManager(int poolSize)
         {
+            m_outputListeners = new List<ExecutionManagerOutputListener>();
             m_isRunning = true;
             m_executionThread = new Thread(new ThreadStart(ExecuterThreadFunc));
             m_executionThread.Start();
@@ -69,6 +71,17 @@ namespace AST.Management
             //    doneEvents[i] = new ManualResetEvent(false);
             //    Executer executer = new Executer(action,i, doneEvents[i]);
             //    ThreadPool.QueueUserWorkItem(executer.ThreadPoolCallback);
- 
+
+        public void AddOutputListener(ExecutionManagerOutputListener o) {
+            this.m_outputListeners.Add(o);
+        }
+
+        public void RemoveOutputListener(ExecutionManagerOutputListener o) {
+            this.m_outputListeners.Remove(o);
+        }
+
+        public void RemoveAllOutputListeners() {
+            this.m_outputListeners.Clear();
+        }
     }
 }

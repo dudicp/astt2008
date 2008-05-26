@@ -25,7 +25,7 @@ namespace AST.Management
             EndStation endstation = m_action.GetEndStations()[m_endstationIndex].EndStation;
             IServiceProvider provider = ProviderFactory.GetServiceProvider(EndStation.OSTypeEnum.WINDOWS);
             String command = m_action.GenerateCommand(endstation.OSType);
-            provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command);
+            provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
             m_doneEvent.Set();
         }
 

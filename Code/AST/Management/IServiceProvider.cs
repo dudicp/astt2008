@@ -7,7 +7,7 @@ namespace AST.Management
 {
     interface IServiceProvider
     {
-        void ExecuteCmd(IPAddress ip, String username, String password, String cmd);
-        void ExecuteScript(IPAddress ip, String username, String password, String filename);
+        void ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration);
+        void ExecuteScript(IPAddress ip, String username, String password, String filename, int timeout, int duration);
     }
 }
