@@ -69,12 +69,6 @@ namespace AST.Presentation {
             if (ea.ShowDialog() == DialogResult.OK) {}
         }
 
-        private void EditESButton_Click(object sender, EventArgs e) {
-            //this.EditESButton.Enabled = false;
-            EditActionESDialog ea = new EditActionESDialog(this.m_abstractAction);
-            if (ea.ShowDialog() == DialogResult.OK) { }
-        }
-
         private void ExecuteButton_Click(object sender, EventArgs e) {
 
             String reportName;

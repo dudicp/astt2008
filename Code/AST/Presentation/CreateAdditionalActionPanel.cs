@@ -14,11 +14,15 @@ namespace AST.Presentation{
 
         private Action m_action;
         private List<Parameter> m_parameters;
+        private List<Parameter> m_newParameters;
         private List<Parameter> m_changedParameters;
         private List<Parameter> m_removedParameters;
+        private bool m_isNew;
 
         public CreateAdditionalActionPanel(Action a){
             m_action = a;
+            m_isNew = false;
+            m_newParameters = new List<Parameter>();
             m_changedParameters = new List<Parameter>();
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
@@ -28,6 +32,7 @@ namespace AST.Presentation{
                 SetActionAttributes();
             }
             else {
+                m_isNew = true;
                 this.m_parameters = new List<Parameter>();
                 this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
                 Title.Text = "Create Additional Action";
@@ -166,7 +171,7 @@ namespace AST.Presentation{
             if (ed.ShowDialog() == DialogResult.OK)
             {
                 this.m_parameters.Add(ed.GetParameter());
-                this.m_changedParameters.Add(ed.GetParameter());//Added to the changed parameters
+                this.m_newParameters.Add(ed.GetParameter());//Added to the changed parameters
                 SetActionParameters(0);
             }
         }
@@ -197,10 +202,13 @@ namespace AST.Presentation{
             else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
 
             this.m_action.Description = this.DescriptionText.Text;
-            ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION);//Save Action Created/Modified
+            ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION, m_isNew);//Save Action Created/Modified
+
+            foreach (Parameter p in this.m_newParameters)
+                ASTManager.GetInstance().Save(p, this.m_action, true);//Save New Parameters Created
 
             foreach (Parameter p in this.m_changedParameters)
-                ASTManager.GetInstance().Save(p,this.m_action);//Save Parameters Created/Modified
+                ASTManager.GetInstance().Save(p,this.m_action, false);//Save Parameters Modified
 
             foreach (Parameter p in this.m_removedParameters)
                 ASTManager.GetInstance().Delete(p, this.m_action);//Delete Parameters Removed

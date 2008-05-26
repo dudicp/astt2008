@@ -278,7 +278,7 @@ namespace AST.Presentation {
             if (esd.ShowDialog() == DialogResult.OK) {
                 EndStation es = esd.GetEndStation();
                 this.m_endStations.Add(es);
-                ASTManager.GetInstance().AddEndStation(es);
+                ASTManager.GetInstance().AddEndStation(es, true);
                 this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
             }
         }
@@ -287,7 +287,7 @@ namespace AST.Presentation {
             EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
             if (esd.ShowDialog() == DialogResult.OK) {
                 EndStation es = esd.GetEndStation();
-                ASTManager.GetInstance().AddEndStation(es);
+                ASTManager.GetInstance().AddEndStation(es, false);
                 InitEditEndStationTab();
             }
         }

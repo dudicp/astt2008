@@ -15,10 +15,12 @@ namespace AST.Presentation {
         private AbstractAction m_abstractAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
         private Hashtable m_actions;
+        private bool m_isNew;
 
         public CreateTSCPanel(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             m_abstractAction = a;
             m_type = type;
+            m_isNew = false;
 
             InitializeComponent();
 
@@ -57,6 +59,8 @@ namespace AST.Presentation {
                     this.m_abstractAction = new TSC("", "", 0, "", DateTime.Now);
                     Title.Text = "Create Test Scenario";
                 }
+
+                m_isNew = true;
             }
 
             //Exist TSC / TP
@@ -228,14 +232,14 @@ namespace AST.Presentation {
                     Action a = ((Action)(((ASTNode)(node)).Value));
                     ((TSC)(this.m_abstractAction)).AddAction(a);
                 }
-                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TSC);
+                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TSC, m_isNew);
             }
             else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
                 foreach (TreeNode node in this.SelectedTreeView.Nodes) {
                     TSC tsc = ((TSC)(((ASTNode)(node)).Value));
                     ((TP)(this.m_abstractAction)).AddTSC(tsc);
                 }
-                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TP);
+                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TP, m_isNew);
             }
 
             ASTManager.GetInstance().DisplayWelcomeScreen();
