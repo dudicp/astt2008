@@ -22,6 +22,10 @@ namespace AST.Database{
             this.m_connectionString = connectionString;
         }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Connection Method
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
         private SqlConnection Connect(){
             try {
                 Debug.WriteLine("Connecting to: " + this.m_connectionString);
@@ -29,124 +33,292 @@ namespace AST.Database{
             }
             catch (Exception e){
                 Debug.WriteLine("SQLHandler::Connect::Connecting to: " + this.m_connectionString + " Failed!");
-                //Throw ConnectionException
-                return null;
+                throw new ConnectionFailedException("Connection to database: " + this.m_connectionString + " failed.", e);
             }
         }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Load Methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
                 case AbstractAction.AbstractActionTypeEnum.ACTION: return LoadAction(name);
                 case AbstractAction.AbstractActionTypeEnum.TSC: return LoadTSC(name);
-                case AbstractAction.AbstractActionTypeEnum.TP: return LoadTP(name);
-                default:{
-                    Debug.WriteLine("SQLHandler::Load::Invalid AbstractAction Type: " + type.ToString());
-                    return null;
-                    //throw
-                    }
+                default : return LoadTP(name);
             }
         }
+
+        private Action LoadAction(String name) {
+
+            ///////////////////
+            //1. Load Action //
+            ///////////////////
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetAction", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadAction:: Loading action: " + name + " failed.");
+                throw new QueryFailedException("Loading action: " + name + " failed.", e);
+            }
+            if (!dr.Read()) throw new EmptyQueryResultException("Action: " + name + " doesn't exist.");
+
+            //Getting the description
+            String description = (String)dr.GetValue(1);
+
+            //Getting the action type
+            Action.ActionTypeEnum type;
+            try {
+                type = this.GetActionType((String)dr.GetValue(2));
+            }
+            catch (InvalidTypeException e) { throw e; }
+
+            //Getting the timeout
+            int timeout = (int)dr.GetValue(3);
+
+            //Getting the creator name
+            String creatorName = (String)dr.GetValue(4);
+
+            //Getting the creation time
+            DateTime creationTime = (DateTime)dr.GetValue(5);
+
+            Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, 0);
+
+            ////////////////////
+            //2. Set Contents //
+            ////////////////////
+            dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetActionContents", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadAction:: Loading action contents of: " + name + " failed.");
+                throw new QueryFailedException("Loading action contents of: " + name + " failed.", e);
+            }
+
+            while (dr.Read()) {
+
+                //Getting the content OSType
+                EndStation.OSTypeEnum OSType = this.GetOSType((String)dr.GetValue(1));
+
+                //Getting the content
+                String actionContent = (String)dr.GetValue(2);
+
+                //Getting the validity String
+                String validityString = (String)dr.GetValue(3);
+
+                a.AddContent(OSType, actionContent);
+                a.AddValidityString(OSType, validityString);
+            }
+
+            return a;
+        }
+
+        private TSC LoadTSC(String name) {
+            return null;
+        }
+
+        private TP LoadTP(String name) {
+            return null;
+        }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Save Methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public void Save(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
-                case AbstractAction.AbstractActionTypeEnum.ACTION:{
-                        this.Save((Action)action);
-                        break;
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TSC:{
-                        this.Save((TSC)action);
-                        break;
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TP:{
-                        this.Save((TP)action);
-                        break;
-                    }
-                default:{
-                    Debug.WriteLine("SQLHandler::Load::Invalid AbstractAction Type: " + type.ToString());
-                    //throw
+                case AbstractAction.AbstractActionTypeEnum.ACTION:
+                    this.Save((Action)action);
                     break;
-                    }
+                case AbstractAction.AbstractActionTypeEnum.TSC:
+                    this.Save((TSC)action);
+                    break;
+                default: 
+                    this.Save((TP)action);
+                    break;
             }
         }
+
+        public void Save(EndStation es) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_insertEndStation", es.ID, es.Name, es.IP.ToString(), es.MAC.ToString(), es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password);
+            }
+            catch (ConnectionFailedException e) {
+                throw e;
+            }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Save(EndStation):: Saving End-Station " + es.Name + "(" + es.ID + ") failed.");
+                throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+            }
+        }
+
+        private void Save(Action action) {
+
+            // 1. Saving Action
+            try {
+                String storedProcedureName;
+                if (this.IsExist(action, AbstractAction.AbstractActionTypeEnum.ACTION)) storedProcedureName = "sp_UpdateAction";
+                else storedProcedureName = "sp_InsertAction";
+
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Save(Action):: Saving action: " + action.Name + " failed.");
+                throw new QueryFailedException("Saving action: " + action.Name + " failed.", e);
+            }
+
+            // 2. Saving Action Content
+            ICollection keys = action.GetAllContents().Keys;
+            foreach (EndStation.OSTypeEnum key in keys) {
+                try {
+                    SqlConnection connection = this.Connect();
+                    String validityString;
+                    if (action.GetValidityString(key) != null) validityString = action.GetValidityString(key);
+                    else validityString = "";
+
+                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertActionContent", action.Name, key, action.GetContent(key), validityString);
+                }
+                catch (ConnectionFailedException e) { throw e; }
+                catch (Exception e) {
+                    Debug.WriteLine("SQLHandler::Save(Action):: Saving action content: " + key.ToString() + " failed.");
+                    throw new QueryFailedException("Saving action content: " + key.ToString() + " failed.", e);
+                }
+            }
+        }
+
+        private void Save(TSC tsc) { }
+
+        private void Save(TP tp) { }
+
+        public void Save(Parameter p, String actionName) {
+            // 1. Saving Parameter
+            SqlConnection connection;
+            try {
+                String storedProcedureName;
+                if (this.IsExist(p, actionName)) storedProcedureName = "sp_UpdateParameter";
+                else storedProcedureName = "sp_InsertParameter";
+
+                connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Save(Parameter):: Saving paramter: " + p.Name + " failed.");
+                throw new QueryFailedException("Saving paramter: " + p.Name + " failed.", e);
+            }
+
+            // 2. Saving Parameter Value
+            ICollection keys = p.GetAllValues().Keys;
+            foreach (EndStation.OSTypeEnum key in keys) {
+                try {
+                    connection = this.Connect();
+                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterContent", actionName, p.Name, key, p.GetValue(key));
+                }
+                catch (ConnectionFailedException e) { throw e; }
+                catch (Exception e) {
+                    Debug.WriteLine("SQLHandler::Save(Parameter):: Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.");
+                    throw new QueryFailedException("Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.", e);
+                }
+            }
+        }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Delete Methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public void Delete(String name, AbstractAction.AbstractActionTypeEnum type) {
             switch (type) {
-                case AbstractAction.AbstractActionTypeEnum.ACTION: {
-                        DeleteAction(name);
-                        break;
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TSC: {
-                        DeleteTSC(name);
-                        break;
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TP: {
-                        DeleteTP(name);
-                        break;
-                    }
-                default: {
-                        Debug.WriteLine("SQLHandler::Delete::Invalid AbstractAction Type: " + type.ToString());
-                        break;
-                        //throw
-                    }
+                case AbstractAction.AbstractActionTypeEnum.ACTION:
+                    DeleteAction(name);
+                    break;
+                case AbstractAction.AbstractActionTypeEnum.TSC:
+                    DeleteTSC(name);
+                    break;
+                default: 
+                    DeleteTP(name);
+                    break;
             }
         }
+
+        public void Delete(EndStation es) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteEndStation", es.ID);
+            }
+            catch (ConnectionFailedException e) {
+                throw e;
+            }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Delete(EndStation):: Deleting End-Station " + es.Name + "(" + es.ID + ") failed.");
+                throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+            }
+        }
+
+        private void DeleteAction(String name) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteAction", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::DeleteAction:: Deleting action: " + name + " failed.");
+                throw new QueryFailedException("Deleting action: " + name + " failed.", e);
+            }
+        }
+
+        private void DeleteTSC(String name) { }
+
+        private void DeleteTP(String name) { }
+
+        public void Delete(Parameter p, String actionName) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteParameter", actionName, p.Name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Delete(Parameter):: Deleting parameter: " + p.Name + " failed.");
+                throw new QueryFailedException("Deleting parameter: " + p.Name + " failed.", e);
+            }
+        }
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      Get Methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
-                case AbstractAction.AbstractActionTypeEnum.ACTION:{
-                        return GetActionsInfo();
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TSC:{
-                        return GetTSCsInfo();
-                    }
-                case AbstractAction.AbstractActionTypeEnum.TP:{
-                        return GetTPsInfo();
-                    }
-                default:{
-                    Debug.WriteLine("Invalid AbstractAction Type: " + type.ToString());
-                    return null;
-                    //throw
-                    }
-            }
-            
+                case AbstractAction.AbstractActionTypeEnum.ACTION: return GetActionsInfo();
+                case AbstractAction.AbstractActionTypeEnum.TSC: return GetTSCsInfo();
+                default: return GetTPsInfo();
+            }            
         }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//      End-Stations Methods
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        public void Save(EndStation es) {
-            SqlConnection connection = this.Connect();
-            try {
-                SqlHelper.ExecuteNonQuery(connection, "sp_insertEndStation", es.ID, es.Name, es.IP.ToString(), es.MAC.ToString(), es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password);
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(EndStation):: Query Failed!");
-                //Throw ConnectionException
-            }
-        }
-
-        public void Delete(EndStation es){
-        }
-
-        public Hashtable GetAllEndStations(){
-
-            Debug.WriteLine("Loading End-Stations:");
-
-            SqlConnection connection = this.Connect();
-
-            Hashtable res = new Hashtable();
-
+        public Hashtable GetAllEndStations() {
             SqlDataReader dr = null;
-            try{
+            Hashtable res = new Hashtable();
+            try {
+                SqlConnection connection = this.Connect();
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetAllEndStations", null);
             }
-            catch (Exception e){
-                Debug.WriteLine("GetAllEndStations Failed!");
-                //Throw ConnectionException
+            catch (ConnectionFailedException e) {
+                throw e;
+            }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetAllEndStations:: Get all end-stations failed.");
+                throw new QueryFailedException("Get all end-stations failed.", e);
             }
 
-            while (dr.Read()){
+            while (dr.Read()) {
 
                 //Getting End-Station ID
                 int id = (int)dr.GetValue(0);
@@ -156,11 +328,12 @@ namespace AST.Database{
 
                 //Getting End-Station IP Address
                 IPAddress parsed;
-                if (!IPAddress.TryParse((String)dr.GetValue(2), out parsed)){
+                IPAddress ip;
+                if (!IPAddress.TryParse((String)dr.GetValue(2), out parsed)) {
                     Debug.WriteLine("Invalid IP Address for EndStation " + id);
-                    //throw
+                    continue; // if one end-station has invalid ip address we ignore it and continue loading the next end-stations.
                 }
-                IPAddress ip = IPAddress.Parse((String)dr.GetValue(2));
+                else ip = IPAddress.Parse((String)dr.GetValue(2));
 
                 //Getting End-Station MAC Address
                 String mac = (String)dr.GetValue(3);
@@ -186,195 +359,49 @@ namespace AST.Database{
             return res;
         }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//      Get Information Methods
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private Hashtable GetActionsInfo(){
-
-            SqlConnection connection = this.Connect(); //Creating Connection
-
+        private Hashtable GetActionsInfo() {
             Hashtable info = new Hashtable();
-
             SqlDataReader dr = null;
-            try{
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetActionsInfo", null);
             }
-            catch (Exception e){
-                Debug.WriteLine("SQLHandler::GetActionsInfo:: Query Failed!");
-                //Throw ConnectionException
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetActionsInfo:: Load information of all actions failed.");
+                throw new QueryFailedException("Load information of all actions failed.", e);
             }
-
-            while (dr.Read()){
+            while (dr.Read()) {
                 String name = (String)dr.GetValue(0);
                 String description = (String)dr.GetValue(1);
 
                 info.Add(name, description);
             }
-
             return info;
         }
 
-        private Hashtable GetTSCsInfo(){
+        private Hashtable GetTSCsInfo() {
             return new Hashtable();
         }
 
-        private Hashtable GetTPsInfo(){
+        private Hashtable GetTPsInfo() {
             return new Hashtable();
         }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//      Load Abstract Actions
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private Action LoadAction(String name){
-            //return (Action)Builder.GetInstance().GetAction(name, AbstractAction.AbstractActionTypeEnum.ACTION);
-            
-            ///////////////////
-            //1. Load Action //
-            ///////////////////
-            SqlConnection connection = this.Connect(); //Creating Connection
-
-            SqlDataReader dr = null;
-            try{
-                dr = SqlHelper.ExecuteReader(connection, "sp_GetAction", name);
-            }
-            catch (Exception e){
-                Debug.WriteLine("SQLHandler::LoadAction:: Query Failed!");
-                //Throw ConnectionException
-            }
-
-            if(!dr.Read()); //throw no result for query
-
-            //Getting the description
-            String description = (String)dr.GetValue(1);
-
-            //Getting the action type
-            Action.ActionTypeEnum type = this.GetActionType((String)dr.GetValue(2));
-
-            //Getting the timeout
-            int timeout = (int)dr.GetValue(3);
-
-            //Getting the creator name
-            String creatorName = (String)dr.GetValue(4);
-
-            //Getting the creation time
-            DateTime creationTime = (DateTime)dr.GetValue(5);
-
-            Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, 0);
-
-            ////////////////////
-            //2. Set Contents //
-            ////////////////////
-            connection = this.Connect(); //Creating Connection
-
-            dr = null;
-            try{
-                dr = SqlHelper.ExecuteReader(connection, "sp_GetActionContents", name);
-            }
-            catch (Exception e){
-                Debug.WriteLine("SQLHandler::LoadAction:: Query Failed!");
-                //Throw ConnectionException
-            }
-
-            while (dr.Read()){
-
-                //Getting the content OSType
-                EndStation.OSTypeEnum OSType = this.GetOSType((String)dr.GetValue(1));
-
-                //Getting the content
-                String actionContent = (String)dr.GetValue(2);
-
-                //Getting the validity String
-                String validityString = (String)dr.GetValue(3);
-
-                a.AddContent(OSType, actionContent);
-                a.AddValidityString(OSType, validityString);
-            }
-
-            return a;
-        }
-
-        private TSC LoadTSC(String name){
-            return null;
-        }
-
-        private TP LoadTP(String name){
-            return null;
-        }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//      Save Abstract Actions
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        private void Save(Action action){
-
-            // 1. Saving Action
-            SqlConnection connection = this.Connect();
-            try {
-                SqlHelper.ExecuteNonQuery(connection, "sp_InsertAction", action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime);
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(Action):: Query Failed!");
-                //Throw ConnectionException
-            }
-
-            // 2. Saving Action Content
-            ICollection keys = action.GetAllContents().Keys;
-            foreach (EndStation.OSTypeEnum key in keys) {
-                connection = this.Connect();
-                try {
-                    String validityString;
-                    if (action.GetValidityString(key) != null) validityString = action.GetValidityString(key);
-                    else validityString = "";
-
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertActionContent", action.Name, key, action.GetContent(key), validityString);
-                }
-                catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::Save(Action):: Query Failed!");
-                    //Throw ConnectionException
-                }
-            }
-        }
-
-        private void Save(TSC tsc) { }
-
-        private void Save(TP tp) { }
-
-        private void DeleteAction(String name) {
-            SqlConnection connection = this.Connect();
-            try {
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteAction", name);
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::DeleteAction:: Query Failed!");
-                //Throw ConnectionException
-            }
-        }
-
-        private void DeleteTSC(String name) { }
-
-        private void DeleteTP(String name) { }
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////
-//      Parameters Methods
-///////////////////////////////////////////////////////////////////////////////////////////////////////
 
         public List<Parameter> GetParameters(String actionName) {
             List<Parameter> res = new List<Parameter>();
 
-            //////////////////////
-            //  Load Parameter  //
-            //////////////////////
-            SqlConnection connection = this.Connect(); //Creating Connection
-
+            //  1. Load Parameter
+            SqlConnection connection;
             SqlDataReader dr = null;
             try {
+                connection = this.Connect(); //Creating Connection
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetActionParameters", actionName);
             }
+            catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::GetParameters:: Query Failed!");
-                //Throw ConnectionException
+                Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameters of action: " + actionName + " failed.", e);
             }
 
             while (dr.Read()) {
@@ -392,18 +419,16 @@ namespace AST.Database{
 
                 Parameter p = new Parameter(parameterName, description, type, validityExp);
 
-                ///////////////////////////
-                //Load Parameter Content //
-                ///////////////////////////
-                connection = this.Connect(); //Creating Connection
-
+                // 2.Load Parameter Content
                 SqlDataReader contentDR = null;
                 try {
+                    connection = this.Connect(); //Creating Connection
                     contentDR = SqlHelper.ExecuteReader(connection, "sp_GetParameterContents", actionName, parameterName);
                 }
+                catch (ConnectionFailedException e) { throw e; }
                 catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::GetParameters:: Query Failed!");
-                    //Throw ConnectionException
+                    Debug.WriteLine("SQLHandler::GetParameters:: Loading parameter contents of: " + p.Name + " failed.");
+                    throw new QueryFailedException("Loading parameter contents of: " + p.Name + " failed.", e);
                 }
 
                 while (contentDR.Read()) {
@@ -416,49 +441,71 @@ namespace AST.Database{
 
                     p.AddValue(OSType, value);
                 }
-
                 res.Add(p);
-
             }
-
             return res;
         }
 
-        public void Save(Parameter p, String actionName) {
-            // 1. Saving Parameter
-            SqlConnection connection = this.Connect();
-            try {
-                SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameter", actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp);
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(Parameter):: Query Failed!");
-                //Throw ConnectionException
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//      IsExist Methods
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        public bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
+            String storedProcedureName = "";
+            switch (type) {
+                case AbstractAction.AbstractActionTypeEnum.ACTION:
+                    storedProcedureName = "sp_GetAction";
+                    break;
+                case AbstractAction.AbstractActionTypeEnum.TSC:
+                    storedProcedureName = "sp_GetTSC";
+                    break;
+                default:
+                    storedProcedureName = "sp_GetTP";
+                    break;
             }
 
-            // 2. Saving Parameter Value
-            ICollection keys = p.GetAllValues().Keys;
-            foreach (EndStation.OSTypeEnum key in keys) {
-                connection = this.Connect();
-                try {
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterContent", actionName, p.Name, key, p.GetValue(key));
-                }
-                catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::Save(Action):: Query Failed!");
-                    //Throw ConnectionException
-                }
+            try {
+                SqlConnection connection = this.Connect();
+                SqlDataReader dr = null;
+                dr = SqlHelper.ExecuteReader(connection, storedProcedureName, action.Name);
+                return dr.HasRows;
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::IsExist(AbstractAction):: Loading information of: " + action.Name + " failed.");
+                throw new QueryFailedException("Loading information of of: " + action.Name + " failed.", e);
+            }
+
+        }
+
+        public bool IsExist(EndStation es) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlDataReader dr = null;
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetEndStation", es.ID);
+                return dr.HasRows;
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::IsExist(EndStation):: Loading information of end-station: " + es.Name + " failed.");
+                throw new QueryFailedException("Loading information of end-station: " + es.Name + " failed.", e);
             }
         }
 
-        public void Delete(Parameter p, String actionName) {
-            SqlConnection connection = this.Connect();
+        public bool IsExist(Parameter p, String actionName) {
             try {
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteParameter", actionName, p.Name);
+                SqlConnection connection = this.Connect();
+                SqlDataReader dr = null;
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetParameter", actionName, p.Name);
+                return dr.HasRows;
             }
+            catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Delete(Parameter):: Query Failed!");
-                //Throw ConnectionException
+                Debug.WriteLine("SQLHandler::IsExist(Parameter):: Loading information of parameter: " + p.Name + " failed.");
+                throw new QueryFailedException("Loading information of parameter: " + p.Name + " failed.", e);
             }
         }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Other Methods
@@ -469,11 +516,9 @@ namespace AST.Database{
             {
                 case "WINDOWS": return EndStation.OSTypeEnum.WINDOWS;
                 case "UNIX": return EndStation.OSTypeEnum.UNIX;
-                default:{
+                default:
                     Debug.WriteLine("Unknown OSType " + str);
-                    //throw
                     return EndStation.OSTypeEnum.UNKNOWN;
-                    }
             }
         }
 
@@ -482,11 +527,9 @@ namespace AST.Database{
                 case "COMMAND_LINE": return Action.ActionTypeEnum.COMMAND_LINE;
                 case "SCRIPT": return Action.ActionTypeEnum.SCRIPT;
                 case "TEST_SCRIPT": return Action.ActionTypeEnum.TEST_SCRIPT;
-                default:{
-                        Debug.WriteLine("Unknown Action Type " + str);
-                        //throw
-                        return Action.ActionTypeEnum.COMMAND_LINE;
-                    }
+                default:
+                    Debug.WriteLine("Unknown Action Type " + str);
+                    throw new InvalidTypeException("Unknown action type " + str);
             }
         }
 
@@ -495,11 +538,9 @@ namespace AST.Database{
                 case "Input": return Parameter.ParameterTypeEnum.Input;
                 case "Option": return Parameter.ParameterTypeEnum.Option;
                 case "Both": return Parameter.ParameterTypeEnum.Both;
-                default:{
+                default:
                     Debug.WriteLine("Unknown Parameter Type " + str);
-                    //throw
                     return Parameter.ParameterTypeEnum.None;
-                    }
             }
         }
     }

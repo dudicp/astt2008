@@ -18,6 +18,8 @@ namespace AST.Database{
 
         List<Parameter> GetParameters(String actionName);
 
+        bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type);
+
         // EndStations Operations //
 
         void Save(EndStation es);
@@ -26,8 +28,12 @@ namespace AST.Database{
 
         Hashtable GetAllEndStations();
 
+        bool IsExist(EndStation es);
+
         void Save(Parameter p, String actionName);
 
         void Delete(Parameter p, String actionName);
+
+        bool IsExist(Parameter p, String actionName);
     }
 }

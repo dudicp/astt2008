@@ -68,10 +68,7 @@ namespace AST.Database
                 case AbstractAction.AbstractActionTypeEnum.ACTION: return this.m_actionInfo;
                 case AbstractAction.AbstractActionTypeEnum.TSC: return this.m_TSCInfo;
                 case AbstractAction.AbstractActionTypeEnum.TP: return this.m_TPInfo;
-                default:{
-                    //throw exception
-                    return null;
-                    }
+                default: throw new InvalidCastException("Unknown type: "+type.ToString());
             }
         }
 
@@ -95,7 +92,13 @@ namespace AST.Database
             return this.m_resultHandler.Load(reportName);
         }
 
-        public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type){
+        public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew){
+
+            //if we create new action that its name already exist
+            if ((isNew) && (this.m_DBHandler.IsExist(a, type))) throw new InvalidNameException("The name: " + a.Name + " already exists.");
+
+            this.m_DBHandler.Save(a, type);
+            
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION: {
                         if (this.m_actionInfo.Contains(a.Name))
@@ -116,7 +119,7 @@ namespace AST.Database
                     break;
                     }
             }
-            this.m_DBHandler.Save(a, type);
+            
         }
 
         public void SaveResult(Result res, String reportName) {
@@ -130,11 +133,14 @@ namespace AST.Database
             this.m_resultHandler.Save(res, reportName);
         }
 
-        public void AddEndStation(EndStation es){
+        public void AddEndStation(EndStation es, bool isNew){
+
+            //if we create new end-station that its ID already exist
+            if ((isNew) && (this.m_DBHandler.IsExist(es))) throw new InvalidNameException("The ID: " + es.ID + " already exists.");
+            this.m_DBHandler.Save(es);
+
             if (this.m_endStations.Contains(es.ID)) this.m_endStations.Remove(es.ID);
             this.m_endStations.Add(es.ID, es);
-
-            this.m_DBHandler.Save(es);
         }
 
         public void Delete(EndStation es){
@@ -142,7 +148,10 @@ namespace AST.Database
             this.m_DBHandler.Delete(es);
         }
 
-        public void Save(Parameter p, String actionName) {
+        public void Save(Parameter p, String actionName, bool isNew) {
+            //if we create new parameter that its name already exist
+            if ((isNew) && (this.m_DBHandler.IsExist(p, actionName))) throw new InvalidNameException("The name: " + p.Name + " already exists.");
+
             this.m_DBHandler.Save(p, actionName);
         }
 
