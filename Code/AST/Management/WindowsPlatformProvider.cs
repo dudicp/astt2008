@@ -20,11 +20,11 @@ namespace AST.Management{
             if (m_instance == null) m_instance = new WindowsPlatformProvider();
             return m_instance;
         }
-        
-        public void ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration){
+
+        public void ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration) {
 
             String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
-            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: "+PSToolsCommand+" doesn't found.");
+            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: " + PSToolsCommand + " doesn't found.");
 
             String timeoutStr = "";
             if (username.Length != 0) username = " -u " + username;
@@ -44,7 +44,7 @@ namespace AST.Management{
             try {
                 p.Start();
                 if (duration == 0) {
-                    StreamReader myStreamReader = p.StandardOutput;                  
+                    StreamReader myStreamReader = p.StandardOutput;
                     String myString1 = myStreamReader.ReadToEnd();
 
                     //res = p.StandardOutput.ReadToEnd();
@@ -66,10 +66,12 @@ namespace AST.Management{
 
                 string output = pi.StandardOutput.ReadToEnd();
 
-            }catch (ExecutionFailedException e) { throw e; }
+            }
+            catch (ExecutionFailedException e) { throw e; }
             catch (Exception e) {
                 throw new ExecutionFailedException("Could not start process.", e);
             }
+        }
             
 
             /*if (duration != 0) {
