@@ -83,8 +83,13 @@ namespace AST.Presentation {
             int maxTime = 10;
             DialogResult res = MessageBox.Show("Execution max time is: " + maxTime + " seconds", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            ExecutionDialog ed = new ExecutionDialog();
+
             ASTManager.GetInstance().Execute(this.m_abstractAction, reportName);
-            // Open ExecutionStatusDialog
+            
+            // Open ExecutionDialog
+            ed.ShowDialog();
+
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
 
