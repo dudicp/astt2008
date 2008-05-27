@@ -147,8 +147,11 @@ namespace AST.Database{
 
         public void Save(EndStation es) {
             try {
+                String storedProcedureName;
+                if (this.IsExist(es)) storedProcedureName = "sp_UpdateEndStation";
+                else storedProcedureName = "sp_InsertEndStation";
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_insertEndStation", es.ID, es.Name, es.IP.ToString(), es.MAC.ToString(), es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, es.ID, es.Name, es.IP.ToString(), es.MAC.ToString(), es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password);
             }
             catch (ConnectionFailedException e) {
                 throw e;

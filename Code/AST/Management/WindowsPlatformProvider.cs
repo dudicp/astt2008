@@ -44,12 +44,12 @@ namespace AST.Management{
             try {
                 p.Start();
                 if (duration == 0) {
-                    StreamReader myStreamReader = p.StandardOutput;
-                    String myString1 = myStreamReader.ReadToEnd();
+                    //StreamReader myStreamReader = p.StandardOutput;
+                    //String myString1 = myStreamReader.ReadToEnd();
 
                     //res = p.StandardOutput.ReadToEnd();
                     //p.WaitForExit();
-                    p.Close();
+                    //p.Close();
                 }
                 else {
                     if (!p.WaitForExit(duration * 1000)) p.Kill();
@@ -68,6 +68,7 @@ namespace AST.Management{
 
             }
             catch (ExecutionFailedException e) { throw e; }
+            catch (FileNotExistException e) { throw e; }
             catch (Exception e) {
                 throw new ExecutionFailedException("Could not start process.", e);
             }
