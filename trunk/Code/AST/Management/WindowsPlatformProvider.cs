@@ -31,7 +31,7 @@ namespace AST.Management{
             if (password.Length != 0) password = " -p " + password;
             if (timeout != 0) timeoutStr = " -n " + timeout;
 
-            String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " " + cmd;
+            String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " -i " +" " + cmd;
             Debug.WriteLine(PSToolsCommand + args);
 
             Process p = new Process();
@@ -48,7 +48,7 @@ namespace AST.Management{
                     //String myString1 = myStreamReader.ReadToEnd();
 
                     //res = p.StandardOutput.ReadToEnd();
-                    //p.WaitForExit();
+                    p.WaitForExit();
                     //p.Close();
                 }
                 else {
