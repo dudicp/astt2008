@@ -40,7 +40,7 @@
   -->
   <ItemGroup>
     <Compile Include="ASTMain.cs" />
-    <Compile Include="Builder.cs" />
+    <Compile Include="Database\DatabaseExceptions.cs" />
     <Compile Include="Database\DatabaseManager.cs" />
     <Compile Include="Database\IDatabaseHandler.cs" />
     <Compile Include="Database\IResultHandler.cs" />
@@ -57,8 +57,16 @@
     <Compile Include="Management\ASTOutputListener.cs" />
     <Compile Include="Management\ConfigurationManager.cs" />
     <Compile Include="Management\Executer.cs" />
+    <Compile Include="Management\ExecutionManagerOutputListener.cs" />
+    <Compile Include="Presentation\ExecutionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\ExecutionDialog.Designer.cs">
+      <DependentUpon>ExecutionDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Management\ExecutionManager.cs" />
     <Compile Include="Management\IServiceProvider.cs" />
+    <Compile Include="Management\ManagementExceptions.cs" />
     <Compile Include="Management\NetWorkBrowser.cs" />
     <Compile Include="Management\ProviderFactory.cs" />
     <Compile Include="Management\WindowsPlatformProvider.cs" />
@@ -87,18 +95,6 @@
     </Compile>
     <Compile Include="Presentation\CreateTSCPanel.Designer.cs">
       <DependentUpon>CreateTSCPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\EditActionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentation\EditActionDialog.Designer.cs">
-      <DependentUpon>EditActionDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\EditActionESDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentation\EditActionESDialog.Designer.cs">
-      <DependentUpon>EditActionESDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentation\EditParametersDialog.cs">
       <SubType>Form</SubType>
@@ -163,6 +159,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Presentation\ExecutionDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExecutionDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\AboutDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutDialog.cs</DependentUpon>
@@ -178,14 +178,6 @@
     <EmbeddedResource Include="Presentation\CreateTSCPanel.resx">
       <SubType>Designer</SubType>
       <DependentUpon>CreateTSCPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\EditActionDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>EditActionDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\EditActionESDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>EditActionESDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\EditParametersDialog.resx">
       <SubType>Designer</SubType>
