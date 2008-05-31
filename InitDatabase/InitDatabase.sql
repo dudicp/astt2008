@@ -288,11 +288,6 @@ ELSE
 	values
 	(@ActionName,@ParameterName,@OSType,@Value)
 	END
-
-INSERT INTO ParameterValues
-(ActionName,ParameterName,OSType,Value)
-values
-(@ActionName,@ParameterName,@OSType,@Value);
 GO
 /****** Object:  StoredProcedure [dbo].[sp_GetEndStation]    Script Date: 05/25/2008 17:31:26 ******/
 SET ANSI_NULLS ON
