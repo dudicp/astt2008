@@ -36,14 +36,14 @@ namespace AST.Presentation {
                 TSCDetailsBox.Text = "TP Details";
                 ActionsBox.Text = "TSC's";
                 TSCNameLabel.Text = "Plan Name:";
-                ActionNameLabel.Text = "TSC Name:";
+                ActionNameLabel.Text = "TSCs List:";
                 SelectedActionsLabel.Text = "Selected TSC's:";
             }
             else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
                 TSCDetailsBox.Text = "TSC Details";
                 ActionsBox.Text = "Actions";
                 TSCNameLabel.Text = "Scenario Name:";
-                ActionNameLabel.Text = "Action Name:";
+                ActionNameLabel.Text = "Actions List:";
                 SelectedActionsLabel.Text = "Selected Actions:";
             }
 
