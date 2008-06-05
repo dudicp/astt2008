@@ -46,6 +46,7 @@ namespace AST.Presentation
             this.listBox.Size = new System.Drawing.Size(134, 68);
             this.listBox.TabIndex = 0;
             this.listBox.SelectedIndexChanged += new System.EventHandler(this.listBox_SelectedIndexChanged);
+            this.listBox.DoubleClick += new System.EventHandler(this.okButton_Click);
             // 
             // DescriptionText
             // 

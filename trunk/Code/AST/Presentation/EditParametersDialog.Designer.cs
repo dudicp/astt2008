@@ -51,6 +51,7 @@ namespace AST.Presentation
             this.InputLabel = new System.Windows.Forms.Label();
             this.InputBox = new System.Windows.Forms.GroupBox();
             this.MyCancelButton = new System.Windows.Forms.Button();
+            this.DefaultCheckBox = new System.Windows.Forms.CheckBox();
             this.ParameterContentBox.SuspendLayout();
             this.ParameterDetailsBox.SuspendLayout();
             this.InputBox.SuspendLayout();
@@ -65,7 +66,7 @@ namespace AST.Presentation
             this.ParameterContentBox.Controls.Add(this.OSTypeLabel);
             this.ParameterContentBox.Controls.Add(this.OScomboBox);
             this.ParameterContentBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ParameterContentBox.Location = new System.Drawing.Point(15, 226);
+            this.ParameterContentBox.Location = new System.Drawing.Point(15, 251);
             this.ParameterContentBox.Name = "ParameterContentBox";
             this.ParameterContentBox.Size = new System.Drawing.Size(260, 112);
             this.ParameterContentBox.TabIndex = 17;
@@ -141,7 +142,7 @@ namespace AST.Presentation
             // OkButton
             // 
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(66, 438);
+            this.OkButton.Location = new System.Drawing.Point(66, 463);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 16;
@@ -170,7 +171,7 @@ namespace AST.Presentation
             // DescriptionText
             // 
             this.DescriptionText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DescriptionText.Location = new System.Drawing.Point(9, 114);
+            this.DescriptionText.Location = new System.Drawing.Point(9, 109);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(240, 45);
             this.DescriptionText.TabIndex = 10;
@@ -178,6 +179,7 @@ namespace AST.Presentation
             // 
             // ParameterDetailsBox
             // 
+            this.ParameterDetailsBox.Controls.Add(this.DefaultCheckBox);
             this.ParameterDetailsBox.Controls.Add(this.InputCheckBox);
             this.ParameterDetailsBox.Controls.Add(this.OptionCheckBox);
             this.ParameterDetailsBox.Controls.Add(this.DescriptionText);
@@ -188,7 +190,7 @@ namespace AST.Presentation
             this.ParameterDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ParameterDetailsBox.Location = new System.Drawing.Point(15, 53);
             this.ParameterDetailsBox.Name = "ParameterDetailsBox";
-            this.ParameterDetailsBox.Size = new System.Drawing.Size(260, 167);
+            this.ParameterDetailsBox.Size = new System.Drawing.Size(260, 192);
             this.ParameterDetailsBox.TabIndex = 14;
             this.ParameterDetailsBox.TabStop = false;
             this.ParameterDetailsBox.Text = "Parameter Details";
@@ -219,7 +221,7 @@ namespace AST.Presentation
             // 
             this.descriptionLabel.AutoSize = true;
             this.descriptionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.descriptionLabel.Location = new System.Drawing.Point(6, 96);
+            this.descriptionLabel.Location = new System.Drawing.Point(6, 91);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(72, 15);
             this.descriptionLabel.TabIndex = 3;
@@ -289,7 +291,7 @@ namespace AST.Presentation
             this.InputBox.Controls.Add(this.ValidityCheckBox);
             this.InputBox.Controls.Add(this.ValidityText);
             this.InputBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InputBox.Location = new System.Drawing.Point(15, 344);
+            this.InputBox.Location = new System.Drawing.Point(15, 369);
             this.InputBox.Name = "InputBox";
             this.InputBox.Size = new System.Drawing.Size(260, 85);
             this.InputBox.TabIndex = 22;
@@ -299,7 +301,7 @@ namespace AST.Presentation
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(147, 438);
+            this.MyCancelButton.Location = new System.Drawing.Point(147, 463);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 23;
@@ -307,11 +309,21 @@ namespace AST.Presentation
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
+            // DefaultCheckBox
+            // 
+            this.DefaultCheckBox.AutoSize = true;
+            this.DefaultCheckBox.Location = new System.Drawing.Point(9, 165);
+            this.DefaultCheckBox.Name = "DefaultCheckBox";
+            this.DefaultCheckBox.Size = new System.Drawing.Size(59, 18);
+            this.DefaultCheckBox.TabIndex = 14;
+            this.DefaultCheckBox.Text = "Default";
+            this.DefaultCheckBox.UseVisualStyleBackColor = true;
+            // 
             // EditParametersDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(291, 467);
+            this.ClientSize = new System.Drawing.Size(291, 507);
             this.Controls.Add(this.MyCancelButton);
             this.Controls.Add(this.ParameterContentBox);
             this.Controls.Add(this.OkButton);
@@ -356,6 +368,7 @@ namespace AST.Presentation
         private System.Windows.Forms.Label InputLabel;
         private System.Windows.Forms.GroupBox InputBox;
         private System.Windows.Forms.Button MyCancelButton;
+        private System.Windows.Forms.CheckBox DefaultCheckBox;
 
     }
 }

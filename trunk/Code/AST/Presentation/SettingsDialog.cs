@@ -311,7 +311,7 @@ namespace AST.Presentation {
 
                 //3. Update Misc
                 if (this.DelayCheckBox.Checked)
-                    this.m_action.Delay = (int)this.DelayNumericUpDown.Value;
+                    ((Action)this.m_action).Delay = (int)this.DelayNumericUpDown.Value;
 
                 if (this.DurationCheckBox.Checked)
                     ((Action)this.m_action).Duration = (int)this.DurationNumericUpDown.Value;
@@ -336,9 +336,9 @@ namespace AST.Presentation {
 
             this.Title3.Text = "Misc - " + this.m_action.Name;
 
-            if (this.m_action.Delay != 0) {
+            if (((Action)this.m_action).Delay != 0) {
                 this.DelayCheckBox.Checked = true;
-                this.DelayNumericUpDown.Value = this.m_action.Delay;
+                this.DelayNumericUpDown.Value = ((Action)this.m_action).Delay;
             }
 
             if (((Action)(this.m_action)).Duration != 0) {

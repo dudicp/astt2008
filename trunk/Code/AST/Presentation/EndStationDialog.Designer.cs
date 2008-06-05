@@ -38,6 +38,9 @@ namespace AST.Presentation {
             this.IPTextBox = new System.Windows.Forms.TextBox();
             this.OSComboBox = new System.Windows.Forms.ComboBox();
             this.OSLabel = new System.Windows.Forms.Label();
+            this.MACTextBox = new System.Windows.Forms.TextBox();
+            this.MACLabel = new System.Windows.Forms.Label();
+            this.DefaultCheckBox = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // NameLabel
@@ -62,7 +65,7 @@ namespace AST.Presentation {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(112, 246);
+            this.MyCancelButton.Location = new System.Drawing.Point(112, 304);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 19;
@@ -73,7 +76,7 @@ namespace AST.Presentation {
             // okButton
             // 
             this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(27, 246);
+            this.okButton.Location = new System.Drawing.Point(27, 304);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(72, 23);
             this.okButton.TabIndex = 20;
@@ -123,7 +126,7 @@ namespace AST.Presentation {
             // 
             this.UsernameLabel.AutoSize = true;
             this.UsernameLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UsernameLabel.Location = new System.Drawing.Point(12, 151);
+            this.UsernameLabel.Location = new System.Drawing.Point(12, 181);
             this.UsernameLabel.Name = "UsernameLabel";
             this.UsernameLabel.Size = new System.Drawing.Size(65, 15);
             this.UsernameLabel.TabIndex = 25;
@@ -133,7 +136,7 @@ namespace AST.Presentation {
             // 
             this.PasswordLabel.AutoSize = true;
             this.PasswordLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PasswordLabel.Location = new System.Drawing.Point(12, 181);
+            this.PasswordLabel.Location = new System.Drawing.Point(12, 211);
             this.PasswordLabel.Name = "PasswordLabel";
             this.PasswordLabel.Size = new System.Drawing.Size(61, 15);
             this.PasswordLabel.TabIndex = 26;
@@ -142,7 +145,7 @@ namespace AST.Presentation {
             // UsernameTextBox
             // 
             this.UsernameTextBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.UsernameTextBox.Location = new System.Drawing.Point(83, 149);
+            this.UsernameTextBox.Location = new System.Drawing.Point(83, 179);
             this.UsernameTextBox.Name = "UsernameTextBox";
             this.UsernameTextBox.Size = new System.Drawing.Size(100, 21);
             this.UsernameTextBox.TabIndex = 27;
@@ -150,7 +153,7 @@ namespace AST.Presentation {
             // PasswordTextBox
             // 
             this.PasswordTextBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PasswordTextBox.Location = new System.Drawing.Point(83, 179);
+            this.PasswordTextBox.Location = new System.Drawing.Point(83, 209);
             this.PasswordTextBox.Name = "PasswordTextBox";
             this.PasswordTextBox.Size = new System.Drawing.Size(100, 21);
             this.PasswordTextBox.TabIndex = 28;
@@ -171,7 +174,7 @@ namespace AST.Presentation {
             this.OSComboBox.Items.AddRange(new object[] {
             "Windows",
             "Unix"});
-            this.OSComboBox.Location = new System.Drawing.Point(83, 209);
+            this.OSComboBox.Location = new System.Drawing.Point(83, 239);
             this.OSComboBox.Name = "OSComboBox";
             this.OSComboBox.Size = new System.Drawing.Size(100, 21);
             this.OSComboBox.TabIndex = 30;
@@ -180,17 +183,49 @@ namespace AST.Presentation {
             // 
             this.OSLabel.AutoSize = true;
             this.OSLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OSLabel.Location = new System.Drawing.Point(12, 211);
+            this.OSLabel.Location = new System.Drawing.Point(12, 241);
             this.OSLabel.Name = "OSLabel";
             this.OSLabel.Size = new System.Drawing.Size(54, 15);
             this.OSLabel.TabIndex = 31;
             this.OSLabel.Text = "OS Type:";
             // 
+            // MACTextBox
+            // 
+            this.MACTextBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MACTextBox.Location = new System.Drawing.Point(83, 149);
+            this.MACTextBox.MaxLength = 15;
+            this.MACTextBox.Name = "MACTextBox";
+            this.MACTextBox.Size = new System.Drawing.Size(100, 21);
+            this.MACTextBox.TabIndex = 33;
+            // 
+            // MACLabel
+            // 
+            this.MACLabel.AutoSize = true;
+            this.MACLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MACLabel.Location = new System.Drawing.Point(12, 151);
+            this.MACLabel.Name = "MACLabel";
+            this.MACLabel.Size = new System.Drawing.Size(35, 15);
+            this.MACLabel.TabIndex = 32;
+            this.MACLabel.Text = "MAC:";
+            // 
+            // DefaultCheckBox
+            // 
+            this.DefaultCheckBox.AutoSize = true;
+            this.DefaultCheckBox.Location = new System.Drawing.Point(15, 271);
+            this.DefaultCheckBox.Name = "DefaultCheckBox";
+            this.DefaultCheckBox.Size = new System.Drawing.Size(60, 17);
+            this.DefaultCheckBox.TabIndex = 34;
+            this.DefaultCheckBox.Text = "Default";
+            this.DefaultCheckBox.UseVisualStyleBackColor = true;
+            // 
             // EndStationDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(209, 287);
+            this.ClientSize = new System.Drawing.Size(209, 343);
+            this.Controls.Add(this.DefaultCheckBox);
+            this.Controls.Add(this.MACTextBox);
+            this.Controls.Add(this.MACLabel);
             this.Controls.Add(this.OSLabel);
             this.Controls.Add(this.OSComboBox);
             this.Controls.Add(this.IPTextBox);
@@ -230,5 +265,8 @@ namespace AST.Presentation {
         private System.Windows.Forms.TextBox IPTextBox;
         private System.Windows.Forms.ComboBox OSComboBox;
         private System.Windows.Forms.Label OSLabel;
+        private System.Windows.Forms.TextBox MACTextBox;
+        private System.Windows.Forms.Label MACLabel;
+        private System.Windows.Forms.CheckBox DefaultCheckBox;
     }
 }

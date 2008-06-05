@@ -119,12 +119,191 @@ namespace AST.Database{
             return a;
         }
 
-        private TSC LoadTSC(String name) {
-            return null;
+        private Parameter LoadParameter(String actionName, String parameterName) {
+            //  1. Load Parameter
+            SqlConnection connection;
+            SqlDataReader dr = null;
+            try {
+                connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetParameter", actionName, parameterName);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadParameter:: Loading parameter " + parameterName + " of action: " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameter " + parameterName + " of action: " + actionName + " failed.", e);
+            }
+
+            if (!dr.Read()) throw new EmptyQueryResultException("Parameter: " + parameterName + " doesn't exist.");
+
+            //Getting the description of the parameter
+            String description = (String)dr.GetValue(2);
+
+            Parameter.ParameterTypeEnum type = this.GetParameterType((String)dr.GetValue(3));
+
+            //Getting the description of the parameter
+            String validityExp = (String)dr.GetValue(5);
+
+            //Getting the bit of isDefault
+            bool isDefault = (bool)dr.GetValue(6);
+
+            Parameter p = new Parameter(parameterName, description, type, validityExp, isDefault);
+
+            // 2.Load Parameter Content
+            SqlDataReader contentDR = null;
+            try {
+                connection = this.Connect(); //Creating Connection
+                contentDR = SqlHelper.ExecuteReader(connection, "sp_GetParameterContents", actionName, parameterName);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadParameter:: Loading parameter " + parameterName + " of action: " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameter " + parameterName + " of action: " + actionName + " failed.", e);
+            }
+
+            while (contentDR.Read()) {
+
+                //Getting content OSTYpe
+                EndStation.OSTypeEnum OSType = this.GetOSType((String)contentDR.GetValue(2));
+
+                //Getting content value
+                String value = (String)contentDR.GetValue(3);
+
+                p.AddValue(OSType, value);
+            }
+            return p;
+
         }
 
+        /// <summary>
+        /// This method loads TSC from the database, the loading process:
+        /// 1. Load TSC information.
+        /// 2. For each action in this TSC
+        ///     2.1. Load Action
+        ///     2.2. Load Paramters of this action in this TSC.
+        /// </summary>
+        /// <param name="name">The name of the TSC</param>
+        /// <returns>The loaded TSC</returns>
+        private TSC LoadTSC(String name) {
+
+            //1. Load TSC Info
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetTSC", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC: " + name + " failed.");
+                throw new QueryFailedException("Loading TSC: " + name + " failed.", e);
+            }
+            if (!dr.Read()) throw new EmptyQueryResultException("TSC: " + name + " doesn't exist.");
+
+            //Getting the description
+            String description = (String)dr.GetValue(1);
+
+            //Getting the creator name
+            String creatorName = (String)dr.GetValue(2);
+
+            //Getting the creation time
+            DateTime creationTime = (DateTime)dr.GetValue(3);
+
+            TSC tsc = new TSC(name, description, creatorName, creationTime);
+
+            //2. Load Actions
+            dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetActionsInTSC", name);
+            
+                while (dr.Read()) {
+                    //2.1 Load Action
+                    String actionName = (String)dr.GetValue(1);
+                    Action a = this.LoadAction(actionName);
+
+                    int delay = (int)dr.GetValue(3);
+                    a.Delay = delay;
+
+                    int executionOrder = (int)dr.GetValue(2);
+                    
+                    SqlDataReader parameterDR = null;
+                    connection = this.Connect();
+                    parameterDR = SqlHelper.ExecuteReader(connection, "sp_GetParametersInTSC", name,actionName,executionOrder);
+
+                    //2.2 Load Parameters
+                    while (parameterDR.Read()) {
+                        String parameterName = (String)parameterDR.GetValue(3);
+                        Parameter p = this.LoadParameter(actionName, parameterName);
+                        p.Input = (String)parameterDR.GetValue(4);
+
+                        a.AddParameter(p);
+                    }
+                    tsc.AddAction(a); // Adding the action to the tsc.
+                }
+
+                return tsc;
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC: " + name + " failed.");
+                throw new QueryFailedException("Loading TSC: " + name + " failed.", e);
+            }
+        }
+
+        /// <summary>
+        /// This method loads TP from the database, the basic flow is:
+        /// 1. Load TP information.
+        /// 2. Load each TSC in this TP
+        /// </summary>
+        /// <param name="name">The name of the TP</param>
+        /// <returns>The loaded TP</returns>
         private TP LoadTP(String name) {
-            return null;
+            
+            //1. Load TP Information
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetTP", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadTP:: Loading TP: " + name + " failed.");
+                throw new QueryFailedException("Loading TP: " + name + " failed.", e);
+            }
+            if (!dr.Read()) throw new EmptyQueryResultException("TP: " + name + " doesn't exist.");
+
+            //Getting the description
+            String description = (String)dr.GetValue(1);
+
+            //Getting the creator name
+            String creatorName = (String)dr.GetValue(2);
+
+            //Getting the creation time
+            DateTime creationTime = (DateTime)dr.GetValue(3);
+
+            TP tp = new TP(name, description, creatorName, creationTime);
+
+            //2. Load TSC
+            dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetTSCsInTP", name);
+
+                while (dr.Read()) {
+                    String tscName = (String)dr.GetValue(1);
+                    TSC tsc = this.LoadTSC(tscName);
+
+                    int executionOrder = (int)dr.GetValue(2);
+
+                    tp.AddTSC(tsc); // Adding the TSC to the TP.
+                }
+
+                return tp;
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::LoadTP:: Loading TP: " + name + " failed.");
+                throw new QueryFailedException("Loading TP: " + name + " failed.", e);
+            }
         }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,7 +330,7 @@ namespace AST.Database{
                 if (this.IsExist(es)) storedProcedureName = "sp_UpdateEndStation";
                 else storedProcedureName = "sp_InsertEndStation";
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, es.ID, es.Name, es.IP.ToString(), es.MAC.ToString(), es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, es.ID, es.Name, es.IP.ToString(), es.MAC, es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password, es.IsDefault);
             }
             catch (ConnectionFailedException e) {
                 throw e;
@@ -198,9 +377,88 @@ namespace AST.Database{
             }
         }
 
-        private void Save(TSC tsc) { }
+        /// <summary>
+        /// This method saves a TSC. The basic flow of this method is:
+        /// 1. Delete TSC from database (if exists).
+        /// 2. Saving the TSC information.
+        /// 3. For each action in the TSC:
+        ///     3.1. Update the action in TSC table.
+        ///     3.2. Update the parameters in TSC table.
+        /// </summary>
+        /// <param name="tsc">The requested TSC</param>
+        private void Save(TSC tsc) {
+            
+            // 1. Deleting the old TSC if exists.
+            try {
+                SqlConnection connection;
 
-        private void Save(TP tp) { }
+                if (this.IsExist(tsc, AbstractAction.AbstractActionTypeEnum.TSC)) {
+                    connection = this.Connect();
+                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSC", tsc.Name);
+                }
+                // 2. Saving the TSC information.
+                connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_InsertTSC", tsc.Name, tsc.Description, tsc.CreatorName, tsc.CreationTime);
+
+                // 3. For each action in the TSC
+                int executionOrder = 0;
+                foreach (Action a in tsc.GetActions()) {
+
+                    //3.1. Update the action in TSC table.
+                    connection = this.Connect();
+                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertActionToTSC", tsc.Name, a.Name, executionOrder, a.Delay);
+
+                    //3.2. Update the parameters in TSC table.
+                    foreach (Parameter p in a.GetParameters()) {
+                        connection = this.Connect();
+                        SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterToTSC", tsc.Name, a.Name, executionOrder, p.Name, p.Input);
+                    }
+                    executionOrder++;
+
+                }
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Save(TSC):: Saving tsc: " + tsc.Name + " failed.");
+                throw new QueryFailedException("Saving tsc: " + tsc.Name + " failed.", e);
+            }
+        }
+
+        /// <summary>
+        /// This method saves a TP. The basic flow of this method is:
+        /// 1. Delete TP from database (if exists).
+        /// 2. Saving the TP information.
+        /// 3. Saving each TSC in the TP.
+        /// </summary>
+        /// <param name="tsc">The requested TP</param>
+        private void Save(TP tp) {
+
+            // 1. Deleting the old TSC if exists.
+            try {
+                SqlConnection connection;
+
+                if (this.IsExist(tp, AbstractAction.AbstractActionTypeEnum.TP)) {
+                    connection = this.Connect();
+                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTP", tp.Name);
+                }
+                // 2. Saving the TSC information.
+                connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_InsertTP", tp.Name, tp.Description, tp.CreatorName, tp.CreationTime);
+
+                // 3. Saving each TSC in the TP.
+                int executionOrder = 0;
+                foreach (TSC tsc in tp.GetTSCs()) {
+
+                    connection = this.Connect();
+                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertTSCToTP", tp.Name, tsc.Name, executionOrder++);
+                }
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::Save(TP):: Saving TP: " + tp.Name + " failed.");
+                throw new QueryFailedException("Saving TP: " + tp.Name + " failed.", e);
+            }
+        }
 
         public void Save(Parameter p, String actionName) {
             // 1. Saving Parameter
@@ -211,7 +469,7 @@ namespace AST.Database{
                 else storedProcedureName = "sp_InsertParameter";
 
                 connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp, p.IsDefault);
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
@@ -278,9 +536,29 @@ namespace AST.Database{
             }
         }
 
-        private void DeleteTSC(String name) { }
+        private void DeleteTSC(String name) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSC", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::DeleteTSC:: Deleting TSC: " + name + " failed.");
+                throw new QueryFailedException("Deleting TSC: " + name + " failed.", e);
+            }
+        }
 
-        private void DeleteTP(String name) { }
+        private void DeleteTP(String name) {
+            try {
+                SqlConnection connection = this.Connect();
+                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTP", name);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::DeleteTP:: Deleting TP: " + name + " failed.");
+                throw new QueryFailedException("Deleting TP: " + name + " failed.", e);
+            }
+        }
 
         public void Delete(Parameter p, String actionName) {
             try {
@@ -350,7 +628,10 @@ namespace AST.Database{
                 //Getting End-Station Password
                 String password = (String)dr.GetValue(7);
 
-                EndStation es = new EndStation(id, name, ip, osType, username, password);
+                //Getting End-Station Password
+                bool isDefault = (bool)dr.GetValue(8);
+
+                EndStation es = new EndStation(id, name, ip, osType, username, password,isDefault);
 
                 es.MAC = mac;
 
@@ -384,11 +665,45 @@ namespace AST.Database{
         }
 
         private Hashtable GetTSCsInfo() {
-            return new Hashtable();
+            Hashtable info = new Hashtable();
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetTSCsInfo", null);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetTSCsInfo:: Load information of all tscs failed.");
+                throw new QueryFailedException("Load information of all tscs failed.", e);
+            }
+            while (dr.Read()) {
+                String name = (String)dr.GetValue(0);
+                String description = (String)dr.GetValue(1);
+
+                info.Add(name, description);
+            }
+            return info;
         }
 
         private Hashtable GetTPsInfo() {
-            return new Hashtable();
+            Hashtable info = new Hashtable();
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetTPsInfo", null);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetTPsInfo:: Load information of all TP's failed.");
+                throw new QueryFailedException("Load information of all TP's failed.", e);
+            }
+            while (dr.Read()) {
+                String name = (String)dr.GetValue(0);
+                String description = (String)dr.GetValue(1);
+
+                info.Add(name, description);
+            }
+            return info;
         }
 
         public List<Parameter> GetParameters(String actionName) {
@@ -420,7 +735,10 @@ namespace AST.Database{
                 //Getting the description of the parameter
                 String validityExp = (String)dr.GetValue(5);
 
-                Parameter p = new Parameter(parameterName, description, type, validityExp);
+                //Getting the bit of isDefault
+                bool isDefault = (bool)dr.GetValue(6);
+
+                Parameter p = new Parameter(parameterName, description, type, validityExp, isDefault);
 
                 // 2.Load Parameter Content
                 SqlDataReader contentDR = null;

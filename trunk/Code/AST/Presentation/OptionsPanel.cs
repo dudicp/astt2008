@@ -82,6 +82,8 @@ namespace AST.Presentation {
             this.IPText.Text = this.m_endStations[this.EndStationsListBox.SelectedIndex].IP.ToString();
             this.UsernameText.Text = this.m_endStations[this.EndStationsListBox.SelectedIndex].Username;
             this.OSTypeText.Text = this.m_endStations[this.EndStationsListBox.SelectedIndex].OSType.ToString();
+            if (this.m_endStations[this.EndStationsListBox.SelectedIndex].IsDefault) this.IsDefaultLabel.Text = "Default End-Station";
+            else this.IsDefaultLabel.Text = "";
         }
 
         private void SaveConfigurationButton_Click(object sender, EventArgs e) {

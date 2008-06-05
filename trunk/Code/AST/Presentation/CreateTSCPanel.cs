@@ -51,12 +51,12 @@ namespace AST.Presentation {
             if (m_abstractAction == null) {
                 // Test Plan
                 if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
-                    this.m_abstractAction = new TP("", "", 0, "", DateTime.Now, 1);
+                    this.m_abstractAction = new TP("", "", "", DateTime.Now);
                     Title.Text = "Create Test Plan";
                     
                 }// Test Scenario
                 else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                    this.m_abstractAction = new TSC("", "", 0, "", DateTime.Now);
+                    this.m_abstractAction = new TSC("", "", "", DateTime.Now);
                     Title.Text = "Create Test Scenario";
                 }
 
@@ -117,6 +117,14 @@ namespace AST.Presentation {
         }
 
         private void SelectedTreeView_AfterSelect(object sender, TreeViewEventArgs e) {
+            if (SelectedTreeView.SelectedNode.Level == 1) {
+                this.MoveUpActionButton.Enabled = false;
+                this.MoveDownActionButton.Enabled = false;
+                this.SelectActionButton.Enabled = false;
+                this.UnselectActionButton.Enabled = false;
+                this.SettingsButton.Enabled = false;
+                return;
+            }
             this.UnselectActionButton.Enabled = false;
             this.SettingsButton.Enabled = false;
             if (this.SelectedTreeView.SelectedNode == null) return;

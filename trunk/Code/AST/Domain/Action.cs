@@ -11,14 +11,16 @@ namespace AST.Domain{
         private Hashtable m_content;
         private ActionTypeEnum m_type;
         private int m_duration;
+        private int m_delay;
         private Hashtable m_validtyString;
         private List<Parameter> m_parameters;
 
         public Action(String name, String description, int delay, String creatorName, DateTime creationTime, int timeout, ActionTypeEnum type, int duration)
-            : base(name, description, delay, creatorName, creationTime)
+            : base(name, description, creatorName, creationTime)
         {     
             m_timeout = timeout;
             m_type = type;
+            m_delay = delay;
             m_duration = duration;
 
             m_content = new Hashtable();
@@ -39,6 +41,11 @@ namespace AST.Domain{
         public int Duration{
             get { return m_duration; }
             set { m_duration = value; }
+        }
+
+        public int Delay {
+            get { return m_delay; }
+            set { m_delay = value; }
         }
 
         public List<Parameter> GetParameters(){

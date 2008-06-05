@@ -20,8 +20,6 @@ namespace AST.Database{
 
         bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type);
 
-        // EndStations Operations //
-
         void Save(EndStation es);
 
         void Delete(EndStation es);

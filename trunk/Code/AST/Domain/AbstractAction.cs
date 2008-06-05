@@ -9,15 +9,13 @@ namespace AST.Domain{
 
         protected String m_name;
         protected String m_description;
-        protected int m_delay;
         protected String m_creatorName;
         protected DateTime m_creationTime;
         protected List<EndStationSchedule> m_endStations;
 
-        public AbstractAction(String name, String description, int delay, String creatorName, DateTime creationTime){
+        public AbstractAction(String name, String description, String creatorName, DateTime creationTime){
             m_name = name;
             m_description = description;
-            m_delay = delay;
             m_creatorName = creatorName;
             m_creationTime = creationTime;
             m_endStations = new List<EndStationSchedule>();
@@ -31,11 +29,6 @@ namespace AST.Domain{
         public String Description{
             get { return this.m_description; }
             set { this.m_description = value; }
-        }
-
-        public int Delay{
-            get { return this.m_delay; }
-            set { this.m_delay = value; }
         }
 
         public String CreatorName{
