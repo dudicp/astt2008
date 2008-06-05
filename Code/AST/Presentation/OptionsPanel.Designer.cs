@@ -24,6 +24,7 @@ namespace AST.Presentation {
         /// </summary>
         private void InitializeComponent() {
             this.EndStationsGroupBox = new System.Windows.Forms.GroupBox();
+            this.IsDefaultLabel = new System.Windows.Forms.Label();
             this.OSTypeText = new System.Windows.Forms.Label();
             this.UsernameText = new System.Windows.Forms.Label();
             this.IPText = new System.Windows.Forms.Label();
@@ -52,6 +53,7 @@ namespace AST.Presentation {
             // 
             // EndStationsGroupBox
             // 
+            this.EndStationsGroupBox.Controls.Add(this.IsDefaultLabel);
             this.EndStationsGroupBox.Controls.Add(this.OSTypeText);
             this.EndStationsGroupBox.Controls.Add(this.UsernameText);
             this.EndStationsGroupBox.Controls.Add(this.IPText);
@@ -70,6 +72,16 @@ namespace AST.Presentation {
             this.EndStationsGroupBox.TabIndex = 29;
             this.EndStationsGroupBox.TabStop = false;
             this.EndStationsGroupBox.Text = "End-Stations";
+            // 
+            // IsDefaultLabel
+            // 
+            this.IsDefaultLabel.AutoSize = true;
+            this.IsDefaultLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IsDefaultLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.IsDefaultLabel.Location = new System.Drawing.Point(241, 117);
+            this.IsDefaultLabel.Name = "IsDefaultLabel";
+            this.IsDefaultLabel.Size = new System.Drawing.Size(0, 15);
+            this.IsDefaultLabel.TabIndex = 37;
             // 
             // OSTypeText
             // 
@@ -331,6 +343,7 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label OSTypeText;
         private System.Windows.Forms.Label UsernameText;
         private System.Windows.Forms.Label IPText;
+        private System.Windows.Forms.Label IsDefaultLabel;
 
     }
 }

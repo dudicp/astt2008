@@ -56,6 +56,7 @@ namespace AST.Presentation
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.astPanel = new AST.Presentation.ASTPanel();
+            this.tempToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -197,7 +198,8 @@ namespace AST.Presentation
             this.ExecuteStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExecuteSingleActionMenuItem,
             this.ExecuteTestScenarioMenuItem,
-            this.ExecuteTestPlanMenuItem});
+            this.ExecuteTestPlanMenuItem,
+            this.tempToolStripMenuItem});
             this.ExecuteStripMenuItem.Name = "ExecuteStripMenuItem";
             this.ExecuteStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExecuteStripMenuItem.Text = "Execute";
@@ -205,7 +207,7 @@ namespace AST.Presentation
             // ExecuteSingleActionMenuItem
             // 
             this.ExecuteSingleActionMenuItem.Name = "ExecuteSingleActionMenuItem";
-            this.ExecuteSingleActionMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.ExecuteSingleActionMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExecuteSingleActionMenuItem.Text = "Single Action";
             this.ExecuteSingleActionMenuItem.Click += new System.EventHandler(this.ExecuteSingleActionMenuItem_Click);
             // 
@@ -213,14 +215,14 @@ namespace AST.Presentation
             // 
             this.ExecuteTestScenarioMenuItem.Enabled = false;
             this.ExecuteTestScenarioMenuItem.Name = "ExecuteTestScenarioMenuItem";
-            this.ExecuteTestScenarioMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.ExecuteTestScenarioMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExecuteTestScenarioMenuItem.Text = "Test Scenario";
             // 
             // ExecuteTestPlanMenuItem
             // 
             this.ExecuteTestPlanMenuItem.Enabled = false;
             this.ExecuteTestPlanMenuItem.Name = "ExecuteTestPlanMenuItem";
-            this.ExecuteTestPlanMenuItem.Size = new System.Drawing.Size(144, 22);
+            this.ExecuteTestPlanMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExecuteTestPlanMenuItem.Text = "Test Plan";
             // 
             // ReportStripMenuItem
@@ -264,7 +266,7 @@ namespace AST.Presentation
             // AboutMenuItem
             // 
             this.AboutMenuItem.Name = "AboutMenuItem";
-            this.AboutMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.AboutMenuItem.Size = new System.Drawing.Size(152, 22);
             this.AboutMenuItem.Text = "About";
             this.AboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
@@ -272,7 +274,7 @@ namespace AST.Presentation
             // 
             this.HelpMenuItem.Enabled = false;
             this.HelpMenuItem.Name = "HelpMenuItem";
-            this.HelpMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.HelpMenuItem.Size = new System.Drawing.Size(152, 22);
             this.HelpMenuItem.Text = "Help";
             // 
             // astPanel
@@ -281,6 +283,13 @@ namespace AST.Presentation
             this.astPanel.Name = "astPanel";
             this.astPanel.Size = new System.Drawing.Size(433, 336);
             this.astPanel.TabIndex = 0;
+            // 
+            // tempToolStripMenuItem
+            // 
+            this.tempToolStripMenuItem.Name = "tempToolStripMenuItem";
+            this.tempToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.tempToolStripMenuItem.Text = "Temp";
+            this.tempToolStripMenuItem.Click += new System.EventHandler(this.tempToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -330,5 +339,6 @@ namespace AST.Presentation
         private System.Windows.Forms.ToolStripMenuItem GenerateReportMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DeleteReportMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tempToolStripMenuItem;
     }
 }

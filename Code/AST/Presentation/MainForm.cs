@@ -185,5 +185,10 @@ namespace AST.Presentation{
             this.ResumeLayout(false);
         }
 
+        private void tempToolStripMenuItem_Click(object sender, EventArgs e) {
+            ExecutionDialog ad = new ExecutionDialog();
+            ad.ShowDialog();
+        }
+
     }
 }

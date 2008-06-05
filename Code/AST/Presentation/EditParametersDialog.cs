@@ -24,7 +24,7 @@ namespace AST.Presentation
             }
             else
             {
-                m_param = new Parameter("", "", Parameter.ParameterTypeEnum.None, "");
+                m_param = new Parameter("", "", Parameter.ParameterTypeEnum.None, "",false);
                 Title.Text = "Create Parameter";
                 OptionCheckBox.Checked = false;
                 InputCheckBox.Checked = false;
@@ -85,6 +85,7 @@ namespace AST.Presentation
                     }
             }
             DescriptionText.Text = m_param.Description;
+            DefaultCheckBox.Checked = m_param.IsDefault;
         }
 
         private void SetParameterContent(int OSTypeSelection)
@@ -148,7 +149,7 @@ namespace AST.Presentation
             }else if(OptionCheckBox.Checked == true)
                 m_param.Type = Parameter.ParameterTypeEnum.Option;
             else m_param.Type = Parameter.ParameterTypeEnum.None;
-
+            m_param.IsDefault = DefaultCheckBox.Checked;
             DialogResult = DialogResult.OK;
         }
 

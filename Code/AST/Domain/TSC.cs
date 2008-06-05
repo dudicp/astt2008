@@ -8,8 +8,8 @@ namespace AST.Domain{
 
         private List<Action> m_actions;
 
-        public TSC(String name, String description, int delay, String creatorName, DateTime creationTime)
-            : base(name, description, delay, creatorName, creationTime) {
+        public TSC(String name, String description, String creatorName, DateTime creationTime)
+            : base(name, description, creatorName, creationTime) {
 
                 m_actions = new List<Action>();
         }

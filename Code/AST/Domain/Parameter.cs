@@ -12,14 +12,16 @@ namespace AST.Domain{
         private String m_validityExp;
         private Hashtable m_values;
         private String m_input;
+        private bool m_isDefault;
 
-        public Parameter(String name, String description, ParameterTypeEnum type, String validityExp){
+        public Parameter(String name, String description, ParameterTypeEnum type, String validityExp, bool isDefault){
             m_name = name;
             m_description = description;
             m_type = type;
             m_validityExp = validityExp;
             m_values = new Hashtable();
             m_input = "";
+            m_isDefault = isDefault;
         }
 
         public String Name{
@@ -45,6 +47,11 @@ namespace AST.Domain{
         public String Input{
             get { return m_input; }
             set { m_input = value; }
+        }
+
+        public bool IsDefault {
+            get { return m_isDefault; }
+            set { m_isDefault = value; }
         }
 
         public String GetValue(EndStation.OSTypeEnum osType){

@@ -19,8 +19,9 @@ namespace AST.Domain{
         private String m_username;
         private String m_password;
         private StateEnum m_state;
+        private bool m_isDefault;
 
-        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password){
+        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password, bool isDefault){
             m_id = id;
             m_name = name;
             m_ip = ip;
@@ -30,6 +31,7 @@ namespace AST.Domain{
             m_username = username;
             m_password = password;
             m_state = StateEnum.Unknown;
+            m_isDefault = isDefault;
         }
 
         public int ID{
@@ -75,6 +77,11 @@ namespace AST.Domain{
         public StateEnum State{
             get { return m_state; }
             set { m_state = value; }
+        }
+
+        public bool IsDefault {
+            get { return m_isDefault; }
+            set { m_isDefault = value; }
         }
 
         public override String ToString(){

@@ -8,11 +8,11 @@ namespace AST.Domain {
         private List<TSC> m_tsc;
         private int m_numberOfTimes;
 
-        public TP(String name, String description, int delay, String creatorName, DateTime creationTime, int numberOfTimes)
-            : base(name, description, delay, creatorName, creationTime)
+        public TP(String name, String description, String creatorName, DateTime creationTime)
+            : base(name, description, creatorName, creationTime)
         {
 
-            m_numberOfTimes = numberOfTimes;
+            m_numberOfTimes = 1;
             m_tsc = new List<TSC>();
         }
 
