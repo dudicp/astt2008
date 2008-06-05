@@ -1017,9 +1017,9 @@ values
 ('Test','WINDOWS','test','');
 
 INSERT INTO Parameters
-(ActionName,ParameterName,Description,Type,Input,ValidityExp)
+(ActionName,ParameterName,Description,Type,Input,ValidityExp,IsDefault)
 values
-('Test','param1','param1','Input','','');
+('Test','param1','param1','Input','','','False');
 
 INSERT INTO ParameterValues
 (ActionName,ParameterName,OSType,Value)
@@ -1027,9 +1027,9 @@ values
 ('Test','param1','WINDOWS','-p1');
 
 INSERT INTO Parameters
-(ActionName,ParameterName,Description,Type,Input,ValidityExp)
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('Test','param2','param2','Option','','');
+('Test','param2','param2','Option','','','False');
 
 INSERT INTO ParameterValues
 (ActionName,ParameterName,OSType,Value)
@@ -1037,9 +1037,9 @@ values
 ('Test','param2','WINDOWS','-p2');
 
 INSERT INTO Parameters
-(ActionName,ParameterName,Description,Type,Input,ValidityExp)
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('Test','param3','param3','Option','','');
+('Test','param3','param3','Option','','','False');
 
 INSERT INTO ParameterValues
 (ActionName,ParameterName,OSType,Value)
@@ -1047,6 +1047,6 @@ values
 ('Test','param3','WINDOWS','-p3');
 
 INSERT INTO EndStations
-(ID,Name,IPAddress,MACAddress,OSType,OSVersion,Username,Password)
+(ID,Name,IPAddress,MACAddress,OSType,OSVersion,Username,Password,IsDefault)
 values
-(0,'End-Station','1.1.1.1','','WINDOWS','','','');
+(0,'End-Station','1.1.1.1','','WINDOWS','','','','False');
