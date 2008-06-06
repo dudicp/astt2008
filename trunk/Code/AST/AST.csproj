@@ -64,11 +64,11 @@
     <Compile Include="Presentation\ExecutionDialog.Designer.cs">
       <DependentUpon>ExecutionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\PrograssDialog.cs">
+    <Compile Include="Presentation\ProgressDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Presentation\PrograssDialog.Designer.cs">
-      <DependentUpon>PrograssDialog.cs</DependentUpon>
+    <Compile Include="Presentation\ProgressDialog.Designer.cs">
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Management\ExecutionManager.cs" />
     <Compile Include="Management\IServiceProvider.cs" />
@@ -144,11 +144,11 @@
     <Compile Include="Presentation\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\WelcomeScreen.cs">
+    <Compile Include="Presentation\WelcomePanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Presentation\WelcomeScreen.Designer.cs">
-      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+    <Compile Include="Presentation\WelcomePanel.Designer.cs">
+      <DependentUpon>WelcomePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -169,9 +169,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>ExecutionDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\PrograssDialog.resx">
+    <EmbeddedResource Include="Presentation\ProgressDialog.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>PrograssDialog.cs</DependentUpon>
+      <DependentUpon>ProgressDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\AboutDialog.resx">
       <SubType>Designer</SubType>
@@ -217,9 +217,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>SettingsDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\WelcomeScreen.resx">
+    <EmbeddedResource Include="Presentation\WelcomePanel.resx">
       <SubType>Designer</SubType>
-      <DependentUpon>WelcomeScreen.cs</DependentUpon>
+      <DependentUpon>WelcomePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>
@@ -229,5 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\coming-soon.gif" />
+    <None Include="Resources\Frame.jpg" />
   </ItemGroup>
 </Project>
