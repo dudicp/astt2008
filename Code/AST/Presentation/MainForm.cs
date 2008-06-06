@@ -13,18 +13,17 @@ namespace AST.Presentation{
     public partial class MainForm : Form , ASTOutputListener{
         public MainForm(){
             this.MaximizeBox = false;
-            
+
+            ASTManager.GetInstance().AddOutputListener(this);
+
+            ASTManager.GetInstance().Init();
+
             InitializeComponent();
             this.astPanel.Dispose();
             this.astPanel = new AST.Presentation.WelcomePanel();
             this.SuspendLayout();
             this.Controls.Add(this.astPanel);
             this.ResumeLayout(false);
-
-            ASTManager.GetInstance().AddOutputListener(this);
-
-            ASTManager.GetInstance().Init();
-
         }
 
         private void AboutMenuItem_Click(object sender, EventArgs e){

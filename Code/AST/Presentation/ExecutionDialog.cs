@@ -33,6 +33,19 @@ namespace AST.Presentation {
             SetAbstractActionsInfo();
         }
 
+        public ExecutionDialog(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
+            m_activeAction = a;
+            m_rootAction = a;
+            m_reportName = "";
+            m_type = type;
+            m_actionsInfo = new Hashtable();
+            m_TSCsInfo = new Hashtable();
+            m_TPsInfo = new Hashtable();
+            InitializeComponent();
+            SetAbstractActionsInfo();
+            SelectAbstractAction();
+        }
+
         public AbstractAction GetAbstractAction() {
             return this.m_rootAction;
         }
@@ -66,6 +79,27 @@ namespace AST.Presentation {
             names = this.m_TPsInfo.Keys;
             foreach (String name in names)
                 this.TPsListBox.Items.Add(name);
+        }
+
+        private void SelectAbstractAction() {
+            switch (m_type) {
+                case AbstractAction.AbstractActionTypeEnum.ACTION:
+                    this.ActionsListBox.SelectedItem = m_rootAction.Name;
+                    this.ActionsListBox_OnDoubleClick(null, null);
+                    break;
+                case AbstractAction.AbstractActionTypeEnum.TSC:
+                    this.TSCsListBox.SelectedItem = m_rootAction.Name;
+                    this.TSCsListBox_OnDoubleClick(null, null);
+                    this.TreeView.SelectedNode = this.TreeView.Nodes[0];
+                    this.TreeView_OnDoubleClick(null, null);
+                    break;
+                default:
+                    this.TPsListBox.SelectedItem = m_rootAction.Name;
+                    this.TPsListBox_OnDoubleClick(null, null);
+                    this.TreeView.SelectedNode = this.TreeView.Nodes[0];
+                    this.TreeView_OnDoubleClick(null, null);
+                    break;
+            }
         }
 
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {

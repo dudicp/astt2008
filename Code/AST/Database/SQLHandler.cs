@@ -732,7 +732,27 @@ namespace AST.Database{
             return info;
         }
 
-        public Hashtable GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
+        public List<RecentEntry> GetRecent(int recent) {
+            List<RecentEntry> recentActions = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.ACTION);
+            List<RecentEntry> recentTSCs = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.TSC);
+            List<RecentEntry> recentTPs = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.TP);
+
+            List<RecentEntry> allRecents = new List<RecentEntry>();
+            allRecents.AddRange(recentActions);
+            allRecents.AddRange(recentTSCs);
+            allRecents.AddRange(recentTPs);
+
+            allRecents.Sort(RecentEntry.Comparison);
+
+            List<RecentEntry> res = new List<RecentEntry>();
+            for (int i = 0; i < recent; i++)
+                if(allRecents.Count > i)
+                    res.Add(allRecents[i]);
+
+            return res;
+        }
+
+        public List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
             String storedProcedureName;
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
@@ -745,7 +765,7 @@ namespace AST.Database{
                     storedProcedureName = "sp_GetRecentTPs";
                     break;
             }
-            Hashtable info = new Hashtable();
+            List<RecentEntry> info = new List<RecentEntry>();
             SqlDataReader dr = null;
             try {
                 SqlConnection connection = this.Connect(); //Creating Connection
@@ -760,8 +780,8 @@ namespace AST.Database{
                 String name = (String)dr.GetValue(0);
                 String description = (String)dr.GetValue(1);
                 DateTime creationTime = (DateTime)dr.GetValue(2);
-
-                info.Add(name,creationTime.Date);
+                RecentEntry re = new RecentEntry(name, description, creationTime, type);
+                info.Add(re);
             }
             return info;
         }

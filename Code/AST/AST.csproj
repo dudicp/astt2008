@@ -51,6 +51,7 @@
     <Compile Include="Domain\EndStation.cs" />
     <Compile Include="Domain\EndStationSchedule.cs" />
     <Compile Include="Domain\Parameter.cs" />
+    <Compile Include="Domain\RecentEntry.cs" />
     <Compile Include="Domain\Result.cs" />
     <Compile Include="Domain\TSC.cs" />
     <Compile Include="Management\ASTManager.cs" />

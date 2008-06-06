@@ -71,7 +71,11 @@ namespace AST.Management {
             return this.m_databaseManager.GetInfo(type);
         }
 
-        public Hashtable GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
+        public List<RecentEntry> GetRecent(int recent) {
+            return this.m_databaseManager.GetRecent(recent);
+        }
+
+        public List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
             return this.m_databaseManager.GetRecent(recent, type);
         }
 

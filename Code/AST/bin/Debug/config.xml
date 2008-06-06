@@ -1,1 +1,0 @@
-<?xml version="1.0"?><Configuration><DatabaseConnectionString>Server=LULU-PC\SQLEXPRESS;Database=ASTDB;Integrated Security=True;</DatabaseConnectionString><MaxThreadPoolSize>10</MaxThreadPoolSize><PSToolsPath>../../../../PSTools</PSToolsPath></Configuration>
