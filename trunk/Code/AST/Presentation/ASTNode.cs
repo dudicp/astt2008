@@ -15,12 +15,19 @@ namespace AST.Presentation{
             m_abstractAction = a;
             m_type = type;
             if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) this.SetTSCNode();
+            else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) this.SetTPNode();
         }
 
         private void SetTSCNode() {
             List<Action> actions = ((TSC)(m_abstractAction)).GetActions();
             foreach (Action a in actions)
                 this.Nodes.Add(new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION));
+        }
+
+        private void SetTPNode() {
+            List<TSC> tscs = ((TP)(m_abstractAction)).GetTSCs();
+            foreach (TSC tsc in tscs)
+                this.Nodes.Add(new ASTNode(tsc, AbstractAction.AbstractActionTypeEnum.TSC));
         }
 
         public AbstractAction Value {

@@ -74,5 +74,10 @@ namespace AST.Domain{
         public bool ValidateValue(){
             return true;
         }
+
+        public override bool Equals(Object o) {
+            if (((Parameter)o).Name != this.Name) return false;
+            else return true;
+        }
     }
 }
