@@ -16,6 +16,8 @@ namespace AST.Database{
 
         Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type);
 
+        Hashtable GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type);
+
         List<Parameter> GetParameters(String actionName);
 
         bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type);

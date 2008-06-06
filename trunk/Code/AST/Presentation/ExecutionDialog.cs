@@ -18,16 +18,30 @@ namespace AST.Presentation {
         private List<EndStation> m_endStations;
         private List<Parameter> m_parameters;
         private AbstractAction m_activeAction;
+        private AbstractAction m_rootAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
+        private String m_reportName;
 
         public ExecutionDialog() {
             m_activeAction = null;
+            m_rootAction = null;
+            m_reportName = "";
             m_actionsInfo = new Hashtable();
             m_TSCsInfo = new Hashtable();
             m_TPsInfo = new Hashtable();
-            InitializeComponent();
+            InitializeComponent();            
             SetAbstractActionsInfo();
         }
+
+        public AbstractAction GetAbstractAction() {
+            return this.m_rootAction;
+        }
+
+        public String GetReportName() {
+            return this.m_reportName;
+        }
+
+    #region Abstract Action Methods
 
         private void SetAbstractActionsInfo() {
             this.ActionsListBox.Items.Clear();
@@ -53,8 +67,6 @@ namespace AST.Presentation {
             foreach (String name in names)
                 this.TPsListBox.Items.Add(name);
         }
-
-    #region Select Abstract Action
 
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem != null) {
@@ -82,7 +94,8 @@ namespace AST.Presentation {
 
         private void ActionsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem == null) return;
-            m_activeAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+            m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+            m_activeAction = m_rootAction;
 
             //Add this action the Default End-Stations
             ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
@@ -112,17 +125,17 @@ namespace AST.Presentation {
             this.TreeViewGroupBox.Enabled = false;
 
             m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
         }
 
         private void TSCsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TSCsListBox.SelectedItem == null) return;
-            m_activeAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
-
-            //Set End-Station List Boxes
-            this.SetEndStations(m_activeAction);
+            m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
 
             //Enable The End-Station GroupBox
-            this.EndStationsGroupBox.Enabled = true;
+            this.EndStationsGroupBox.Enabled = false;
 
             //Enable The Parameters GroupBox
             this.ParametersGroupBox.Enabled = false;
@@ -134,17 +147,17 @@ namespace AST.Presentation {
 
             //Disable The TreeView GroupBox
             this.TreeViewGroupBox.Enabled = true;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
         }
 
         private void TPsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TPsListBox.SelectedItem == null) return;
-            m_activeAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
-
-            //Set End-Station List Boxes
-            this.SetEndStations(m_activeAction);
+            m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
 
             //Enable The End-Station GroupBox
-            this.EndStationsGroupBox.Enabled = true;
+            this.EndStationsGroupBox.Enabled = false;
 
             //Enable The Parameters GroupBox
             this.ParametersGroupBox.Enabled = false;
@@ -156,6 +169,9 @@ namespace AST.Presentation {
 
             //Disable The TreeView GroupBox
             this.TreeViewGroupBox.Enabled = true;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
         }
 
     #endregion
@@ -164,14 +180,140 @@ namespace AST.Presentation {
 
         private void SetTreeView() {
             this.TreeView.Nodes.Clear();
+            this.TreeView.HideSelection = false;
 
-            ASTNode node = new ASTNode(this.m_activeAction, m_type);
+            ASTNode node = new ASTNode(this.m_rootAction, m_type);
             this.TreeView.Nodes.Add(node);
+            this.TreeView.Nodes[0].Expand();
+        }
+
+        private void TreeView_AfterSelect(object sender, TreeViewEventArgs e) {
+
+            if (this.TreeView.SelectedNode == null) return;
+
+            this.DescriptionText.Text = ((ASTNode)(this.TreeView.SelectedNode)).Value.Description;
+
+            if (TreeView.SelectedNode.Level != 1) {
+                this.MoveUpActionButton.Enabled = false;
+                this.MoveDownActionButton.Enabled = false;
+                return;
+            }
+
+            if (this.TreeView.SelectedNode == null) return;
+            if (TreeView.SelectedNode.Index > 0) this.MoveUpActionButton.Enabled = true;
+            else this.MoveUpActionButton.Enabled = false;
+            if ((TreeView.SelectedNode.Level == 1) && (TreeView.SelectedNode.Index < this.TreeView.SelectedNode.Parent.GetNodeCount(false) - 1)) this.MoveDownActionButton.Enabled = true;
+            else this.MoveDownActionButton.Enabled = false;
+        }
+
+        private void MoveUpActionButton_Click(object sender, EventArgs e) {
+            //Checks index validity
+            if (this.TreeView.SelectedNode == null) return;
+
+            //Changing the tree view order
+            ASTNode upperNode = ((ASTNode)(this.TreeView.SelectedNode));
+            int index = this.TreeView.SelectedNode.Index;
+            ASTNode lowerNode = ((ASTNode)this.TreeView.SelectedNode.Parent.Nodes[index - 1]);
+
+            if (this.TreeView.SelectedNode.Parent.Nodes.Count == 2) {
+                //if there are only 2 children and we remove them the selected node will be changed to the parent node
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
+                this.TreeView.SelectedNode.Nodes.Insert(index - 1, lowerNode);
+                this.TreeView.SelectedNode.Nodes.Insert(index - 1, upperNode);
+            }
+            else {
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
+                this.TreeView.SelectedNode.Parent.Nodes.Insert(index - 1, lowerNode);
+                this.TreeView.SelectedNode.Parent.Nodes.Insert(index - 1, upperNode);
+            }
+
+            this.TreeView.SelectedNode = upperNode;
+            if (this.TreeView.SelectedNode.Index == 0) this.MoveUpActionButton.Enabled = false;
+
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+                Action tmp = ((TSC)this.m_rootAction).GetActions()[index];
+                ((TSC)this.m_rootAction).GetActions()[index] = ((TSC)this.m_rootAction).GetActions()[index - 1];
+                ((TSC)this.m_rootAction).GetActions()[index - 1] = tmp;
+            }
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
+                TSC tmp = ((TP)this.m_rootAction).GetTSCs()[index];
+                ((TP)this.m_rootAction).GetTSCs()[index] = ((TP)this.m_rootAction).GetTSCs()[index - 1];
+                ((TP)this.m_rootAction).GetTSCs()[index - 1] = tmp;
+            }
+
+        }
+
+        private void MoveDownActionButton_Click(object sender, EventArgs e) {
+            //Checks index validity
+            if (this.TreeView.SelectedNode == null) return;
+
+            //Changing the tree view order
+            ASTNode lowerNode = ((ASTNode)(this.TreeView.SelectedNode));
+            int index = this.TreeView.SelectedNode.Index;
+            ASTNode upperNode = ((ASTNode)this.TreeView.SelectedNode.Parent.Nodes[index + 1]);
+
+            if (this.TreeView.SelectedNode.Parent.Nodes.Count == 2) {
+                //if there are only 2 children and we remove them the selected node will be changed to the parent node
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+
+                this.TreeView.SelectedNode.Nodes.Insert(index, lowerNode);
+                this.TreeView.SelectedNode.Nodes.Insert(index, upperNode);
+            }else{
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
+                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+
+                this.TreeView.SelectedNode.Parent.Nodes.Insert(index, lowerNode);
+                this.TreeView.SelectedNode.Parent.Nodes.Insert(index, upperNode);
+            }
+            this.TreeView.SelectedNode = lowerNode;
+
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+                Action tmp = ((TSC)this.m_rootAction).GetActions()[index];
+                ((TSC)this.m_rootAction).GetActions()[index] = ((TSC)this.m_rootAction).GetActions()[index + 1];
+                ((TSC)this.m_rootAction).GetActions()[index + 1] = tmp;
+            }
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
+                TSC tmp = ((TP)this.m_rootAction).GetTSCs()[index];
+                ((TP)this.m_rootAction).GetTSCs()[index] = ((TP)this.m_rootAction).GetTSCs()[index + 1];
+                ((TP)this.m_rootAction).GetTSCs()[index + 1] = tmp;
+            }
+        }
+
+        private void TreeView_OnDoubleClick(object sender, EventArgs e) {
+
+            if (this.TreeView.SelectedNode == null) return;
+
+            m_activeAction = ((ASTNode)this.TreeView.SelectedNode).Value;
+            AbstractAction.AbstractActionTypeEnum selectedType;
+            if(m_type == AbstractAction.AbstractActionTypeEnum.TSC){
+                if(this.TreeView.SelectedNode.Level == 0) selectedType = AbstractAction.AbstractActionTypeEnum.TSC;
+                else selectedType = AbstractAction.AbstractActionTypeEnum.ACTION;
+            }
+            else{
+                if(this.TreeView.SelectedNode.Level == 0) selectedType = AbstractAction.AbstractActionTypeEnum.TP;
+                else if(this.TreeView.SelectedNode.Level == 1) selectedType = AbstractAction.AbstractActionTypeEnum.TSC;
+                else selectedType = AbstractAction.AbstractActionTypeEnum.ACTION;
+            }
+
+
+            //Enable end-stations GroupBox
+            this.EndStationsGroupBox.Enabled = true;
+            this.SetEndStations(m_activeAction);
+
+            //Enable Parameters Groupbox if the active action is of type Action
+            if (selectedType == AbstractAction.AbstractActionTypeEnum.ACTION) {
+                this.SetParameters((Action)m_activeAction);
+                this.ParametersGroupBox.Enabled = true;
+            }
+            else this.ParametersGroupBox.Enabled = false;
         }
 
     #endregion
 
-        #region End-Stations Methods
+    #region End-Stations Methods
 
         private void SetEndStations(AbstractAction a) {
             this.m_endStations = new List<EndStation>();
@@ -465,7 +607,36 @@ namespace AST.Presentation {
             ((Action)m_activeAction).Duration = (int)this.DurationNumericUpDown.Value;
         }
 
-    #endregion
+        private void ReportNameCheckBox_CheckedChanged(object sender, EventArgs e) {
+            this.ReportNameTextBox.Enabled = this.ReportNameCheckBox.Checked;
+        }
 
+        private void ExecuteButton_Click(object sender, EventArgs e) {
+
+            //Getting report name
+            if ((this.ReportNameCheckBox.Checked) && (this.ReportNameTextBox.Text.Length > 0)) m_reportName = this.ReportNameTextBox.Text;
+            else if (this.ReportNameCheckBox.Checked) {
+                MessageBox.Show("Invalid Report Name.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            //Check End-Stations Selection
+            if (m_rootAction.GetEndStations().Count == 0) {
+                MessageBox.Show("No End-Station selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            else m_reportName = this.m_rootAction.Name + " " + DateTime.Now.ToString();
+
+            DialogResult = DialogResult.OK;
+        }
+
+        private void MyCancelButton_Click(object sender, EventArgs e) {
+            DialogResult = DialogResult.Cancel;
+        }
+
+    #endregion     
+
+        
     }
 }

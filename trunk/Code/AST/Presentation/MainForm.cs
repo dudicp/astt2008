@@ -16,7 +16,7 @@ namespace AST.Presentation{
             
             InitializeComponent();
             this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.WelcomeScreen();
+            this.astPanel = new AST.Presentation.WelcomePanel();
             this.SuspendLayout();
             this.Controls.Add(this.astPanel);
             this.ResumeLayout(false);
@@ -44,7 +44,7 @@ namespace AST.Presentation{
 
         public void DisplayWelcomeScreen() {
             this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.WelcomeScreen();
+            this.astPanel = new AST.Presentation.WelcomePanel();
             this.SuspendLayout();
             this.Controls.Add(this.astPanel);
             this.ResumeLayout(false);
@@ -67,23 +67,6 @@ namespace AST.Presentation{
 
         private void ExitMenuItem_Click(object sender, FormClosedEventArgs e) {
             ASTManager.GetInstance().Exit();
-        }
-
-        private void ExecuteSingleActionMenuItem_Click(object sender, EventArgs e) {
-            BrowseDialog bd = new BrowseDialog(AbstractAction.AbstractActionTypeEnum.ACTION);
-            if (bd.ShowDialog() == DialogResult.OK) {
-                String name = bd.GetAbstractActionName();
-                if ((name == null) || (name.Length == 0)) {
-                    MessageBox.Show("No Action Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                Action a = (Action)ASTManager.GetInstance().Load(name, AbstractAction.AbstractActionTypeEnum.ACTION);
-                this.astPanel.Dispose();
-                this.astPanel = new AST.Presentation.ExecutionPanel(a, AbstractAction.AbstractActionTypeEnum.ACTION);
-                this.SuspendLayout();
-                this.Controls.Add(this.astPanel);
-                this.ResumeLayout(false);
-            }
         }
 
         private void NewTestScenarioMenuItem_Click(object sender, EventArgs e) {
@@ -185,9 +168,18 @@ namespace AST.Presentation{
             this.ResumeLayout(false);
         }
 
-        private void tempToolStripMenuItem_Click(object sender, EventArgs e) {
-            ExecutionDialog ad = new ExecutionDialog();
-            ad.ShowDialog();
+        private void ExecuteStripMenuItem_Click(object sender, EventArgs e) {
+            ExecutionDialog ed = new ExecutionDialog();
+            if (ed.ShowDialog() == DialogResult.OK) {
+                ProgressDialog pd = new ProgressDialog();
+
+                AbstractAction a = ed.GetAbstractAction();
+                String reportName = ed.GetReportName();
+
+                ASTManager.GetInstance().Execute(a, reportName);
+
+                pd.ShowDialog();
+            }
         }
 
     }

@@ -27,6 +27,7 @@ namespace AST.Presentation{
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
             if (a != null) {
+                this.m_action.CreationTime = DateTime.Now;
                 this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
                 Title.Text = "Edit Additional Action";
                 SetActionAttributes();

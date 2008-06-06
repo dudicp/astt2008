@@ -55,7 +55,7 @@ namespace AST.Management{
                     if (!p.WaitForExit(duration * 1000)) p.Kill();
                 }
 
-                if (p.ExitCode != 0) throw new ExecutionFailedException("Proccess terminated with error code: " + p.ExitCode);
+                //if (p.ExitCode != 0) throw new ExecutionFailedException("Proccess terminated with error code: " + p.ExitCode);
 
                 Process pi = new Process();
                 pi.StartInfo.FileName = "cmd.exe";
