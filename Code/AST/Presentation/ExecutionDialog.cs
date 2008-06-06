@@ -16,7 +16,9 @@ namespace AST.Presentation {
         private Hashtable m_TSCsInfo;
         private Hashtable m_TPsInfo;
         private List<EndStation> m_endStations;
+        private List<Parameter> m_parameters;
         private AbstractAction m_activeAction;
+        private AbstractAction.AbstractActionTypeEnum m_type;
 
         public ExecutionDialog() {
             m_activeAction = null;
@@ -52,7 +54,7 @@ namespace AST.Presentation {
                 this.TPsListBox.Items.Add(name);
         }
 
-    #region SelectAbstractAction
+    #region Select Abstract Action
 
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem != null) {
@@ -89,12 +91,87 @@ namespace AST.Presentation {
             }
 
             //Set End-Station List Boxes
-            SetEndStations(m_activeAction);
+            this.SetEndStations(m_activeAction);
+
+            //Add this action the Default Parameters
+            List<Parameter> parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
+            foreach (Parameter p in parameters) {
+                if (p.IsDefault) ((Action)m_activeAction).AddParameter(p);
+            }
+
+            //Set Parameters List Boxes
+            this.SetParameters((Action)m_activeAction);
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = true;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = true;
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = false;
+
+            m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
+        }
+
+        private void TSCsListBox_OnDoubleClick(object sender, EventArgs e) {
+            if (this.TSCsListBox.SelectedItem == null) return;
+            m_activeAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+
+            //Set End-Station List Boxes
+            this.SetEndStations(m_activeAction);
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = true;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = false;
+
+            m_type = AbstractAction.AbstractActionTypeEnum.TSC;
+
+            //Set TreeView GroupBox
+            this.SetTreeView();
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = true;
+        }
+
+        private void TPsListBox_OnDoubleClick(object sender, EventArgs e) {
+            if (this.TPsListBox.SelectedItem == null) return;
+            m_activeAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
+
+            //Set End-Station List Boxes
+            this.SetEndStations(m_activeAction);
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = true;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = false;
+
+            m_type = AbstractAction.AbstractActionTypeEnum.TP;
+
+            //Set TreeView GroupBox
+            this.SetTreeView();
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = true;
         }
 
     #endregion
 
-    #region EndStationsMethods
+    #region TreeView Methods
+
+        private void SetTreeView() {
+            this.TreeView.Nodes.Clear();
+
+            ASTNode node = new ASTNode(this.m_activeAction, m_type);
+            this.TreeView.Nodes.Add(node);
+        }
+
+    #endregion
+
+        #region End-Stations Methods
 
         private void SetEndStations(AbstractAction a) {
             this.m_endStations = new List<EndStation>();
@@ -233,5 +310,162 @@ namespace AST.Presentation {
         }
 
     #endregion
+
+    #region Parameters Methods
+
+        private void SetParameters(Action a) {
+
+            this.SelectedParametersListBox.Items.Clear();
+            this.ParametersListBox.Items.Clear();
+            this.m_parameters = new List<Parameter>();
+
+            //Filling the selected parameters:
+            foreach (Parameter p in a.GetParameters()) {
+                this.SelectedParametersListBox.Items.Add(p.Name);
+            }
+
+            List<Parameter> allParameters = ASTManager.GetInstance().GetParameters(a.Name);
+
+            //Filling the unselected parameters:
+            foreach (Parameter p in allParameters) {
+                if (!a.GetParameters().Contains(p)) {
+                    this.m_parameters.Add(p);
+                    this.ParametersListBox.Items.Add(p.Name);
+                }
+            }
+        }
+
+        private void ParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.SelectParameterButton.Enabled = false;
+            if ((this.ParametersListBox.SelectedIndex < 0) || (this.ParametersListBox.SelectedIndex >= this.m_parameters.Count)) return;
+            this.SelectParameterButton.Enabled = true;
+            this.DescriptionText.Text = this.m_parameters[this.ParametersListBox.SelectedIndex].Description;
+            if (!(this.m_parameters[this.ParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) &&
+                !(this.m_parameters[this.ParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both))
+
+                this.InputTextBox.Enabled = false;
+
+            else this.InputTextBox.Enabled = true;
+
+            this.InputTextBox.Text = this.m_parameters[this.ParametersListBox.SelectedIndex].Input;
+            this.SelectedParametersListBox.ClearSelected();
+        }
+
+        private void SelectedParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.UnselectParameterButton.Enabled = false;
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count)) return;
+            if (this.SelectedParametersListBox.SelectedIndex > 0) this.MoveUpParameterButton.Enabled = true;
+            else this.MoveUpParameterButton.Enabled = false;
+            if (this.SelectedParametersListBox.SelectedIndex < (((Action)this.m_activeAction).GetParameters().Count - 1)) this.MoveDownParameterButton.Enabled = true;
+            else this.MoveDownParameterButton.Enabled = false;
+            this.UnselectParameterButton.Enabled = true;
+
+            if (!(((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) &&
+                !(((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both))
+
+                this.InputTextBox.Enabled = false;
+
+            else this.InputTextBox.Enabled = true;
+
+            this.InputTextBox.Text = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Input;
+            this.DescriptionText.Text = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Description;
+            this.ParametersListBox.ClearSelected();
+        }
+
+        private void UnselectParameterButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count)) {
+                this.UnselectParameterButton.Enabled = false;
+                return;
+            }
+
+            Parameter p = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex];
+            this.ParametersListBox.Items.Add(p.Name);
+            this.m_parameters.Add(p);
+            this.SelectedParametersListBox.Items.Remove(p.Name);
+            ((Action)this.m_activeAction).RemoveParameter(p);
+            if (SelectedParametersListBox.Items.Count == 0)
+                this.UnselectParameterButton.Enabled = false;
+            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count))
+                this.MoveUpParameterButton.Enabled = false;
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (((Action)this.m_activeAction).GetParameters().Count - 1)))
+                this.MoveDownParameterButton.Enabled = false;
+
+            this.InputTextBox.Clear();
+        }
+
+        private void SelectParameterButton_Click(object sender, EventArgs e) {
+            if ((this.ParametersListBox.SelectedIndex < 0) || (this.ParametersListBox.SelectedIndex >= this.m_parameters.Count)) {
+                this.SelectParameterButton.Enabled = false;
+                return;
+            }
+            Parameter p = this.m_parameters[this.ParametersListBox.SelectedIndex];
+            p.Input = this.InputTextBox.Text;
+            this.InputTextBox.Clear();
+
+            ((Action)this.m_activeAction).AddParameter(p);
+            this.SelectedParametersListBox.Items.Add(p.Name);
+            this.m_parameters.Remove(p);
+            this.ParametersListBox.Items.Remove(p.Name);
+            if (ParametersListBox.Items.Count == 0)
+                this.SelectParameterButton.Enabled = false;
+        }
+
+        private void MoveUpParameterButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count))
+                return;
+            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex - 1] = tmp;
+            if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count)) this.MoveUpParameterButton.Enabled = false;
+
+            Parameter p = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex - 1];
+            ((Action)this.m_activeAction).GetParameters().RemoveAt(this.SelectedParametersListBox.SelectedIndex - 1);
+            ((Action)this.m_activeAction).GetParameters().Insert(this.SelectedParametersListBox.SelectedIndex, ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex - 1]);
+            ((Action)this.m_activeAction).GetParameters().RemoveAt(this.SelectedParametersListBox.SelectedIndex);
+            ((Action)this.m_activeAction).GetParameters().Insert(this.SelectedParametersListBox.SelectedIndex, p);
+            this.SelectedParametersListBox.SelectedIndex--;
+        }
+
+        private void MoveDownParameterButton_Click(object sender, EventArgs e) {
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (((Action)this.m_activeAction).GetParameters().Count - 1)))
+                return;
+            String tmp = (String)this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex] = this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1];
+            this.SelectedParametersListBox.Items[this.SelectedParametersListBox.SelectedIndex + 1] = tmp;
+
+
+            Parameter p = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex];
+            ((Action)this.m_activeAction).GetParameters().RemoveAt(this.SelectedParametersListBox.SelectedIndex);
+            ((Action)this.m_activeAction).GetParameters().Insert(this.SelectedParametersListBox.SelectedIndex, ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex]);
+            ((Action)this.m_activeAction).GetParameters().RemoveAt(this.SelectedParametersListBox.SelectedIndex + 1);
+            ((Action)this.m_activeAction).GetParameters().Insert(this.SelectedParametersListBox.SelectedIndex + 1, p);
+            this.SelectedParametersListBox.SelectedIndex++;
+            if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (((Action)this.m_activeAction).GetParameters().Count - 1))) this.MoveDownParameterButton.Enabled = false;
+        }
+
+    #endregion
+
+    #region Misc Methods
+
+        private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
+            this.DelayNumericUpDown.Enabled = this.DelayCheckBox.Checked;
+            if (!this.DelayCheckBox.Checked) ((Action)m_activeAction).Delay = 0;
+        }
+
+        private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
+            this.DurationNumericUpDown.Enabled = this.DurationCheckBox.Checked;
+            if (!this.DurationCheckBox.Checked) ((Action)m_activeAction).Duration = 0;
+        }
+
+        private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
+            ((Action)m_activeAction).Delay = (int)this.DelayNumericUpDown.Value;
+        }
+
+        private void DurationNumericUpDown_ValueChanged(object sender, EventArgs e) {
+            ((Action)m_activeAction).Duration = (int)this.DurationNumericUpDown.Value;
+        }
+
+    #endregion
+
     }
 }

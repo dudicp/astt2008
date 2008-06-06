@@ -40,7 +40,8 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Load Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        
+    #region Load Methods
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
                 case AbstractAction.AbstractActionTypeEnum.ACTION: return LoadAction(name);
@@ -140,6 +141,9 @@ namespace AST.Database{
 
             Parameter.ParameterTypeEnum type = this.GetParameterType((String)dr.GetValue(3));
 
+            //Getting the default input of the parameter
+            String input = (String)dr.GetValue(4);
+
             //Getting the description of the parameter
             String validityExp = (String)dr.GetValue(5);
 
@@ -147,6 +151,7 @@ namespace AST.Database{
             bool isDefault = (bool)dr.GetValue(6);
 
             Parameter p = new Parameter(parameterName, description, type, validityExp, isDefault);
+            p.Input = input;
 
             // 2.Load Parameter Content
             SqlDataReader contentDR = null;
@@ -306,9 +311,13 @@ namespace AST.Database{
             }
         }
 
+    #endregion
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Save Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #region Save Methods
 
         public void Save(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
@@ -492,9 +501,13 @@ namespace AST.Database{
             }
         }
 
+    #endregion
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Delete Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #region Delete Methods
 
         public void Delete(String name, AbstractAction.AbstractActionTypeEnum type) {
             switch (type) {
@@ -572,9 +585,13 @@ namespace AST.Database{
             }
         }
 
+    #endregion
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Get Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #region Get Methods
 
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
@@ -628,7 +645,7 @@ namespace AST.Database{
                 //Getting End-Station Password
                 String password = (String)dr.GetValue(7);
 
-                //Getting End-Station Password
+                //Getting End-Station Default
                 bool isDefault = (bool)dr.GetValue(8);
 
                 EndStation es = new EndStation(id, name, ip, osType, username, password,isDefault);
@@ -709,7 +726,7 @@ namespace AST.Database{
         public List<Parameter> GetParameters(String actionName) {
             List<Parameter> res = new List<Parameter>();
 
-            //  1. Load Parameter
+            //  1. Load Parameters
             SqlConnection connection;
             SqlDataReader dr = null;
             try {
@@ -723,53 +740,20 @@ namespace AST.Database{
             }
 
             while (dr.Read()) {
-
-                //Getting the name of the parameter
-                String parameterName = (String)dr.GetValue(1);
-
-                //Getting the description of the parameter
-                String description = (String)dr.GetValue(2);
-
-                Parameter.ParameterTypeEnum type = this.GetParameterType((String)dr.GetValue(3));
-
-                //Getting the description of the parameter
-                String validityExp = (String)dr.GetValue(5);
-
-                //Getting the bit of isDefault
-                bool isDefault = (bool)dr.GetValue(6);
-
-                Parameter p = new Parameter(parameterName, description, type, validityExp, isDefault);
-
-                // 2.Load Parameter Content
-                SqlDataReader contentDR = null;
-                try {
-                    connection = this.Connect(); //Creating Connection
-                    contentDR = SqlHelper.ExecuteReader(connection, "sp_GetParameterContents", actionName, parameterName);
-                }
-                catch (ConnectionFailedException e) { throw e; }
-                catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::GetParameters:: Loading parameter contents of: " + p.Name + " failed.");
-                    throw new QueryFailedException("Loading parameter contents of: " + p.Name + " failed.", e);
-                }
-
-                while (contentDR.Read()) {
-
-                    //Getting content OSTYpe
-                    EndStation.OSTypeEnum OSType = this.GetOSType((String)contentDR.GetValue(2));
-
-                    //Getting content value
-                    String value = (String)contentDR.GetValue(3);
-
-                    p.AddValue(OSType, value);
-                }
+                //Loading each paramter
+                Parameter p = this.LoadParameter(actionName, (String)dr.GetValue(1));
                 res.Add(p);
             }
             return res;
         }
 
+    #endregion
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      IsExist Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #region IsExist Methods
 
         public bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
             String storedProcedureName = "";
@@ -827,10 +811,13 @@ namespace AST.Database{
             }
         }
 
+    #endregion
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Other Methods
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    #region Other Methods
 
         private EndStation.OSTypeEnum GetOSType(String str){
             switch (str)
@@ -864,5 +851,7 @@ namespace AST.Database{
                     return Parameter.ParameterTypeEnum.None;
             }
         }
+
+    #endregion
     }
 }

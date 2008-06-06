@@ -78,7 +78,7 @@ namespace AST.Presentation {
 
             else this.InputTextBox.Enabled = true;
 
-            this.InputTextBox.Clear();
+            this.InputTextBox.Text = this.m_parameters[this.ParameterListBox.SelectedIndex].Input;
         }
 
         private void SelectedParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -136,6 +136,7 @@ namespace AST.Presentation {
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (this.m_selectedParameters.Count - 1)))
                 this.MoveDownParameterButton.Enabled = false;
 
+            this.InputTextBox.Clear();
         }
 
         private void MoveUpParameterButton_Click(object sender, EventArgs e) {
