@@ -440,15 +440,15 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteParameter]') AND type in (N'P', N'PC'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetRecentActions]') AND type in (N'P', N'PC'))
 BEGIN
-EXEC dbo.sp_executesql @statement = N'--1. Delete Parameter
-CREATE PROCEDURE [dbo].[sp_DeleteParameter]
-@ActionName varchar(20),
-@ParameterName varchar(20)
+EXEC dbo.sp_executesql @statement = N'--3. Getting action
+CREATE PROCEDURE [dbo].[sp_GetRecentActions]
 AS
-DELETE FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
-DELETE FROM Parameters WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+SELECT Name, Description, CreationTime
+FROM Actions
+ORDER BY CreationTime DESC;
+
 ' 
 END
 GO
@@ -481,6 +481,22 @@ ELSE
 	values
 	(@ActionName,@ParameterName,@OSType,@Value)
 	END' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteParameter]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--1. Delete Parameter
+CREATE PROCEDURE [dbo].[sp_DeleteParameter]
+@ActionName varchar(20),
+@ParameterName varchar(20)
+AS
+DELETE FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+DELETE FROM Parameters WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+' 
 END
 GO
 SET ANSI_NULLS ON
@@ -612,6 +628,22 @@ CREATE PROCEDURE [dbo].[sp_GetActionContents]
 @Name varchar(20) 
 AS
 SELECT * FROM ActionContents WHERE ActionName=@Name;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetRecentTSCs]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Getting action
+CREATE PROCEDURE [dbo].[sp_GetRecentTSCs]
+AS
+SELECT Name, Description, CreationTime
+FROM TSCs
+ORDER BY CreationTime DESC;
+
 ' 
 END
 GO
@@ -774,6 +806,48 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_UpdateTP]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Insert Action
+CREATE PROCEDURE [dbo].[sp_UpdateTP]
+@Name varchar(20),
+@Description text,
+@CreatorName varchar(20),
+@CreationTime datetime
+
+AS
+
+UPDATE TPs
+SET Description = @Description,
+	CreatorName = @CreatorName,
+	CreationTime = @CreationTime
+WHERE Name=@Name;
+
+
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetRecentTPs]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Getting action
+CREATE PROCEDURE [dbo].[sp_GetRecentTPs]
+AS
+SELECT Name, Description, CreationTime
+FROM TPs
+ORDER BY CreationTime DESC;
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTP]') AND type in (N'P', N'PC'))
 BEGIN
 EXEC dbo.sp_executesql @statement = N'--3. Getting action
@@ -781,6 +855,25 @@ CREATE PROCEDURE [dbo].[sp_GetTP]
 @Name varchar(20) 
 AS
 SELECT * FROM TPs WHERE Name=@Name;
+
+
+
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTPContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTPContent]
+@TPName varchar(20)
+AS
+DELETE FROM TSCsInTP WHERE TPName=@TPName;
+
 
 
 
@@ -825,7 +918,8 @@ EXEC dbo.sp_executesql @statement = N'--4. Getting action content
 CREATE PROCEDURE [dbo].[sp_GetTSCsInTP]
 @TPName varchar(20) 
 AS
-SELECT * FROM TSCsInTP WHERE TPName=@TPName;
+SELECT * FROM TSCsInTP WHERE TPName=@TPName ORDER BY ExecutionOrder ASC;
+
 
 
 ' 
@@ -868,7 +962,27 @@ EXEC dbo.sp_executesql @statement = N'--4. Getting action content
 CREATE PROCEDURE [dbo].[sp_GetActionsInTSC]
 @Name varchar(20) 
 AS
-SELECT * FROM ActionsInTSC WHERE TSCName=@Name;
+SELECT * FROM ActionsInTSC WHERE TSCName=@Name ORDER BY ExecutionOrder ASC;
+
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTSCContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTSCContent]
+@TSCName varchar(20)
+AS
+DELETE FROM ParametersInTSC WHERE TSCName=@TSCName;
+DELETE FROM ActionsInTSC WHERE TSCName=@TSCName;
+DELETE FROM EndStationsInTSC WHERE TSCName=@TSCName;
+
+
 
 ' 
 END
@@ -990,7 +1104,6 @@ ALTER TABLE [dbo].[TSCsInTP]  WITH CHECK ADD  CONSTRAINT [FK_TSCsInTP_TSCs] FORE
 REFERENCES [dbo].[TSCs] ([Name])
 GO
 ALTER TABLE [dbo].[TSCsInTP] CHECK CONSTRAINT [FK_TSCsInTP_TSCs]
-
 
 --/////////////////////////////////////////
 --// Basic Actions

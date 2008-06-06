@@ -71,6 +71,10 @@ namespace AST.Database
                 default: throw new InvalidCastException("Unknown type: "+type.ToString());
             }
         }
+        
+        public Hashtable GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
+            return this.m_DBHandler.GetRecent(recent, type);
+        }
 
         public List<String> GetReportsNames(){
             return this.m_reportsNames;

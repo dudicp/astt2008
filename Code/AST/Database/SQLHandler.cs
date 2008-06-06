@@ -399,15 +399,20 @@ namespace AST.Database{
             
             // 1. Deleting the old TSC if exists.
             try {
+
                 SqlConnection connection;
 
+                String storedProcedureName;
                 if (this.IsExist(tsc, AbstractAction.AbstractActionTypeEnum.TSC)) {
                     connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSC", tsc.Name);
+                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSCContent", tsc.Name);
+                    storedProcedureName = "sp_UpdateTSC";
                 }
+                else storedProcedureName = "sp_InsertTSC";
+
                 // 2. Saving the TSC information.
                 connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_InsertTSC", tsc.Name, tsc.Description, tsc.CreatorName, tsc.CreationTime);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, tsc.Name, tsc.Description, tsc.CreatorName, tsc.CreationTime);
 
                 // 3. For each action in the TSC
                 int executionOrder = 0;
@@ -446,13 +451,17 @@ namespace AST.Database{
             try {
                 SqlConnection connection;
 
+                String storedProcedureName;
                 if (this.IsExist(tp, AbstractAction.AbstractActionTypeEnum.TP)) {
                     connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTP", tp.Name);
+                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTPContent", tp.Name);
+                    storedProcedureName = "sp_UpdateTP";
                 }
+                else storedProcedureName = "sp_InsertTP";
+
                 // 2. Saving the TSC information.
                 connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_InsertTP", tp.Name, tp.Description, tp.CreatorName, tp.CreationTime);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, tp.Name, tp.Description, tp.CreatorName, tp.CreationTime);
 
                 // 3. Saving each TSC in the TP.
                 int executionOrder = 0;
@@ -719,6 +728,40 @@ namespace AST.Database{
                 String description = (String)dr.GetValue(1);
 
                 info.Add(name, description);
+            }
+            return info;
+        }
+
+        public Hashtable GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
+            String storedProcedureName;
+            switch (type) {
+                case AbstractAction.AbstractActionTypeEnum.ACTION:
+                    storedProcedureName = "sp_GetRecentActions";
+                    break;
+                case AbstractAction.AbstractActionTypeEnum.TSC:
+                    storedProcedureName = "sp_GetRecentTSCs";
+                    break;
+                default:
+                    storedProcedureName = "sp_GetRecentTPs";
+                    break;
+            }
+            Hashtable info = new Hashtable();
+            SqlDataReader dr = null;
+            try {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, storedProcedureName, null);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetRecent:: Load information of all actions failed.");
+                throw new QueryFailedException("Load information of all actions failed.", e);
+            }
+            while (dr.Read() && recent-- > 0) {
+                String name = (String)dr.GetValue(0);
+                String description = (String)dr.GetValue(1);
+                DateTime creationTime = (DateTime)dr.GetValue(2);
+
+                info.Add(name,creationTime.Date);
             }
             return info;
         }
