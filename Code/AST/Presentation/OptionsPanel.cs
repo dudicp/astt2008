@@ -108,6 +108,12 @@ namespace AST.Presentation {
                 MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void button1_Click(object sender, EventArgs e) {
+            FolderBrowserDialog browse = new FolderBrowserDialog();
+            if (browse.ShowDialog() == DialogResult.OK)
+                PSToolsPathText.Text = browse.SelectedPath;
+        }
     }
 }
 
