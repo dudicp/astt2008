@@ -137,6 +137,9 @@ namespace AST.Presentation {
                 if (es.IsDefault) m_activeAction.AddEndStation(new EndStationSchedule(es));
             }
 
+            //Clears the TreeView
+            this.TreeView.Nodes.Clear();
+
             //Set End-Station List Boxes
             this.SetEndStations(m_activeAction);
 
