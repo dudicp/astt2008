@@ -39,6 +39,7 @@ namespace AST.Presentation {
             this.EndStationsTitle = new System.Windows.Forms.Label();
             this.ConfigurationSettingsTitle = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.BrowseButton = new System.Windows.Forms.Button();
             this.MaxThreadPoolText = new System.Windows.Forms.NumericUpDown();
             this.PSToolsPathText = new System.Windows.Forms.TextBox();
             this.DBConnectionText = new System.Windows.Forms.TextBox();
@@ -221,6 +222,7 @@ namespace AST.Presentation {
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.BrowseButton);
             this.groupBox1.Controls.Add(this.MaxThreadPoolText);
             this.groupBox1.Controls.Add(this.PSToolsPathText);
             this.groupBox1.Controls.Add(this.DBConnectionText);
@@ -236,6 +238,17 @@ namespace AST.Presentation {
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
             // 
+            // BrowseButton
+            // 
+            this.BrowseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F);
+            this.BrowseButton.Location = new System.Drawing.Point(332, 76);
+            this.BrowseButton.Name = "BrowseButton";
+            this.BrowseButton.Size = new System.Drawing.Size(57, 23);
+            this.BrowseButton.TabIndex = 37;
+            this.BrowseButton.Text = "Browse";
+            this.BrowseButton.UseVisualStyleBackColor = true;
+            this.BrowseButton.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MaxThreadPoolText
             // 
             this.MaxThreadPoolText.Location = new System.Drawing.Point(172, 106);
@@ -248,7 +261,7 @@ namespace AST.Presentation {
             this.PSToolsPathText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.PSToolsPathText.Location = new System.Drawing.Point(172, 76);
             this.PSToolsPathText.Name = "PSToolsPathText";
-            this.PSToolsPathText.Size = new System.Drawing.Size(218, 24);
+            this.PSToolsPathText.Size = new System.Drawing.Size(154, 24);
             this.PSToolsPathText.TabIndex = 35;
             // 
             // DBConnectionText
@@ -344,6 +357,7 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label UsernameText;
         private System.Windows.Forms.Label IPText;
         private System.Windows.Forms.Label IsDefaultLabel;
+        private System.Windows.Forms.Button BrowseButton;
 
     }
 }
