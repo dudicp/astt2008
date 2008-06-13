@@ -43,10 +43,11 @@ namespace AST.Presentation {
             this.MaxThreadPoolText = new System.Windows.Forms.NumericUpDown();
             this.PSToolsPathText = new System.Windows.Forms.TextBox();
             this.DBConnectionText = new System.Windows.Forms.TextBox();
-            this.SaveConfigurationButton = new System.Windows.Forms.Button();
             this.MaxThreadPoolLabel = new System.Windows.Forms.Label();
             this.PSToolsPathLabel = new System.Windows.Forms.Label();
             this.DBConnectionLabel = new System.Windows.Forms.Label();
+            this.MyCancelButton = new System.Windows.Forms.Button();
+            this.okButton = new System.Windows.Forms.Button();
             this.EndStationsGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxThreadPoolText)).BeginInit();
@@ -188,6 +189,7 @@ namespace AST.Presentation {
             this.EndStationsListBox.Name = "EndStationsListBox";
             this.EndStationsListBox.Size = new System.Drawing.Size(128, 79);
             this.EndStationsListBox.TabIndex = 11;
+            this.EndStationsListBox.DoubleClick += new System.EventHandler(this.EditEndStationButton_Click);
             this.EndStationsListBox.SelectedIndexChanged += new System.EventHandler(this.EndStationsListBox_SelectedIndexChanged);
             // 
             // EndStationsLabel
@@ -214,7 +216,7 @@ namespace AST.Presentation {
             // 
             this.ConfigurationSettingsTitle.AutoSize = true;
             this.ConfigurationSettingsTitle.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConfigurationSettingsTitle.Location = new System.Drawing.Point(16, 268);
+            this.ConfigurationSettingsTitle.Location = new System.Drawing.Point(16, 277);
             this.ConfigurationSettingsTitle.Name = "ConfigurationSettingsTitle";
             this.ConfigurationSettingsTitle.Size = new System.Drawing.Size(209, 20);
             this.ConfigurationSettingsTitle.TabIndex = 30;
@@ -226,14 +228,13 @@ namespace AST.Presentation {
             this.groupBox1.Controls.Add(this.MaxThreadPoolText);
             this.groupBox1.Controls.Add(this.PSToolsPathText);
             this.groupBox1.Controls.Add(this.DBConnectionText);
-            this.groupBox1.Controls.Add(this.SaveConfigurationButton);
             this.groupBox1.Controls.Add(this.MaxThreadPoolLabel);
             this.groupBox1.Controls.Add(this.PSToolsPathLabel);
             this.groupBox1.Controls.Add(this.DBConnectionLabel);
             this.groupBox1.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(19, 307);
+            this.groupBox1.Location = new System.Drawing.Point(19, 316);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(396, 182);
+            this.groupBox1.Size = new System.Drawing.Size(396, 144);
             this.groupBox1.TabIndex = 31;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
@@ -247,7 +248,7 @@ namespace AST.Presentation {
             this.BrowseButton.TabIndex = 37;
             this.BrowseButton.Text = "Browse";
             this.BrowseButton.UseVisualStyleBackColor = true;
-            this.BrowseButton.Click += new System.EventHandler(this.button1_Click);
+            this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
             // MaxThreadPoolText
             // 
@@ -271,17 +272,6 @@ namespace AST.Presentation {
             this.DBConnectionText.Name = "DBConnectionText";
             this.DBConnectionText.Size = new System.Drawing.Size(218, 24);
             this.DBConnectionText.TabIndex = 32;
-            // 
-            // SaveConfigurationButton
-            // 
-            this.SaveConfigurationButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveConfigurationButton.Location = new System.Drawing.Point(332, 153);
-            this.SaveConfigurationButton.Name = "SaveConfigurationButton";
-            this.SaveConfigurationButton.Size = new System.Drawing.Size(58, 23);
-            this.SaveConfigurationButton.TabIndex = 34;
-            this.SaveConfigurationButton.Text = "Save";
-            this.SaveConfigurationButton.UseVisualStyleBackColor = true;
-            this.SaveConfigurationButton.Click += new System.EventHandler(this.SaveConfigurationButton_Click);
             // 
             // MaxThreadPoolLabel
             // 
@@ -313,9 +303,33 @@ namespace AST.Presentation {
             this.DBConnectionLabel.TabIndex = 31;
             this.DBConnectionLabel.Text = "Database Name:";
             // 
+            // MyCancelButton
+            // 
+            this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MyCancelButton.Location = new System.Drawing.Point(220, 519);
+            this.MyCancelButton.Name = "MyCancelButton";
+            this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
+            this.MyCancelButton.TabIndex = 32;
+            this.MyCancelButton.Text = "Cancel";
+            this.MyCancelButton.UseVisualStyleBackColor = true;
+            this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
+            // 
+            // okButton
+            // 
+            this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.okButton.Location = new System.Drawing.Point(142, 519);
+            this.okButton.Name = "okButton";
+            this.okButton.Size = new System.Drawing.Size(72, 23);
+            this.okButton.TabIndex = 33;
+            this.okButton.Text = "OK";
+            this.okButton.UseVisualStyleBackColor = true;
+            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            // 
             // OptionsPanel
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.Controls.Add(this.MyCancelButton);
+            this.Controls.Add(this.okButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ConfigurationSettingsTitle);
             this.Controls.Add(this.EndStationsGroupBox);
@@ -349,7 +363,6 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label MaxThreadPoolLabel;
         private System.Windows.Forms.Label PSToolsPathLabel;
         private System.Windows.Forms.Label DBConnectionLabel;
-        private System.Windows.Forms.Button SaveConfigurationButton;
         private System.Windows.Forms.TextBox PSToolsPathText;
         private System.Windows.Forms.TextBox DBConnectionText;
         private System.Windows.Forms.NumericUpDown MaxThreadPoolText;
@@ -358,6 +371,8 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label IPText;
         private System.Windows.Forms.Label IsDefaultLabel;
         private System.Windows.Forms.Button BrowseButton;
+        private System.Windows.Forms.Button MyCancelButton;
+        private System.Windows.Forms.Button okButton;
 
     }
 }

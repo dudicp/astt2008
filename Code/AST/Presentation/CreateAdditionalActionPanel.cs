@@ -127,6 +127,7 @@ namespace AST.Presentation{
 
         private void SaveOSButton_Click(object sender, EventArgs e)
         {
+            if (!this.CheckActionContent()) return;
             EndStation.OSTypeEnum OSType = ConvertSelectionToOSType(OScomboBox.SelectedIndex);
             m_action.AddContent(OSType,ContentText.Text);
             m_action.Timeout = (int)TimeoutText.Value;
@@ -143,6 +144,7 @@ namespace AST.Presentation{
 
         private void RemoveParameterButton_Click(object sender, EventArgs e)
         {
+            if (this.ParametersComboBox.SelectedItem == null) return;
             int paramIndex = ParametersComboBox.SelectedIndex;
             this.m_removedParameters.Add(this.m_parameters[paramIndex]); //Added to the remove parameters
             this.m_parameters.Remove(this.m_parameters[paramIndex]); //Removed from screen
@@ -158,6 +160,7 @@ namespace AST.Presentation{
 
         private void EditParameterButton_Click(object sender, EventArgs e)
         {
+            if (this.ParametersComboBox.SelectedItem == null) return;
             EditParametersDialog ed = new EditParametersDialog(this.m_parameters[ParametersComboBox.SelectedIndex]);
             if (ed.ShowDialog() == DialogResult.OK)
             {
@@ -234,6 +237,21 @@ namespace AST.Presentation{
             }
             if (this.CreatorNameText.Text.Length == 0) {
                 message += "Creator name\n";
+                res = false;
+            }
+            if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return res;
+        }
+
+        private bool CheckActionContent() {
+            bool res = true;
+            String message = "The following attributes are invalid:\n";
+            if (this.OScomboBox.SelectedItem == null) {
+                message += "OS Type\n";
+                res = false;
+            }
+            if (this.ContentText.Text.Length == 0) {
+                message += "Command/Script empty\n";
                 res = false;
             }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -44,7 +44,7 @@ namespace AST.Management {
 
 
         private void EndStationComboBox_SelectedIndexChanged(object sender, EventArgs e) {
-            if (this.EndStationComboBox.SelectedIndex >= m_endStations.Count) {
+            if (this.EndStationComboBox.SelectedItem == null || this.EndStationComboBox.SelectedIndex >= m_endStations.Count) {
                 return;
             }
             this.EndStationNameText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].Name+"("+m_endStations[this.EndStationComboBox.SelectedIndex].ID+")";

@@ -46,6 +46,7 @@ namespace AST.Presentation {
 
             this.Title1.Text = "Edit Parameters - " + this.m_action.Name;
 
+
             this.m_parameters = new List<Parameter>();
             this.m_selectedParameters = new List<Parameter>();
 

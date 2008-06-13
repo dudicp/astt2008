@@ -81,6 +81,10 @@ namespace AST.Presentation {
                 message += "IP Address\n";
                 res = false;
             }
+            if (this.OSComboBox.SelectedItem == null) {
+                message += "OS Type\n";
+                res = false;
+            }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return res;
         }

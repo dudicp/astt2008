@@ -669,6 +669,9 @@ namespace AST.Presentation {
         }
 
         private void MyCancelButton_Click(object sender, EventArgs e) {
+            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.No) return;
+
             DialogResult = DialogResult.Cancel;
         }
 
