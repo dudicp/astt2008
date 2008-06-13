@@ -45,9 +45,6 @@ namespace AST.Presentation
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExecuteStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ReportStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.GenerateReportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.DeleteReportMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -183,7 +180,6 @@ namespace AST.Presentation
             // 
             this.ToolsStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ExecuteStripMenuItem,
-            this.ReportStripMenuItem,
             this.SettingsToolStripMenuItem});
             this.ToolsStripMenuItem.Name = "ToolsStripMenuItem";
             this.ToolsStripMenuItem.Size = new System.Drawing.Size(48, 20);
@@ -195,28 +191,6 @@ namespace AST.Presentation
             this.ExecuteStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExecuteStripMenuItem.Text = "Execute";
             this.ExecuteStripMenuItem.Click += new System.EventHandler(this.ExecuteStripMenuItem_Click);
-            // 
-            // ReportStripMenuItem
-            // 
-            this.ReportStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.GenerateReportMenuItem,
-            this.DeleteReportMenuItem});
-            this.ReportStripMenuItem.Enabled = false;
-            this.ReportStripMenuItem.Name = "ReportStripMenuItem";
-            this.ReportStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.ReportStripMenuItem.Text = "Reports";
-            // 
-            // GenerateReportMenuItem
-            // 
-            this.GenerateReportMenuItem.Name = "GenerateReportMenuItem";
-            this.GenerateReportMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.GenerateReportMenuItem.Text = "Generate Report";
-            // 
-            // DeleteReportMenuItem
-            // 
-            this.DeleteReportMenuItem.Name = "DeleteReportMenuItem";
-            this.DeleteReportMenuItem.Size = new System.Drawing.Size(159, 22);
-            this.DeleteReportMenuItem.Text = "Delete Report";
             // 
             // SettingsToolStripMenuItem
             // 
@@ -296,9 +270,6 @@ namespace AST.Presentation
         private System.Windows.Forms.ToolStripMenuItem DeleteTestPlanMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExitMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExecuteStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ReportStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem GenerateReportMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem DeleteReportMenuItem;
         private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
     }
 }

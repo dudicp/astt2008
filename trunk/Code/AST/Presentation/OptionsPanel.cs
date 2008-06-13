@@ -86,11 +86,18 @@ namespace AST.Presentation {
             else this.IsDefaultLabel.Text = "";
         }
 
-        private void SaveConfigurationButton_Click(object sender, EventArgs e) {
+        private void BrowseButton_Click(object sender, EventArgs e) {
+            FolderBrowserDialog browse = new FolderBrowserDialog();
+            if (browse.ShowDialog() == DialogResult.OK)
+                PSToolsPathText.Text = browse.SelectedPath;
+        }
+
+        private void okButton_Click(object sender, EventArgs e) {
             int res = ConfigurationManager.WriteConfiguration(this.DBConnectionText.Text, this.PSToolsPathText.Text, (int)this.MaxThreadPoolText.Value);
             if (res == ConfigurationManager.SUCCESS) {
                 MessageBox.Show("Configuration file updated successfully.", "Info Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ASTManager.GetInstance().Init();
+                ASTManager.GetInstance().DisplayWelcomeScreen();
             }
             else {
                 String message;
@@ -109,11 +116,14 @@ namespace AST.Presentation {
             }
         }
 
-        private void button1_Click(object sender, EventArgs e) {
-            FolderBrowserDialog browse = new FolderBrowserDialog();
-            if (browse.ShowDialog() == DialogResult.OK)
-                PSToolsPathText.Text = browse.SelectedPath;
+        private void MyCancelButton_Click(object sender, EventArgs e) {
+            //Return to the welcome screen
+            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.No) return;
+
+            ASTManager.GetInstance().DisplayWelcomeScreen();
         }
+
     }
 }
 
