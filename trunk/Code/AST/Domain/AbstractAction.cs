@@ -50,6 +50,8 @@ namespace AST.Domain{
         public abstract void RemoveEndStation(EndStationSchedule es);
 
         public abstract void ClearEndStations();
+
+        public abstract List<Action> GetActions();
     }
 
 }

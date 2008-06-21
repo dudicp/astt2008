@@ -118,5 +118,12 @@ namespace AST.Domain{
                 res = res + " " + p.GetValue(osType) + " " + p.Input;
             return res;
         }
+
+        public override List<Action> GetActions()
+        {
+            List<Action> actions = new List<Action>();
+            actions.Add(this);
+            return actions;
+        }
     }
 }
