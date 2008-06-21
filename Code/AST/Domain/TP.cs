@@ -59,5 +59,19 @@ namespace AST.Domain {
         public void ClearTSCs() {
             m_tsc.Clear();
         }
+
+        public override List<Action> GetActions()
+        {
+            List<Action> actions = new List<Action>();
+            List<Action> tmp;
+            foreach (TSC tsc in m_tsc)
+            {
+                tmp = tsc.GetActions();
+                actions.AddRange(tmp);
+            }
+
+            return actions;
+
+        }
     }
 }

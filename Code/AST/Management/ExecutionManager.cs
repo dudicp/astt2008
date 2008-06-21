@@ -6,17 +6,19 @@ using AST.Domain;
 using System.Threading;
 
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace AST.Management
 {
     class ExecutionManager
     {
-        private ICollection<Result> m_results;
         private Thread m_executionThread;
         private bool m_isRunning;
-        private Action m_action;
+        private AbstractAction m_action;
+        private List<Action> m_actions;
         private String m_reportName;
         private List<ExecutionManagerOutputListener> m_outputListeners;
+        private Queue m_results;
 
 
         public ExecutionManager(int poolSize)
@@ -26,10 +28,12 @@ namespace AST.Management
             m_executionThread = new Thread(new ThreadStart(ExecuterThreadFunc));
             m_executionThread.Start();
             m_action = null;
+            
+            m_results = Queue.Synchronized(new Queue());            
 
         }
 
-        public ICollection<Result> Results
+        public Queue Results
         {
             get { return m_results; }
             set { m_results = value; }
@@ -37,8 +41,7 @@ namespace AST.Management
 
         public void Execute(AbstractAction action, String name)
         {
-            
-            m_action = (Action)action;
+            m_action = action;
             m_reportName = name;
             System.Threading.Thread.Sleep(100);
             m_executionThread.Resume();      
@@ -46,31 +49,37 @@ namespace AST.Management
 
         private void ExecuterThreadFunc()
         {
+            List<Action> actions;
             while (m_isRunning)
             {
                 m_executionThread.Suspend();
+                actions = m_action.GetActions();
 
-                int length = ((Action)m_action).GetEndStations().ToArray().Length;
-                ManualResetEvent[] doneEvents = new ManualResetEvent[length];
-                for (int i = 0; i < length; i++)
+                foreach (Action action in actions)
                 {
-                    doneEvents[i] = new ManualResetEvent(false);
-                    Executer executer = new Executer(m_action,i, doneEvents[i]);
-                    ThreadPool.QueueUserWorkItem(executer.ExecuterCallback, null);
+                    int length = action.GetEndStations().ToArray().Length;
+                    ManualResetEvent[] doneEvents = new ManualResetEvent[length];
+                    for (int i = 0; i < length; i++)
+                    {
+                        doneEvents[i] = new ManualResetEvent(false);
+                        Executer executer = new Executer(action, i, doneEvents[i], m_results);
+                        ThreadPool.QueueUserWorkItem(executer.ExecuterCallback, null);
+                    }
+
+                    WaitHandle.WaitAll(doneEvents);
+                    Debug.WriteLine("Sleeping for " + action.Timeout + " sec");
+                    System.Threading.Thread.Sleep(action.Timeout * 1000);
                 }
 
-                WaitHandle.WaitAll(doneEvents);
+                foreach (Object res in m_results)
+                {
+                    Debug.WriteLine(((Result)res).ToString());
+                }
 
+                m_results.Clear();
+                
             }
         }
-
-            //int length = ((Action)action).GetEndStations().ToArray().Length;
-            //ManualResetEvent[] doneEvents = new ManualResetEvent[length];
-            //for (int i = 0; i < length; i++)
-            //{
-            //    doneEvents[i] = new ManualResetEvent(false);
-            //    Executer executer = new Executer(action,i, doneEvents[i]);
-            //    ThreadPool.QueueUserWorkItem(executer.ThreadPoolCallback);
 
         public void AddOutputListener(ExecutionManagerOutputListener o) {
             this.m_outputListeners.Add(o);

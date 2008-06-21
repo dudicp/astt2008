@@ -14,9 +14,6 @@ namespace AST.Domain{
                 m_actions = new List<Action>();
         }
 
-        public List<Action> GetActions(){
-            return m_actions;
-        }
 
         public override void AddEndStation(EndStationSchedule es){
             if (m_endStations.Contains(es)) m_endStations.Remove(es);
@@ -51,6 +48,11 @@ namespace AST.Domain{
 
         public void ClearActions() {
             m_actions.Clear();
+        }
+
+        public override List<Action> GetActions()
+        {
+            return m_actions;
         }
     }
 }

@@ -17,72 +17,66 @@ namespace AST.Management{
         private WindowsPlatformProvider(){}
 
         public static WindowsPlatformProvider GetInstance(){
-            if (m_instance == null) m_instance = new WindowsPlatformProvider();
+            if (m_instance == null) 
+                m_instance = new WindowsPlatformProvider();
             return m_instance;
         }
 
-        public void ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration) {
+        public String ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration) 
+        {
+           String res = "";
+           String cmd2 = "c:\\pstools\\psexec.exe ";
+           if (!File.Exists(cmd2))
+               Console.Out.WriteLine("no such file" + cmd2);
+           else
+           {
+                String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
+                if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: " + PSToolsCommand + " doesn't found.");
 
-            String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
-            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: " + PSToolsCommand + " doesn't found.");
+                String timeoutStr = "";
+                if (username.Length != 0) username = " -u " + username;
+                if (password.Length != 0) password = " -p " + password;
+                if (timeout != 0) timeoutStr = " -n " + timeout;
 
-            String timeoutStr = "";
-            if (username.Length != 0) username = " -u " + username;
-            if (password.Length != 0) password = " -p " + password;
-            if (timeout != 0) timeoutStr = " -n " + timeout;
+                String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " " + cmd;
+                Debug.WriteLine(PSToolsCommand + args);
 
-            String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " -i " +" " + cmd;
-            Debug.WriteLine(PSToolsCommand + args);
+                Process p = new Process();
+                ProcessStartInfo psi = new ProcessStartInfo(PSToolsCommand, args);
+                //psi.CreateNoWindow = false;
+                psi.UseShellExecute = false;
+                psi.RedirectStandardOutput = true;
+                p.StartInfo = psi;
+     
+                try {
+                    p.Start();
+                    if (duration == 0) {
+                        //StreamReader myStreamReader = p.StandardOutput;
+                        //String myString1 = myStreamReader.ReadToEnd();
 
-            Process p = new Process();
-            ProcessStartInfo psi = new ProcessStartInfo(PSToolsCommand, args);
-            //psi.CreateNoWindow = false;
-            psi.UseShellExecute = false;
-            psi.RedirectStandardOutput = true;
-            p.StartInfo = psi;
-            String res;
-            try {
-                p.Start();
-                if (duration == 0) {
-                    //StreamReader myStreamReader = p.StandardOutput;
-                    //String myString1 = myStreamReader.ReadToEnd();
+                        p.WaitForExit();
+                        res = p.StandardOutput.ReadToEnd();
+                        Debug.WriteLine("Ping result:\n" + res);
 
-                    //res = p.StandardOutput.ReadToEnd();
-                    p.WaitForExit();
-                    //p.Close();
+                        //p.Close();
+                    }
+                    else {
+                        if (!p.WaitForExit(duration * 1000)) p.Kill();
+                    }
+
                 }
-                else {
-                    if (!p.WaitForExit(duration * 1000)) p.Kill();
+                catch (ExecutionFailedException e) { throw e; }
+                catch (FileNotExistException e) { throw e; }
+                catch (Exception e) {
+                    throw new ExecutionFailedException("Could not start process.", e);
                 }
-
-                //if (p.ExitCode != 0) throw new ExecutionFailedException("Proccess terminated with error code: " + p.ExitCode);
-
-                Process pi = new Process();
-                pi.StartInfo.FileName = "cmd.exe";
-                pi.StartInfo.Arguments = "/c dir *.*";
-                pi.StartInfo.UseShellExecute = false;
-                pi.StartInfo.RedirectStandardOutput = true;
-                pi.Start();
-
-                string output = pi.StandardOutput.ReadToEnd();
 
             }
-            catch (ExecutionFailedException e) { throw e; }
-            catch (FileNotExistException e) { throw e; }
-            catch (Exception e) {
-                throw new ExecutionFailedException("Could not start process.", e);
-            }
+            return res;
         }
-            
 
-            /*if (duration != 0) {
-                System.Threading.Thread.Sleep(duration*1000);
-                String PsKillCommand = ConfigurationManager.GetPSToolsFullPath() + KILL_COMMAND;
-                args = " \\\\" + ip.ToString() + username + password + " " + p.Id;
-                Process.Start(PsKillCommand, args);
-            }*/
-
-        public void ExecuteCmd(IPAddress ip, String username, String password, String cmd)
+ /*
+        public String ExecuteCmd(IPAddress ip, String username, String password, String cmd)
         {
             String PSToolsPath = ConfigurationManager.GetPSToolsFullPath();
             String str = PSToolsPath + "\\psexec.exe" ;
@@ -94,12 +88,13 @@ namespace AST.Management{
             Console.WriteLine(str + args); 
             Process.Start(str, args);
         }
-
-        public void ExecuteScript(IPAddress ip, String username, String password, String filename, int timeout, int duration)
+*/
+        public String ExecuteScript(IPAddress ip, String username, String password, String filename, int timeout, int duration)
         {
+            String res = "";
 
+            return res;
         }
-
 
     }
 }
