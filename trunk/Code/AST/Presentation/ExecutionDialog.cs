@@ -516,6 +516,28 @@ namespace AST.Presentation {
                     this.ParametersListBox.Items.Add(p.Name);
                 }
             }
+
+            if (a.Duration != 0)
+            {
+                this.DurationCheckBox.Checked = true;
+                this.DurationNumericUpDown.Value = a.Duration;
+            }
+            else
+            {
+                this.DurationCheckBox.Checked = false;
+                this.DurationNumericUpDown.Value = 10;
+            }
+
+            if (a.Delay != 0)
+            {
+                this.DelayCheckBox.Checked = true;
+                this.DelayNumericUpDown.Value = a.Delay;
+            }
+            else
+            {
+                this.DelayCheckBox.Checked = false;
+                this.DelayNumericUpDown.Value = 10;
+            }
         }
 
         private void ParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -663,8 +685,18 @@ namespace AST.Presentation {
             else m_reportName = this.GenerateTmpReportName();
 
             //Check End-Stations Selection
-            if (m_rootAction.GetEndStations().Count == 0) {
-                MessageBox.Show("No End-Station selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            bool check = false;
+            String err = "The following end-stations has no end-station:\n\n";
+            List<Action> allActions = m_rootAction.GetActions();            
+            foreach (Action a in allActions)
+            {
+                if ((a.ActionType != Action.ActionTypeEnum.TEST_SCRIPT) && (a.GetEndStations().Count == 0)){
+                    check = true;
+                    err += a.Name + ".\n";
+                }
+            }
+            if (check) {
+                MessageBox.Show(err, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
