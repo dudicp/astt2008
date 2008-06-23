@@ -233,7 +233,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="DataObjectClassDiagram.cd" />
     <None Include="Resources\ASTBackground.jpg" />
     <None Include="Resources\ASTBackground.png" />
     <Content Include="Resources\coming-soon.gif" />
