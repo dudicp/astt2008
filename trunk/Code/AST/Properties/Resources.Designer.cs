@@ -66,26 +66,5 @@ namespace AST.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
-        internal static System.Drawing.Bitmap coming_soon {
-            get {
-                object obj = ResourceManager.GetObject("coming-soon", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap Frame {
-            get {
-                object obj = ResourceManager.GetObject("Frame", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        internal static System.Drawing.Bitmap none {
-            get {
-                object obj = ResourceManager.GetObject("none", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
     }
 }
