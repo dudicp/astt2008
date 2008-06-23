@@ -54,6 +54,10 @@ namespace AST.Presentation {
             return this.m_reportName;
         }
 
+        public AbstractAction.AbstractActionTypeEnum GetAbstractActionType() {
+            return m_type;
+        }
+
     #region Abstract Action Methods
 
         private void SetAbstractActionsInfo() {
@@ -656,14 +660,13 @@ namespace AST.Presentation {
                 MessageBox.Show("Invalid Report Name.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
+            else m_reportName = this.GenerateTmpReportName();
 
             //Check End-Stations Selection
             if (m_rootAction.GetEndStations().Count == 0) {
                 MessageBox.Show("No End-Station selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
-            else m_reportName = this.m_rootAction.Name + " " + DateTime.Now.ToString();
 
             DialogResult = DialogResult.OK;
         }
@@ -677,6 +680,13 @@ namespace AST.Presentation {
 
     #endregion     
 
+        private String GenerateTmpReportName() {
+            String reportName = this.m_rootAction.Name + " " + DateTime.Now.ToString();
+            reportName = reportName.Replace(":", "-");
+            reportName = reportName.Replace("\\", "-");
+            reportName = reportName.Replace("/", "-");
+            return reportName;
+        }
         
     }
 }

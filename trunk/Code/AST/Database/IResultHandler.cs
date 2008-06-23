@@ -7,12 +7,6 @@ namespace AST.Database{
 
     interface IResultHandler{
 
-        List<Result> Load(String reportName);
-
         void Save(Result res, String reportName);
-
-        void Delete(String reportName);
-
-        List<String> GetNames();
     }
 }

@@ -26,8 +26,6 @@ namespace AST.Management {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ResultsGridView = new System.Windows.Forms.DataGridView();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EndStationComboBox = new System.Windows.Forms.ComboBox();
             this.EndStationLabel = new System.Windows.Forms.Label();
             this.EndStationDetailsBox = new System.Windows.Forms.GroupBox();
@@ -43,11 +41,14 @@ namespace AST.Management {
             this.UsernameLabel = new System.Windows.Forms.Label();
             this.IPLabel = new System.Windows.Forms.Label();
             this.CurrentActionLabel = new System.Windows.Forms.Label();
-            this.RoundLabel = new System.Windows.Forms.Label();
-            this.RoundText = new System.Windows.Forms.Label();
+            this.ActionNoLabel = new System.Windows.Forms.Label();
+            this.ActionNoText = new System.Windows.Forms.Label();
             this.CurrentActionText = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.SuspendLayout();
@@ -56,14 +57,14 @@ namespace AST.Management {
             // 
             this.ProgressBar.Location = new System.Drawing.Point(13, 243);
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(445, 23);
+            this.ProgressBar.Size = new System.Drawing.Size(514, 23);
             this.ProgressBar.TabIndex = 0;
             this.ProgressBar.Value = 70;
             // 
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(227, 277);
+            this.MyCancelButton.Location = new System.Drawing.Point(273, 277);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 20;
@@ -80,32 +81,20 @@ namespace AST.Management {
             this.ResultsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.ResultsGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.Action,
+            this.EndStation,
             this.Status});
             this.ResultsGridView.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.ResultsGridView.Location = new System.Drawing.Point(10, 47);
             this.ResultsGridView.Name = "ResultsGridView";
             this.ResultsGridView.ReadOnly = true;
             this.ResultsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ResultsGridView.Size = new System.Drawing.Size(245, 106);
+            this.ResultsGridView.Size = new System.Drawing.Size(313, 106);
             this.ResultsGridView.TabIndex = 21;
-            // 
-            // Action
-            // 
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            this.Action.Width = 130;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
             // 
             // EndStationComboBox
             // 
             this.EndStationComboBox.FormattingEnabled = true;
-            this.EndStationComboBox.Location = new System.Drawing.Point(349, 11);
+            this.EndStationComboBox.Location = new System.Drawing.Point(422, 11);
             this.EndStationComboBox.Name = "EndStationComboBox";
             this.EndStationComboBox.Size = new System.Drawing.Size(105, 21);
             this.EndStationComboBox.TabIndex = 22;
@@ -115,7 +104,7 @@ namespace AST.Management {
             // 
             this.EndStationLabel.AutoSize = true;
             this.EndStationLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationLabel.Location = new System.Drawing.Point(264, 13);
+            this.EndStationLabel.Location = new System.Drawing.Point(337, 13);
             this.EndStationLabel.Name = "EndStationLabel";
             this.EndStationLabel.Size = new System.Drawing.Size(79, 15);
             this.EndStationLabel.TabIndex = 23;
@@ -135,7 +124,7 @@ namespace AST.Management {
             this.EndStationDetailsBox.Controls.Add(this.UsernameLabel);
             this.EndStationDetailsBox.Controls.Add(this.IPLabel);
             this.EndStationDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationDetailsBox.Location = new System.Drawing.Point(267, 38);
+            this.EndStationDetailsBox.Location = new System.Drawing.Point(340, 38);
             this.EndStationDetailsBox.Name = "EndStationDetailsBox";
             this.EndStationDetailsBox.Size = new System.Drawing.Size(187, 127);
             this.EndStationDetailsBox.TabIndex = 24;
@@ -262,24 +251,24 @@ namespace AST.Management {
             this.CurrentActionLabel.TabIndex = 39;
             this.CurrentActionLabel.Text = "Current Action:";
             // 
-            // RoundLabel
+            // ActionNoLabel
             // 
-            this.RoundLabel.AutoSize = true;
-            this.RoundLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RoundLabel.Location = new System.Drawing.Point(360, 191);
-            this.RoundLabel.Name = "RoundLabel";
-            this.RoundLabel.Size = new System.Drawing.Size(51, 15);
-            this.RoundLabel.TabIndex = 40;
-            this.RoundLabel.Text = "Round:";
+            this.ActionNoLabel.AutoSize = true;
+            this.ActionNoLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActionNoLabel.Location = new System.Drawing.Point(337, 191);
+            this.ActionNoLabel.Name = "ActionNoLabel";
+            this.ActionNoLabel.Size = new System.Drawing.Size(77, 15);
+            this.ActionNoLabel.TabIndex = 40;
+            this.ActionNoLabel.Text = "Action No.:";
             // 
-            // RoundText
+            // ActionNoText
             // 
-            this.RoundText.AutoSize = true;
-            this.RoundText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RoundText.Location = new System.Drawing.Point(417, 191);
-            this.RoundText.Name = "RoundText";
-            this.RoundText.Size = new System.Drawing.Size(0, 15);
-            this.RoundText.TabIndex = 41;
+            this.ActionNoText.AutoSize = true;
+            this.ActionNoText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ActionNoText.Location = new System.Drawing.Point(417, 191);
+            this.ActionNoText.Name = "ActionNoText";
+            this.ActionNoText.Size = new System.Drawing.Size(0, 15);
+            this.ActionNoText.TabIndex = 41;
             // 
             // CurrentActionText
             // 
@@ -304,23 +293,45 @@ namespace AST.Management {
             // 
             this.OkButton.Enabled = false;
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(150, 277);
+            this.OkButton.Location = new System.Drawing.Point(196, 277);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(71, 23);
             this.OkButton.TabIndex = 44;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
+            this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
+            // 
+            // Action
+            // 
+            this.Action.Frozen = true;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            // 
+            // EndStation
+            // 
+            this.EndStation.Frozen = true;
+            this.EndStation.HeaderText = "End-Station";
+            this.EndStation.Name = "EndStation";
+            this.EndStation.ReadOnly = true;
+            // 
+            // Status
+            // 
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 70;
             // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(469, 312);
+            this.ClientSize = new System.Drawing.Size(538, 312);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.Title);
             this.Controls.Add(this.CurrentActionText);
-            this.Controls.Add(this.RoundText);
-            this.Controls.Add(this.RoundLabel);
+            this.Controls.Add(this.ActionNoText);
+            this.Controls.Add(this.ActionNoLabel);
             this.Controls.Add(this.CurrentActionLabel);
             this.Controls.Add(this.EndStationDetailsBox);
             this.Controls.Add(this.EndStationLabel);
@@ -357,13 +368,14 @@ namespace AST.Management {
         private System.Windows.Forms.Label MacText;
         private System.Windows.Forms.Label MacLabel;
         private System.Windows.Forms.Label CurrentActionLabel;
-        private System.Windows.Forms.Label RoundLabel;
-        private System.Windows.Forms.Label RoundText;
+        private System.Windows.Forms.Label ActionNoLabel;
+        private System.Windows.Forms.Label ActionNoText;
         private System.Windows.Forms.Label CurrentActionText;
         private System.Windows.Forms.Label EndStationNameText;
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.Button OkButton;
         private System.Windows.Forms.DataGridViewTextBoxColumn Action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
     }
 }

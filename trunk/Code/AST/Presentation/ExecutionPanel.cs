@@ -85,7 +85,7 @@ namespace AST.Presentation {
 
             ExecutionDialog ed = new ExecutionDialog();
 
-            ASTManager.GetInstance().Execute(this.m_abstractAction, reportName);
+            ASTManager.GetInstance().Execute(this.m_abstractAction, this.m_type, reportName);
             
             // Open ExecutionDialog
             ed.ShowDialog();

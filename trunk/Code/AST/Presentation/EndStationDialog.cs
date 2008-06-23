@@ -22,7 +22,7 @@ namespace AST.Presentation {
             if (es != null) {
                 this.SetEndStationDetails();
             }else{
-                int id = ASTManager.GetInstance().GetEndStations().Count;
+                int id = ASTManager.GetInstance().GetUnusedEndStationIndex();
                 this.IDTextBox.Text = ""+id;
                 this.m_es = new EndStation(id,"",new IPAddress(0x00000000) ,EndStation.OSTypeEnum.WINDOWS,"","",false);
                 this.SetOSType();

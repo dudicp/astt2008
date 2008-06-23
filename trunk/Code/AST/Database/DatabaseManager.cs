@@ -13,7 +13,6 @@ namespace AST.Database
         private Hashtable m_actionInfo;
         private Hashtable m_TSCInfo;
         private Hashtable m_TPInfo;
-        private List<String> m_reportsNames;
         private IDatabaseHandler m_DBHandler;
         private IResultHandler m_resultHandler;
 
@@ -22,7 +21,6 @@ namespace AST.Database
             this.m_actionInfo = new Hashtable();
             this.m_TSCInfo = new Hashtable();
             this.m_TPInfo = new Hashtable();
-            this.m_reportsNames = new List<String>();
             this.m_DBHandler = DBhandler;
             this.m_resultHandler = resultHandler;
         }
@@ -32,7 +30,6 @@ namespace AST.Database
             this.m_actionInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
             this.m_TSCInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
             this.m_TPInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
-            this.m_reportsNames = this.m_resultHandler.GetNames();
         }
 
         public void DeleteAbstractAction(String name, AbstractAction.AbstractActionTypeEnum type){
@@ -52,11 +49,6 @@ namespace AST.Database
                     }
             }
             this.m_DBHandler.Delete(name, type);
-        }
-
-        public void DeleteReport(String name){
-            this.m_reportsNames.Remove(name);
-            this.m_resultHandler.Delete(name);
         }
 
         public bool Exist(String filename){
@@ -80,10 +72,6 @@ namespace AST.Database
             return this.m_DBHandler.GetRecent(recent, type);
         }
 
-        public List<String> GetReportsNames(){
-            return this.m_reportsNames;
-        }
-
         public List<Parameter> GetParameters(String actionName) {
             return this.m_DBHandler.GetParameters(actionName);
         }
@@ -94,10 +82,6 @@ namespace AST.Database
 
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type){
             return this.m_DBHandler.Load(name, type);
-        }
-
-        public List<Result> LoadReport(String reportName){
-            return this.m_resultHandler.Load(reportName);
         }
 
         public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew){
@@ -131,13 +115,6 @@ namespace AST.Database
         }
 
         public void SaveResult(Result res, String reportName) {
-            if (this.m_reportsNames.Contains(reportName)) {
-                int index = this.m_reportsNames.IndexOf(reportName);
-                this.m_reportsNames.Remove(reportName);
-                this.m_reportsNames.Insert(index, reportName);
-            }
-            else this.m_reportsNames.Add(reportName);
-
             this.m_resultHandler.Save(res, reportName);
         }
 
