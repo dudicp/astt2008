@@ -170,9 +170,10 @@ namespace AST.Presentation{
                 ProgressDialog pd = new ProgressDialog();
 
                 AbstractAction a = ed.GetAbstractAction();
+                AbstractAction.AbstractActionTypeEnum type = ed.GetAbstractActionType();
                 String reportName = ed.GetReportName();
 
-                ASTManager.GetInstance().Execute(a, reportName);
+                ASTManager.GetInstance().Execute(a, type, reportName);
 
                 pd.ShowDialog();
             }

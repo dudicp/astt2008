@@ -11,6 +11,7 @@ namespace AST.Management {
         private static String m_databaseConnectionStr = "";
         private static String m_databaseName = "";
         private static String m_PSToolsFullPath = "";
+        private static String m_reportsFullPath = "";
         private static int m_threadPoolSize = 0;
 
         public const int SUCCESS = 0;
@@ -29,9 +30,10 @@ namespace AST.Management {
                 m_databaseName = System.Environment.MachineName + "\\SQLEXPRESS";
                 m_threadPoolSize = 10;
                 m_PSToolsFullPath = ".//";
+                m_reportsFullPath = ".//";
 
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: configuration file " + Configuration_Filename + " doesn't exist.");
-                System.Diagnostics.Debug.WriteLine("using defaults values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolPath = " + m_PSToolsFullPath);
+                System.Diagnostics.Debug.WriteLine("using defaults values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
                 return SUCCESS;
             }
             
@@ -58,8 +60,13 @@ namespace AST.Management {
                 if (list.Count > 0) m_PSToolsFullPath = list[0].InnerText;
                 else return ERROR_BAD_FORMAT;
 
+                //Reading Report Full Path
+                list = xmlDoc.GetElementsByTagName("ReportsPath");
+                if (list.Count > 0) m_reportsFullPath = list[0].InnerText;
+                else return ERROR_BAD_FORMAT;
+
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: configuration file " + Configuration_Filename + " found.");
-                System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath);
+                System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
 
                 return SUCCESS;
             }catch(System.Xml.XmlException e){
@@ -69,7 +76,7 @@ namespace AST.Management {
             }
         }
 
-        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize) {
+        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize, String reportsPath) {
 
             try {
 
@@ -96,6 +103,11 @@ namespace AST.Management {
                 textWriter.WriteString(PSToolsPath);
                 textWriter.WriteEndElement();
 
+                // Write ReportsPath element
+                textWriter.WriteStartElement("ReportsPath", "");
+                textWriter.WriteString(reportsPath);
+                textWriter.WriteEndElement();
+
                 // Close root element
                 textWriter.WriteEndDocument();
                 textWriter.Close();
@@ -104,9 +116,10 @@ namespace AST.Management {
                 m_databaseName = databaseName;
                 m_PSToolsFullPath = PSToolsPath;
                 m_threadPoolSize = maxTheardPoolSize;
+                m_reportsFullPath = reportsPath;
 
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: configuration file " + Configuration_Filename + " updated.");
-                System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath);
+                System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
 
                 return SUCCESS;
             }
@@ -141,6 +154,10 @@ namespace AST.Management {
 
         public static String GetPSToolsFullPath() {
             return m_PSToolsFullPath;
+        }
+
+        public static String GetReportFullPath() {
+            return m_reportsFullPath;
         }
 
         private static String ResolveDatabaseName(String connectionString) {

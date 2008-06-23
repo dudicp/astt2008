@@ -63,10 +63,6 @@ namespace AST.Management {
                 o.DisplayInfoMessage(name + " Deleted Successfully.");
         }
 
-        public void DeleteReport(String reportName) {
-            this.m_databaseManager.DeleteReport(reportName);
-        }
-
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type) {
             return this.m_databaseManager.GetInfo(type);
         }
@@ -79,10 +75,6 @@ namespace AST.Management {
             return this.m_databaseManager.GetRecent(recent, type);
         }
 
-        public List<String> GetReportsNames() {
-            return this.m_databaseManager.GetReportsNames();
-        }
-
         public List<Parameter> GetParameters(String actionName) {
             return this.m_databaseManager.GetParameters(actionName);
         }
@@ -91,12 +83,17 @@ namespace AST.Management {
             return this.m_databaseManager.GetAllEndStations();
         }
 
-        public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
-            return this.m_databaseManager.Load(name, type);
+        public int GetUnusedEndStationIndex() {
+            Hashtable endStations = m_databaseManager.GetAllEndStations();
+            
+            for (int i = 0; i < endStations.Count; i++)
+                if (!endStations.Contains(i)) return i;
+
+            return endStations.Count;
         }
 
-        public List<Result> LoadReport(String reportName) {
-            return this.m_databaseManager.LoadReport(reportName);
+        public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
+            return this.m_databaseManager.Load(name, type);
         }
 
         public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew) {
@@ -105,7 +102,7 @@ namespace AST.Management {
                 o.DisplayInfoMessage(a.Name + " Saved Successfully.");
         }
 
-        public void SaveResult(Result res, String reportName) {
+        public void Save(Result res, String reportName) {
             this.m_databaseManager.SaveResult(res, reportName);
         }
 
@@ -117,10 +114,11 @@ namespace AST.Management {
             this.m_databaseManager.Delete(es);
         }
 
-        public void Execute(AbstractAction a, String executionName) 
+        public void Execute(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, String executionName) 
         {
             //Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
-            m_executionManager.Execute(a, executionName);
+            String reportFilename = ConfigurationManager.GetReportFullPath() + "\\" + executionName;
+            m_executionManager.Execute(a, type, reportFilename);
         }
 
         public void AddOutputListener(ASTOutputListener o) {

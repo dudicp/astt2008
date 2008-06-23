@@ -25,11 +25,20 @@ namespace AST.Domain{
             return m_action;
         }
 
-   /*     public DateTime ExecutionTime{
-            get { return m_executionTime; }
-            set { m_executionTime = value; }
+        public EndStation GetEndStation() {
+            return m_endStation;
         }
-*/
+
+        public DateTime StartTime{
+            get { return m_startTime; }
+            set { m_startTime = value; }
+        }
+
+        public DateTime EndTime {
+            get { return m_endTime; }
+            set { m_endTime = value; }
+        }
+
         public bool Status{
             get { return m_status; }
             set { m_status = value; }

@@ -37,6 +37,7 @@ namespace AST.Presentation {
             this.DBConnectionText.Text = ConfigurationManager.GetDatabaseName();
             this.PSToolsPathText.Text = ConfigurationManager.GetPSToolsFullPath();
             this.MaxThreadPoolText.Value = ConfigurationManager.GetMaxThreadPoolSize();
+            this.ReportsFullPathText.Text = ConfigurationManager.GetReportFullPath();
         }
 
         private void NewEndStationButton_Click(object sender, EventArgs e) {
@@ -92,8 +93,14 @@ namespace AST.Presentation {
                 PSToolsPathText.Text = browse.SelectedPath;
         }
 
+        private void ReportsBrowseButton_Click(object sender, EventArgs e) {
+            FolderBrowserDialog browse = new FolderBrowserDialog();
+            if (browse.ShowDialog() == DialogResult.OK)
+                ReportsFullPathText.Text = browse.SelectedPath;
+        }
+
         private void okButton_Click(object sender, EventArgs e) {
-            int res = ConfigurationManager.WriteConfiguration(this.DBConnectionText.Text, this.PSToolsPathText.Text, (int)this.MaxThreadPoolText.Value);
+            int res = ConfigurationManager.WriteConfiguration(this.DBConnectionText.Text, this.PSToolsPathText.Text, (int)this.MaxThreadPoolText.Value, this.ReportsFullPathText.Text);
             if (res == ConfigurationManager.SUCCESS) {
                 MessageBox.Show("Configuration file updated successfully.", "Info Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 ASTManager.GetInstance().Init();

@@ -6,7 +6,7 @@
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{0F2ED03A-6626-40A1-86A3-C9F764E9FE0E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AST</RootNamespace>
     <AssemblyName>AST</AssemblyName>
@@ -45,6 +45,7 @@
     <Compile Include="Database\IDatabaseHandler.cs" />
     <Compile Include="Database\IResultHandler.cs" />
     <Compile Include="Database\SQLHandler.cs" />
+    <Compile Include="Database\RTFHandler.cs" />
     <Compile Include="Database\XMLHandler.cs" />
     <Compile Include="Domain\AbstractAction.cs" />
     <Compile Include="Domain\Action.cs" />
@@ -59,6 +60,9 @@
     <Compile Include="Management\ConfigurationManager.cs" />
     <Compile Include="Management\Executer.cs" />
     <Compile Include="Management\ExecutionManagerOutputListener.cs" />
+    <Compile Include="Management\IResultHandler.cs" />
+    <Compile Include="Management\ResultHandler.cs" />
+    <Compile Include="Management\ResultHandlerFactory.cs" />
     <Compile Include="Presentation\ExecutionDialog.cs">
       <SubType>Form</SubType>
     </Compile>

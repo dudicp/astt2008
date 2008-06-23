@@ -32,9 +32,14 @@ namespace AST.Management
             
             String command = m_action.GenerateCommand(endstation.OSType);
             DateTime startTime = DateTime.Now;
-            msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
-            DateTime endTime = DateTime.Now;
-            res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg);
+            try {
+                msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
+                DateTime endTime = DateTime.Now;
+                res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg);
+            }
+            catch (ManagementException e) {
+                res = new Result(m_action, endstation, startTime, startTime, false, e.Message);
+            }
             m_results.Enqueue(res);
             m_doneEvent.Set();
         }
