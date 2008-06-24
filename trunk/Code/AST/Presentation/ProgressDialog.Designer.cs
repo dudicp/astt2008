@@ -26,6 +26,9 @@ namespace AST.Management {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ResultsGridView = new System.Windows.Forms.DataGridView();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EndStationComboBox = new System.Windows.Forms.ComboBox();
             this.EndStationLabel = new System.Windows.Forms.Label();
             this.EndStationDetailsBox = new System.Windows.Forms.GroupBox();
@@ -46,9 +49,7 @@ namespace AST.Management {
             this.CurrentActionText = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ViewReportLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.SuspendLayout();
@@ -90,6 +91,27 @@ namespace AST.Management {
             this.ResultsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.ResultsGridView.Size = new System.Drawing.Size(313, 106);
             this.ResultsGridView.TabIndex = 21;
+            // 
+            // Action
+            // 
+            this.Action.Frozen = true;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            // 
+            // EndStation
+            // 
+            this.EndStation.Frozen = true;
+            this.EndStation.HeaderText = "End-Station";
+            this.EndStation.Name = "EndStation";
+            this.EndStation.ReadOnly = true;
+            // 
+            // Status
+            // 
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 70;
             // 
             // EndStationComboBox
             // 
@@ -301,32 +323,26 @@ namespace AST.Management {
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
             // 
-            // Action
+            // ViewReportLabel
             // 
-            this.Action.Frozen = true;
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            // 
-            // EndStation
-            // 
-            this.EndStation.Frozen = true;
-            this.EndStation.HeaderText = "End-Station";
-            this.EndStation.Name = "EndStation";
-            this.EndStation.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 70;
+            this.ViewReportLabel.AutoSize = true;
+            this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.ViewReportLabel.Location = new System.Drawing.Point(357, 282);
+            this.ViewReportLabel.Name = "ViewReportLabel";
+            this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
+            this.ViewReportLabel.TabIndex = 45;
+            this.ViewReportLabel.Text = "View Report";
+            this.ViewReportLabel.MouseLeave += new System.EventHandler(this.ViewReport_MouseLeave);
+            this.ViewReportLabel.Click += new System.EventHandler(this.ViewReportLabel_Click);
+            this.ViewReportLabel.MouseEnter += new System.EventHandler(this.ViewReport_MouseEnter);
             // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(538, 312);
+            this.Controls.Add(this.ViewReportLabel);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.Title);
             this.Controls.Add(this.CurrentActionText);
@@ -377,5 +393,6 @@ namespace AST.Management {
         private System.Windows.Forms.DataGridViewTextBoxColumn Action;
         private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.Label ViewReportLabel;
     }
 }

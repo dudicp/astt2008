@@ -106,6 +106,11 @@ namespace AST.Management {
             this.m_databaseManager.SaveResult(res, reportName);
         }
 
+        public void ShowReport(String reportName) {
+            String reportFilename = ConfigurationManager.GetReportFullPath() + "\\" + reportName;
+            this.m_databaseManager.ShowReport(reportFilename);
+        }
+
         public void AddEndStation(EndStation es, bool isNew) {
             this.m_databaseManager.AddEndStation(es, isNew);
         }

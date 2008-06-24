@@ -28,5 +28,7 @@ namespace AST.Database{
             tw.WriteLine("-------------------------------------------------");
             tw.Close();
         }
+
+        public void ShowReport(String reportName) {}
     }
 }

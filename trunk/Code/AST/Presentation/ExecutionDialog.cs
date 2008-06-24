@@ -517,26 +517,22 @@ namespace AST.Presentation {
                 }
             }
 
-            if (a.Duration != 0)
-            {
-                this.DurationCheckBox.Checked = true;
-                this.DurationNumericUpDown.Value = a.Duration;
+            if (a.Delay == 0) {
+                this.DelayNumericUpDown.Value = 10;
+                this.DelayCheckBox.Checked = false;
             }
-            else
-            {
-                this.DurationCheckBox.Checked = false;
-                this.DurationNumericUpDown.Value = 10;
+            else {
+                this.DelayNumericUpDown.Value = Decimal.Parse(a.Delay.ToString());
+                this.DelayCheckBox.Checked = true;
             }
 
-            if (a.Delay != 0)
-            {
-                this.DelayCheckBox.Checked = true;
-                this.DelayNumericUpDown.Value = a.Delay;
+            if (a.Duration == 0) {
+                this.DurationNumericUpDown.Value = 10;
+                this.DurationCheckBox.Checked = false;
             }
-            else
-            {
-                this.DelayCheckBox.Checked = false;
-                this.DelayNumericUpDown.Value = 10;
+            else {
+                this.DurationNumericUpDown.Value = Decimal.Parse(a.Duration.ToString());
+                this.DurationCheckBox.Checked = true;
             }
         }
 
@@ -655,11 +651,13 @@ namespace AST.Presentation {
         private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
             this.DelayNumericUpDown.Enabled = this.DelayCheckBox.Checked;
             if (!this.DelayCheckBox.Checked) ((Action)m_activeAction).Delay = 0;
+            else ((Action)m_activeAction).Delay = (int)this.DelayNumericUpDown.Value;
         }
 
         private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
             this.DurationNumericUpDown.Enabled = this.DurationCheckBox.Checked;
             if (!this.DurationCheckBox.Checked) ((Action)m_activeAction).Duration = 0;
+            else ((Action)m_activeAction).Duration = (int)this.DurationNumericUpDown.Value;
         }
 
         private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
@@ -686,7 +684,7 @@ namespace AST.Presentation {
 
             //Check End-Stations Selection
             bool check = false;
-            String err = "The following end-stations has no end-station:\n\n";
+            String err = "The following actions has no end-station:\n\n";
             List<Action> allActions = m_rootAction.GetActions();            
             foreach (Action a in allActions)
             {

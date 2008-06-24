@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?><xsl:stylesheet version="1.0"
 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
+
 	<html>
 		<head>
 			<script type='text/javascript' src='collapse.js'></script>
@@ -42,8 +43,13 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 							</xsl:if>
 						</td>
 						<td>
-							<div class='collapsable'> 
-								<p><xsl:value-of select="Message"/> </p> 
+							<div class='collapsable'>
+								<p>
+									<xsl:for-each select="Message/Line">							
+										<xsl:value-of select="."/>
+										<br/>
+									</xsl:for-each>
+								</p> 
 							</div> 
 						</td>
 				    </tr>
