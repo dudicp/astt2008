@@ -45,7 +45,7 @@
     <Compile Include="Database\IDatabaseHandler.cs" />
     <Compile Include="Database\IResultHandler.cs" />
     <Compile Include="Database\SQLHandler.cs" />
-    <Compile Include="Database\RTFHandler.cs" />
+    <Compile Include="Database\TXTHandler.cs" />
     <Compile Include="Database\XMLHandler.cs" />
     <Compile Include="Domain\AbstractAction.cs" />
     <Compile Include="Domain\Action.cs" />

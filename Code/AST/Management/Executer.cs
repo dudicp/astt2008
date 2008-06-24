@@ -25,7 +25,7 @@ namespace AST.Management
         public void ExecuterCallback(Object threadContext)
         {
             Result res;
-            String msg;
+            String msg = "";
             EndStation endstation = m_action.GetEndStations()[m_endstationIndex].EndStation;
             IServiceProvider provider = ProviderFactory.GetServiceProvider(EndStation.OSTypeEnum.WINDOWS);
             IResultHandler resultHandler = ResultHandlerFactory.GetResultHandler(m_action);
@@ -33,7 +33,18 @@ namespace AST.Management
             String command = m_action.GenerateCommand(endstation.OSType);
             DateTime startTime = DateTime.Now;
             try {
-                msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
+                switch(m_action.ActionType){
+                    case Action.ActionTypeEnum.COMMAND_LINE:
+                        msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
+                        break;
+                    case Action.ActionTypeEnum.SCRIPT:
+                        msg = provider.ExecuteScript(endstation.IP,endstation.Username,endstation.Password,m_action.GetContent(endstation.OSType),command, m_action.Timeout,m_action.Duration);
+                        break;
+                    case Action.ActionTypeEnum.TEST_SCRIPT:
+                        break;
+                    default:
+                        break;
+                }
                 DateTime endTime = DateTime.Now;
                 res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg);
             }
