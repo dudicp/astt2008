@@ -8,5 +8,7 @@ namespace AST.Database{
     interface IResultHandler{
 
         void Save(Result res, String reportName);
+
+        void ShowReport(String reportName);
     }
 }

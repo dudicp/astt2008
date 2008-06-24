@@ -13,6 +13,8 @@ namespace AST.Management {
 
         private List<EndStation> m_endStations;
         private int m_currentActionNo;
+        private String m_reportFilename;
+        private Color m_defaultColor;
 
         // This delegate enables asynchronous calls for setting
         // the text property on a TextBox control.
@@ -21,10 +23,13 @@ namespace AST.Management {
         delegate void SetExecutionFinishCallback();
 
 
-        public ProgressDialog() {
+        public ProgressDialog(String reportFilename) {
             InitializeComponent();
             m_endStations = new List<EndStation>();
             m_currentActionNo = 0;
+            m_reportFilename = reportFilename;
+            ViewReportLabel.Text = "";
+            m_defaultColor = ViewReportLabel.ForeColor;
             ASTManager.GetInstance().AddExecutionManagerOutputListener(this);
 
             this.Init();
@@ -132,6 +137,8 @@ namespace AST.Management {
             }
             else {
                 OkButton.Enabled = true;
+                ViewReportLabel.Text = "View Report";
+                ViewReportLabel.Enabled = true;
             }
         }
 
@@ -145,6 +152,18 @@ namespace AST.Management {
                 else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Failed";
             }
 
+        }
+
+        private void ViewReportLabel_Click(object sender, EventArgs e) {
+            ASTManager.GetInstance().ShowReport(m_reportFilename);
+        }
+
+        private void ViewReport_MouseEnter(object sender, EventArgs e) {
+            this.ViewReportLabel.ForeColor = Color.LightSteelBlue;
+        }
+
+        private void ViewReport_MouseLeave(object sender, EventArgs e) {
+            this.ViewReportLabel.ForeColor = m_defaultColor;
         }
     }
 }

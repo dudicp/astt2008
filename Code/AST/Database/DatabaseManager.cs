@@ -143,5 +143,9 @@ namespace AST.Database
         public void Delete(Parameter p, String actionName) {
             this.m_DBHandler.Delete(p, actionName);
         }
+
+        public void ShowReport(String filename) {
+            this.m_resultHandler.ShowReport(filename);
+        }
     }
 }

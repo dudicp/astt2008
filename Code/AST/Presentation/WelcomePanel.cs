@@ -93,7 +93,7 @@ namespace AST.Presentation
                 AbstractAction action = ASTManager.GetInstance().Load(m_recent[index].Name, m_recent[index].Type);
                 ExecutionDialog ed = new ExecutionDialog(action, m_recent[index].Type);
                 if (ed.ShowDialog() == DialogResult.OK) {
-                    ProgressDialog pd = new ProgressDialog();
+                    ProgressDialog pd = new ProgressDialog(ed.GetReportName());
 
                     AbstractAction a = ed.GetAbstractAction();
                     AbstractAction.AbstractActionTypeEnum type = ed.GetAbstractActionType();

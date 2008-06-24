@@ -167,7 +167,7 @@ namespace AST.Presentation{
         private void ExecuteStripMenuItem_Click(object sender, EventArgs e) {
             ExecutionDialog ed = new ExecutionDialog();
             if (ed.ShowDialog() == DialogResult.OK) {
-                ProgressDialog pd = new ProgressDialog();
+                ProgressDialog pd = new ProgressDialog(ed.GetReportName());
 
                 AbstractAction a = ed.GetAbstractAction();
                 AbstractAction.AbstractActionTypeEnum type = ed.GetAbstractActionType();

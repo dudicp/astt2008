@@ -7,6 +7,7 @@ using System.Xml;
 using System.IO;
 
 
+
 namespace AST.Database{
 
     class XMLHandler : IResultHandler{
@@ -63,10 +64,28 @@ namespace AST.Database{
             else this.AppendChild("Status", "Fail", resultNode, xmlDoc);
 
             // Write Message element
-            this.AppendChild("Message", res.Message, resultNode, xmlDoc);
+            XmlElement messageNode = xmlDoc.CreateElement("Message");
+            String[] lines = res.Message.Split(new char[]{'\n'});
+            foreach (String line in lines) {
+                this.AppendChild("Line", line, messageNode, xmlDoc);
+            }
+            resultNode.AppendChild(messageNode);
 
             xmlDoc.DocumentElement.AppendChild(resultNode);
             xmlDoc.Save(reportName + ".xml");
+        }
+
+        public void ShowReport(String reportName) {
+            if (!File.Exists(reportName + ".xml")) {
+                //throw
+                return;
+            }
+            System.Diagnostics.ProcessStartInfo procFormsBuilderStartInfo = new System.Diagnostics.ProcessStartInfo();
+            procFormsBuilderStartInfo.FileName = reportName + ".xml";
+            procFormsBuilderStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+            System.Diagnostics.Process procFormsBuilder = new System.Diagnostics.Process();
+            procFormsBuilder.StartInfo = procFormsBuilderStartInfo;
+            procFormsBuilder.Start();
         }
 
         private void AppendChild(String name, String value, XmlElement node, XmlDocument xmlDoc) {
