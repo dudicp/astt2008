@@ -63,7 +63,7 @@ namespace AST.Presentation
             this.CloseButton.Location = new System.Drawing.Point(88, 201);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
-            this.CloseButton.TabIndex = 4;
+            this.CloseButton.TabIndex = 1;
             this.CloseButton.Text = "Close";
             this.CloseButton.UseVisualStyleBackColor = true;
             this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
