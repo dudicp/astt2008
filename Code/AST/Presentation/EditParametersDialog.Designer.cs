@@ -40,6 +40,7 @@ namespace AST.Presentation
             this.ParameterNameText = new System.Windows.Forms.TextBox();
             this.DescriptionText = new System.Windows.Forms.RichTextBox();
             this.ParameterDetailsBox = new System.Windows.Forms.GroupBox();
+            this.DefaultCheckBox = new System.Windows.Forms.CheckBox();
             this.InputCheckBox = new System.Windows.Forms.CheckBox();
             this.OptionCheckBox = new System.Windows.Forms.CheckBox();
             this.descriptionLabel = new System.Windows.Forms.Label();
@@ -51,7 +52,6 @@ namespace AST.Presentation
             this.InputLabel = new System.Windows.Forms.Label();
             this.InputBox = new System.Windows.Forms.GroupBox();
             this.MyCancelButton = new System.Windows.Forms.Button();
-            this.DefaultCheckBox = new System.Windows.Forms.CheckBox();
             this.ParameterContentBox.SuspendLayout();
             this.ParameterDetailsBox.SuspendLayout();
             this.InputBox.SuspendLayout();
@@ -79,7 +79,7 @@ namespace AST.Presentation
             this.RemoveOSButton.Location = new System.Drawing.Point(117, 83);
             this.RemoveOSButton.Name = "RemoveOSButton";
             this.RemoveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.RemoveOSButton.TabIndex = 19;
+            this.RemoveOSButton.TabIndex = 7;
             this.RemoveOSButton.Text = "Remove";
             this.RemoveOSButton.UseVisualStyleBackColor = true;
             this.RemoveOSButton.Click += new System.EventHandler(this.RemoveOSButton_Click);
@@ -90,7 +90,7 @@ namespace AST.Presentation
             this.SaveOSButton.Location = new System.Drawing.Point(181, 83);
             this.SaveOSButton.Name = "SaveOSButton";
             this.SaveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.SaveOSButton.TabIndex = 18;
+            this.SaveOSButton.TabIndex = 8;
             this.SaveOSButton.Text = "Save";
             this.SaveOSButton.UseVisualStyleBackColor = true;
             this.SaveOSButton.Click += new System.EventHandler(this.SaveOSButton_Click);
@@ -101,7 +101,7 @@ namespace AST.Presentation
             this.ContentText.Location = new System.Drawing.Point(113, 52);
             this.ContentText.Name = "ContentText";
             this.ContentText.Size = new System.Drawing.Size(136, 24);
-            this.ContentText.TabIndex = 11;
+            this.ContentText.TabIndex = 6;
             // 
             // ValueLabel
             // 
@@ -136,7 +136,7 @@ namespace AST.Presentation
             this.OScomboBox.Name = "OScomboBox";
             this.OScomboBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OScomboBox.Size = new System.Drawing.Size(136, 23);
-            this.OScomboBox.TabIndex = 2;
+            this.OScomboBox.TabIndex = 5;
             this.OScomboBox.SelectedIndexChanged += new System.EventHandler(this.OScomboBox_SelectedIndexChanged);
             // 
             // OkButton
@@ -145,7 +145,7 @@ namespace AST.Presentation
             this.OkButton.Location = new System.Drawing.Point(66, 463);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
-            this.OkButton.TabIndex = 16;
+            this.OkButton.TabIndex = 12;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
@@ -166,7 +166,7 @@ namespace AST.Presentation
             this.ParameterNameText.Location = new System.Drawing.Point(113, 25);
             this.ParameterNameText.Name = "ParameterNameText";
             this.ParameterNameText.Size = new System.Drawing.Size(136, 24);
-            this.ParameterNameText.TabIndex = 4;
+            this.ParameterNameText.TabIndex = 0;
             // 
             // DescriptionText
             // 
@@ -174,7 +174,7 @@ namespace AST.Presentation
             this.DescriptionText.Location = new System.Drawing.Point(9, 109);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(240, 45);
-            this.DescriptionText.TabIndex = 10;
+            this.DescriptionText.TabIndex = 3;
             this.DescriptionText.Text = "";
             // 
             // ParameterDetailsBox
@@ -195,13 +195,23 @@ namespace AST.Presentation
             this.ParameterDetailsBox.TabStop = false;
             this.ParameterDetailsBox.Text = "Parameter Details";
             // 
+            // DefaultCheckBox
+            // 
+            this.DefaultCheckBox.AutoSize = true;
+            this.DefaultCheckBox.Location = new System.Drawing.Point(9, 165);
+            this.DefaultCheckBox.Name = "DefaultCheckBox";
+            this.DefaultCheckBox.Size = new System.Drawing.Size(59, 18);
+            this.DefaultCheckBox.TabIndex = 4;
+            this.DefaultCheckBox.Text = "Default";
+            this.DefaultCheckBox.UseVisualStyleBackColor = true;
+            // 
             // InputCheckBox
             // 
             this.InputCheckBox.AutoSize = true;
             this.InputCheckBox.Location = new System.Drawing.Point(193, 62);
             this.InputCheckBox.Name = "InputCheckBox";
             this.InputCheckBox.Size = new System.Drawing.Size(51, 18);
-            this.InputCheckBox.TabIndex = 12;
+            this.InputCheckBox.TabIndex = 2;
             this.InputCheckBox.Text = "Input";
             this.InputCheckBox.UseVisualStyleBackColor = true;
             this.InputCheckBox.CheckedChanged += new System.EventHandler(this.InputCheckBox_CheckedChanged);
@@ -212,7 +222,7 @@ namespace AST.Presentation
             this.OptionCheckBox.Location = new System.Drawing.Point(113, 62);
             this.OptionCheckBox.Name = "OptionCheckBox";
             this.OptionCheckBox.Size = new System.Drawing.Size(58, 18);
-            this.OptionCheckBox.TabIndex = 11;
+            this.OptionCheckBox.TabIndex = 1;
             this.OptionCheckBox.Text = "Option";
             this.OptionCheckBox.UseVisualStyleBackColor = true;
             this.OptionCheckBox.CheckedChanged += new System.EventHandler(this.OptionCheckBox_CheckedChanged);
@@ -254,7 +264,7 @@ namespace AST.Presentation
             this.ValidityCheckBox.Location = new System.Drawing.Point(9, 52);
             this.ValidityCheckBox.Name = "ValidityCheckBox";
             this.ValidityCheckBox.Size = new System.Drawing.Size(91, 19);
-            this.ValidityCheckBox.TabIndex = 15;
+            this.ValidityCheckBox.TabIndex = 10;
             this.ValidityCheckBox.Text = "Validity Exp:";
             this.ValidityCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -264,7 +274,7 @@ namespace AST.Presentation
             this.ValidityText.Location = new System.Drawing.Point(117, 50);
             this.ValidityText.Name = "ValidityText";
             this.ValidityText.Size = new System.Drawing.Size(136, 24);
-            this.ValidityText.TabIndex = 14;
+            this.ValidityText.TabIndex = 11;
             // 
             // InputTextBox
             // 
@@ -272,7 +282,7 @@ namespace AST.Presentation
             this.InputTextBox.Location = new System.Drawing.Point(117, 20);
             this.InputTextBox.Name = "InputTextBox";
             this.InputTextBox.Size = new System.Drawing.Size(136, 24);
-            this.InputTextBox.TabIndex = 20;
+            this.InputTextBox.TabIndex = 9;
             // 
             // InputLabel
             // 
@@ -304,20 +314,10 @@ namespace AST.Presentation
             this.MyCancelButton.Location = new System.Drawing.Point(147, 463);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.MyCancelButton.TabIndex = 23;
+            this.MyCancelButton.TabIndex = 13;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.CancelButton_Click);
-            // 
-            // DefaultCheckBox
-            // 
-            this.DefaultCheckBox.AutoSize = true;
-            this.DefaultCheckBox.Location = new System.Drawing.Point(9, 165);
-            this.DefaultCheckBox.Name = "DefaultCheckBox";
-            this.DefaultCheckBox.Size = new System.Drawing.Size(59, 18);
-            this.DefaultCheckBox.TabIndex = 14;
-            this.DefaultCheckBox.Text = "Default";
-            this.DefaultCheckBox.UseVisualStyleBackColor = true;
             // 
             // EditParametersDialog
             // 

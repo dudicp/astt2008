@@ -55,7 +55,7 @@ namespace AST.Presentation
             this.DescriptionText.Location = new System.Drawing.Point(30, 146);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(240, 45);
-            this.DescriptionText.TabIndex = 11;
+            this.DescriptionText.TabIndex = 1;
             this.DescriptionText.Text = "";
             // 
             // descriptionLabel
@@ -84,7 +84,7 @@ namespace AST.Presentation
             this.okButton.Location = new System.Drawing.Point(73, 201);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 14;
+            this.okButton.TabIndex = 2;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -95,7 +95,7 @@ namespace AST.Presentation
             this.MyCancelButton.Location = new System.Drawing.Point(154, 201);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.MyCancelButton.TabIndex = 15;
+            this.MyCancelButton.TabIndex = 3;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);

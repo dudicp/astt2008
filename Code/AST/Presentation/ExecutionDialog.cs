@@ -147,6 +147,9 @@ namespace AST.Presentation {
             //Set End-Station List Boxes
             this.SetEndStations(m_activeAction);
 
+            //Clears the input text box
+            this.InputTextBox.Clear();
+
             //Add this action the Default Parameters
             List<Parameter> parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
             foreach (Parameter p in parameters) {
@@ -181,6 +184,9 @@ namespace AST.Presentation {
             //Enable The Parameters GroupBox
             this.ParametersGroupBox.Enabled = false;
 
+            //Clears the input text box
+            this.InputTextBox.Clear();
+
             m_type = AbstractAction.AbstractActionTypeEnum.TSC;
 
             //Set TreeView GroupBox
@@ -202,6 +208,9 @@ namespace AST.Presentation {
 
             //Enable The Parameters GroupBox
             this.ParametersGroupBox.Enabled = false;
+
+            //Clears the input text box
+            this.InputTextBox.Clear();
 
             m_type = AbstractAction.AbstractActionTypeEnum.TP;
 
@@ -390,14 +399,31 @@ namespace AST.Presentation {
         }
 
         private void EditButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                EndStation es = esd.GetEndStation();
-                ASTManager.GetInstance().AddEndStation(es, false);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                this.m_endStations.Add(es);
+
+            //In case we are in the upper list box.
+            if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
+                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                    this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, false);
+                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.m_endStations.Add(es);
+                }
+            }
+
+            // In case we are in the lower list box.
+            if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
+                EndStationDialog esd = new EndStationDialog(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
+                    this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, false);
+                    this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
+                }
             }
         }
 
@@ -406,6 +432,7 @@ namespace AST.Presentation {
                 this.SelectEndStationButton.Enabled = false;
                 return;
             }
+            this.EditButton.Enabled = false;
             EndStation es = this.m_endStations[this.EndStationsListBox.SelectedIndex];
 
             this.m_activeAction.AddEndStation(new EndStationSchedule(es));
@@ -423,7 +450,7 @@ namespace AST.Presentation {
                 this.UnselectEndStationButton.Enabled = false;
                 return;
             }
-
+            this.EditButton.Enabled = false;
             EndStationSchedule ess = this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex];
             EndStation es = ess.EndStation;
 
@@ -445,6 +472,8 @@ namespace AST.Presentation {
             this.SelectEndStationButton.Enabled = true;
             this.EditButton.Enabled = true;
             this.SelectedEndStationsListBox.ClearSelected();
+
+            this.SetUnselectedMenuItemDetails();
         }
 
         private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -456,7 +485,21 @@ namespace AST.Presentation {
             else this.MoveDownEndStationButton.Enabled = false;
             this.UnselectEndStationButton.Enabled = true;
             this.EndStationsListBox.ClearSelected();
-            this.EditButton.Enabled = false;
+            this.EditButton.Enabled = true;
+
+            this.SetSelectedMenuItemDetails();
+        }
+
+        private void SetSelectedMenuItemDetails() {
+            this.IPMenuItem.Text = "IP:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.IP;
+            this.UsernameMenuItem.Text = "Username:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.Username;
+            this.OSTypeMenuItem.Text = "OS Type:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.OSType;
+        }
+
+        private void SetUnselectedMenuItemDetails() {
+            this.IPMenuItem.Text = "IP:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].IP;
+            this.UsernameMenuItem.Text = "Username:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].Username;
+            this.OSTypeMenuItem.Text = "OS Type:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].OSType;
         }
 
         private void MoveUpEndStationButton_Click(object sender, EventArgs e) {
@@ -592,6 +635,21 @@ namespace AST.Presentation {
                 this.MoveDownParameterButton.Enabled = false;
 
             this.InputTextBox.Clear();
+        }
+
+        private void SetParameterValue(object sender, EventArgs e) {
+            
+            // In case we are in the upper list box.
+            System.Diagnostics.Debug.WriteLine("Up   Selected Index = " + this.ParametersListBox.SelectedIndex);
+            System.Diagnostics.Debug.WriteLine("Down Selected Index = " + this.SelectedParametersListBox.SelectedIndex);
+            if ((this.ParametersListBox.SelectedIndex >= 0) && (this.ParametersListBox.SelectedIndex < this.m_parameters.Count)) {
+                this.m_parameters[this.ParametersListBox.SelectedIndex].Input = this.InputTextBox.Text;
+            }
+
+            // In case we are in the lower list box.
+            else if ((this.SelectedParametersListBox.SelectedIndex >= 0) && (this.SelectedParametersListBox.SelectedIndex < this.m_parameters.Count)) {
+                ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Input = this.InputTextBox.Text;
+            }
         }
 
         private void SelectParameterButton_Click(object sender, EventArgs e) {

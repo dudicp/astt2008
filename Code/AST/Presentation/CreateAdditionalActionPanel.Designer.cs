@@ -92,7 +92,7 @@ namespace AST.Presentation
             this.DescriptionText.Location = new System.Drawing.Point(9, 140);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(390, 45);
-            this.DescriptionText.TabIndex = 10;
+            this.DescriptionText.TabIndex = 5;
             this.DescriptionText.Text = "";
             // 
             // TestScriptRadio
@@ -102,7 +102,7 @@ namespace AST.Presentation
             this.TestScriptRadio.Location = new System.Drawing.Point(292, 90);
             this.TestScriptRadio.Name = "TestScriptRadio";
             this.TestScriptRadio.Size = new System.Drawing.Size(76, 18);
-            this.TestScriptRadio.TabIndex = 8;
+            this.TestScriptRadio.TabIndex = 4;
             this.TestScriptRadio.TabStop = true;
             this.TestScriptRadio.Text = "Test Script";
             this.TestScriptRadio.UseVisualStyleBackColor = true;
@@ -115,7 +115,7 @@ namespace AST.Presentation
             this.ScriptRadio.Location = new System.Drawing.Point(223, 90);
             this.ScriptRadio.Name = "ScriptRadio";
             this.ScriptRadio.Size = new System.Drawing.Size(53, 18);
-            this.ScriptRadio.TabIndex = 7;
+            this.ScriptRadio.TabIndex = 3;
             this.ScriptRadio.TabStop = true;
             this.ScriptRadio.Text = "Script";
             this.ScriptRadio.UseVisualStyleBackColor = true;
@@ -128,7 +128,7 @@ namespace AST.Presentation
             this.CommandLineRadio.Location = new System.Drawing.Point(113, 90);
             this.CommandLineRadio.Name = "CommandLineRadio";
             this.CommandLineRadio.Size = new System.Drawing.Size(94, 18);
-            this.CommandLineRadio.TabIndex = 6;
+            this.CommandLineRadio.TabIndex = 2;
             this.CommandLineRadio.TabStop = true;
             this.CommandLineRadio.Text = "Command Line";
             this.CommandLineRadio.UseVisualStyleBackColor = true;
@@ -140,7 +140,7 @@ namespace AST.Presentation
             this.CreatorNameText.Location = new System.Drawing.Point(113, 60);
             this.CreatorNameText.Name = "CreatorNameText";
             this.CreatorNameText.Size = new System.Drawing.Size(136, 24);
-            this.CreatorNameText.TabIndex = 5;
+            this.CreatorNameText.TabIndex = 1;
             // 
             // ActionNameText
             // 
@@ -148,7 +148,7 @@ namespace AST.Presentation
             this.ActionNameText.Location = new System.Drawing.Point(113, 30);
             this.ActionNameText.Name = "ActionNameText";
             this.ActionNameText.Size = new System.Drawing.Size(136, 24);
-            this.ActionNameText.TabIndex = 4;
+            this.ActionNameText.TabIndex = 0;
             // 
             // descriptionLabel
             // 
@@ -214,7 +214,7 @@ namespace AST.Presentation
             this.OScomboBox.Name = "OScomboBox";
             this.OScomboBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OScomboBox.Size = new System.Drawing.Size(136, 23);
-            this.OScomboBox.TabIndex = 2;
+            this.OScomboBox.TabIndex = 6;
             this.OScomboBox.SelectedIndexChanged += new System.EventHandler(this.OScomboBox_SelectedIndexChanged);
             // 
             // okButton
@@ -223,7 +223,7 @@ namespace AST.Presentation
             this.okButton.Location = new System.Drawing.Point(140, 528);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 3;
+            this.okButton.TabIndex = 18;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -265,7 +265,7 @@ namespace AST.Presentation
             this.RemoveOSButton.Location = new System.Drawing.Point(272, 134);
             this.RemoveOSButton.Name = "RemoveOSButton";
             this.RemoveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.RemoveOSButton.TabIndex = 19;
+            this.RemoveOSButton.TabIndex = 12;
             this.RemoveOSButton.Text = "Remove";
             this.RemoveOSButton.UseVisualStyleBackColor = true;
             this.RemoveOSButton.Click += new System.EventHandler(this.RemoveOSButton_Click);
@@ -276,7 +276,7 @@ namespace AST.Presentation
             this.SaveOSButton.Location = new System.Drawing.Point(336, 134);
             this.SaveOSButton.Name = "SaveOSButton";
             this.SaveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.SaveOSButton.TabIndex = 18;
+            this.SaveOSButton.TabIndex = 13;
             this.SaveOSButton.Text = "Save";
             this.SaveOSButton.UseVisualStyleBackColor = true;
             this.SaveOSButton.Click += new System.EventHandler(this.SaveOSButton_Click);
@@ -288,7 +288,7 @@ namespace AST.Presentation
             this.BrowseButton.Location = new System.Drawing.Point(303, 61);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(95, 23);
-            this.BrowseButton.TabIndex = 17;
+            this.BrowseButton.TabIndex = 8;
             this.BrowseButton.Text = "Browse";
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
@@ -298,7 +298,7 @@ namespace AST.Presentation
             this.TimeoutText.Location = new System.Drawing.Point(361, 90);
             this.TimeoutText.Name = "TimeoutText";
             this.TimeoutText.Size = new System.Drawing.Size(37, 21);
-            this.TimeoutText.TabIndex = 13;
+            this.TimeoutText.TabIndex = 11;
             // 
             // TimeoutLabel
             // 
@@ -317,7 +317,7 @@ namespace AST.Presentation
             this.ValidityCheckBox.Location = new System.Drawing.Point(6, 92);
             this.ValidityCheckBox.Name = "ValidityCheckBox";
             this.ValidityCheckBox.Size = new System.Drawing.Size(103, 19);
-            this.ValidityCheckBox.TabIndex = 15;
+            this.ValidityCheckBox.TabIndex = 9;
             this.ValidityCheckBox.Text = "Validity String:";
             this.ValidityCheckBox.UseVisualStyleBackColor = true;
             // 
@@ -327,7 +327,7 @@ namespace AST.Presentation
             this.ValidityText.Location = new System.Drawing.Point(113, 90);
             this.ValidityText.Name = "ValidityText";
             this.ValidityText.Size = new System.Drawing.Size(181, 24);
-            this.ValidityText.TabIndex = 14;
+            this.ValidityText.TabIndex = 10;
             // 
             // ContentText
             // 
@@ -335,7 +335,7 @@ namespace AST.Presentation
             this.ContentText.Location = new System.Drawing.Point(113, 60);
             this.ContentText.Name = "ContentText";
             this.ContentText.Size = new System.Drawing.Size(181, 24);
-            this.ContentText.TabIndex = 11;
+            this.ContentText.TabIndex = 7;
             // 
             // ContentLabel
             // 
@@ -354,7 +354,7 @@ namespace AST.Presentation
             this.ParametersComboBox.Location = new System.Drawing.Point(113, 25);
             this.ParametersComboBox.Name = "ParametersComboBox";
             this.ParametersComboBox.Size = new System.Drawing.Size(112, 23);
-            this.ParametersComboBox.TabIndex = 0;
+            this.ParametersComboBox.TabIndex = 14;
             // 
             // EditParameterButton
             // 
@@ -362,7 +362,7 @@ namespace AST.Presentation
             this.EditParameterButton.Location = new System.Drawing.Point(292, 25);
             this.EditParameterButton.Name = "EditParameterButton";
             this.EditParameterButton.Size = new System.Drawing.Size(53, 23);
-            this.EditParameterButton.TabIndex = 20;
+            this.EditParameterButton.TabIndex = 16;
             this.EditParameterButton.Text = "Edit";
             this.EditParameterButton.UseVisualStyleBackColor = true;
             this.EditParameterButton.Click += new System.EventHandler(this.EditParameterButton_Click);
@@ -373,7 +373,7 @@ namespace AST.Presentation
             this.NewParameterButton.Location = new System.Drawing.Point(346, 25);
             this.NewParameterButton.Name = "NewParameterButton";
             this.NewParameterButton.Size = new System.Drawing.Size(53, 23);
-            this.NewParameterButton.TabIndex = 21;
+            this.NewParameterButton.TabIndex = 17;
             this.NewParameterButton.Text = "New";
             this.NewParameterButton.UseVisualStyleBackColor = true;
             this.NewParameterButton.Click += new System.EventHandler(this.NewParameterButton_Click);
@@ -384,7 +384,7 @@ namespace AST.Presentation
             this.RemoveParameterButton.Location = new System.Drawing.Point(228, 25);
             this.RemoveParameterButton.Name = "RemoveParameterButton";
             this.RemoveParameterButton.Size = new System.Drawing.Size(63, 23);
-            this.RemoveParameterButton.TabIndex = 20;
+            this.RemoveParameterButton.TabIndex = 15;
             this.RemoveParameterButton.Text = "Remove";
             this.RemoveParameterButton.UseVisualStyleBackColor = true;
             this.RemoveParameterButton.Click += new System.EventHandler(this.RemoveParameterButton_Click);
@@ -420,7 +420,7 @@ namespace AST.Presentation
             this.MyCancelButton.Location = new System.Drawing.Point(221, 528);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.MyCancelButton.TabIndex = 14;
+            this.MyCancelButton.TabIndex = 19;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
