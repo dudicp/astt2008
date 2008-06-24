@@ -113,10 +113,21 @@ namespace AST.Domain{
         }
 
         public String GenerateCommand(EndStation.OSTypeEnum osType){
-            String res = (String)m_content[osType];
-            foreach (Parameter p in m_parameters)
-                res = res + " " + p.GetValue(osType) + " " + p.Input;
-            return res;
+            switch (this.ActionType) {
+                case ActionTypeEnum.COMMAND_LINE: {
+                        String res = (String)m_content[osType];
+                        foreach (Parameter p in m_parameters)
+                            res = res + " " + p.GetValue(osType) + " " + p.Input;
+                        return res;
+                    }
+                // for SCRIPT and TEST_SCRIPT
+                default: {
+                        String res = "";
+                        foreach (Parameter p in m_parameters)
+                            res = res + " " + p.GetValue(osType) + " " + p.Input;
+                        return res;
+                    }
+            }
         }
 
         public override List<Action> GetActions()
