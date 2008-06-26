@@ -103,12 +103,20 @@ namespace AST.Management {
         }
 
         public void Save(Result res, String reportName) {
-            this.m_databaseManager.SaveResult(res, reportName);
+            //called from the execution manager
+            try {
+                this.m_databaseManager.SaveResult(res, reportName);
+            }catch(SaveReportException e){}
         }
 
         public void ShowReport(String reportName) {
             String reportFilename = ConfigurationManager.GetReportFullPath() + "\\" + reportName;
-            this.m_databaseManager.ShowReport(reportFilename);
+            try {
+                this.m_databaseManager.ShowReport(reportFilename);
+            }
+            catch (OpenFileFailedException e) {
+                this.DisplayErrorMessage(e.Message);
+            }
         }
 
         public void AddEndStation(EndStation es, bool isNew) {

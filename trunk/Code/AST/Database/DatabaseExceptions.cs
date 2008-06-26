@@ -51,4 +51,20 @@ namespace AST.Database {
             :
             base(message, innerException) { }
     }
+
+    class OpenFileFailedException : DatabaseException {
+        public OpenFileFailedException() : base() { }
+        public OpenFileFailedException(String message) : base(message) { }
+        public OpenFileFailedException(String message, Exception innerException)
+            :
+            base(message, innerException) { }
+    }
+
+    class SaveReportException : DatabaseException {
+        public SaveReportException() : base() { }
+        public SaveReportException(String message) : base(message) { }
+        public SaveReportException(String message, Exception innerException)
+            :
+            base(message, innerException) { }
+    }
 }

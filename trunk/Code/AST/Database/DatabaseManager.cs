@@ -115,7 +115,12 @@ namespace AST.Database
         }
 
         public void SaveResult(Result res, String reportName) {
-            this.m_resultHandler.Save(res, reportName);
+            try {
+                this.m_resultHandler.Save(res, reportName);
+            }
+            catch (SaveReportException e) {
+                throw e;
+            }
         }
 
         public void AddEndStation(EndStation es, bool isNew){
@@ -145,7 +150,12 @@ namespace AST.Database
         }
 
         public void ShowReport(String filename) {
-            this.m_resultHandler.ShowReport(filename);
+            try {
+                this.m_resultHandler.ShowReport(filename);
+            }
+            catch (OpenFileFailedException e) {
+                throw e;
+            }
         }
     }
 }
