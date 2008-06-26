@@ -647,7 +647,7 @@ namespace AST.Presentation {
             }
 
             // In case we are in the lower list box.
-            else if ((this.SelectedParametersListBox.SelectedIndex >= 0) && (this.SelectedParametersListBox.SelectedIndex < this.m_parameters.Count)) {
+            else if ((this.SelectedParametersListBox.SelectedIndex >= 0) && (this.SelectedParametersListBox.SelectedIndex < ((Action)this.m_activeAction).GetParameters().Count)) {
                 ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Input = this.InputTextBox.Text;
             }
         }
