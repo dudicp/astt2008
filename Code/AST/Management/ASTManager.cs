@@ -34,7 +34,9 @@ namespace AST.Management {
             switch (res) {
                 case ConfigurationManager.SUCCESS: 
                     SQLHandler sql = new SQLHandler(ConfigurationManager.GetDBConnectionString());
-                    m_databaseManager = new DatabaseManager(sql, new XMLHandler());
+                    if(ConfigurationManager.GetReportOption().Equals(ConfigurationManager.TXT_REPORT))
+                        m_databaseManager = new DatabaseManager(sql, new TXTHandler());
+                    else m_databaseManager = new DatabaseManager(sql, new XMLHandler());
                     m_databaseManager.Init();
                     break;
                 case ConfigurationManager.ERROR_READING:

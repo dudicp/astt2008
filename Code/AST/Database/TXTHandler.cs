@@ -29,6 +29,21 @@ namespace AST.Database{
             tw.Close();
         }
 
-        public void ShowReport(String reportName) {}
+        public void ShowReport(String reportName) {
+            if (!File.Exists(reportName + ".txt")) {
+                throw new OpenFileFailedException("File: " + reportName + ".txt doesn't exist.");
+            }
+            System.Diagnostics.ProcessStartInfo procFormsBuilderStartInfo = new System.Diagnostics.ProcessStartInfo();
+            procFormsBuilderStartInfo.FileName = reportName + ".txt";
+            procFormsBuilderStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+            System.Diagnostics.Process procFormsBuilder = new System.Diagnostics.Process();
+            try {
+                procFormsBuilder.StartInfo = procFormsBuilderStartInfo;
+                procFormsBuilder.Start();
+            }
+            catch (Exception e) {
+                throw new OpenFileFailedException("Unable to open the report file: " + reportName + ".txt", e);
+            }
+        }
     }
 }

@@ -39,6 +39,9 @@ namespace AST.Presentation {
             this.EndStationsTitle = new System.Windows.Forms.Label();
             this.ConfigurationSettingsTitle = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.ReportsBrowseButton = new System.Windows.Forms.Button();
+            this.ReportsFullPathText = new System.Windows.Forms.TextBox();
+            this.ReportsPathLabel = new System.Windows.Forms.Label();
             this.BrowseButton = new System.Windows.Forms.Button();
             this.MaxThreadPoolText = new System.Windows.Forms.NumericUpDown();
             this.PSToolsPathText = new System.Windows.Forms.TextBox();
@@ -48,9 +51,9 @@ namespace AST.Presentation {
             this.DBConnectionLabel = new System.Windows.Forms.Label();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.okButton = new System.Windows.Forms.Button();
-            this.ReportsPathLabel = new System.Windows.Forms.Label();
-            this.ReportsFullPathText = new System.Windows.Forms.TextBox();
-            this.ReportsBrowseButton = new System.Windows.Forms.Button();
+            this.ReportFormatLabel = new System.Windows.Forms.Label();
+            this.XMLFormatRadioButton = new System.Windows.Forms.RadioButton();
+            this.TXTFormatRadioButton = new System.Windows.Forms.RadioButton();
             this.EndStationsGroupBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MaxThreadPoolText)).BeginInit();
@@ -219,7 +222,7 @@ namespace AST.Presentation {
             // 
             this.ConfigurationSettingsTitle.AutoSize = true;
             this.ConfigurationSettingsTitle.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ConfigurationSettingsTitle.Location = new System.Drawing.Point(16, 277);
+            this.ConfigurationSettingsTitle.Location = new System.Drawing.Point(16, 263);
             this.ConfigurationSettingsTitle.Name = "ConfigurationSettingsTitle";
             this.ConfigurationSettingsTitle.Size = new System.Drawing.Size(209, 20);
             this.ConfigurationSettingsTitle.TabIndex = 30;
@@ -227,6 +230,9 @@ namespace AST.Presentation {
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.TXTFormatRadioButton);
+            this.groupBox1.Controls.Add(this.XMLFormatRadioButton);
+            this.groupBox1.Controls.Add(this.ReportFormatLabel);
             this.groupBox1.Controls.Add(this.ReportsBrowseButton);
             this.groupBox1.Controls.Add(this.ReportsFullPathText);
             this.groupBox1.Controls.Add(this.ReportsPathLabel);
@@ -238,12 +244,41 @@ namespace AST.Presentation {
             this.groupBox1.Controls.Add(this.PSToolsPathLabel);
             this.groupBox1.Controls.Add(this.DBConnectionLabel);
             this.groupBox1.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(19, 316);
+            this.groupBox1.Location = new System.Drawing.Point(19, 302);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(396, 180);
+            this.groupBox1.Size = new System.Drawing.Size(396, 199);
             this.groupBox1.TabIndex = 31;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Configuration";
+            // 
+            // ReportsBrowseButton
+            // 
+            this.ReportsBrowseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F);
+            this.ReportsBrowseButton.Location = new System.Drawing.Point(332, 106);
+            this.ReportsBrowseButton.Name = "ReportsBrowseButton";
+            this.ReportsBrowseButton.Size = new System.Drawing.Size(57, 23);
+            this.ReportsBrowseButton.TabIndex = 38;
+            this.ReportsBrowseButton.Text = "Browse";
+            this.ReportsBrowseButton.UseVisualStyleBackColor = true;
+            this.ReportsBrowseButton.Click += new System.EventHandler(this.ReportsBrowseButton_Click);
+            // 
+            // ReportsFullPathText
+            // 
+            this.ReportsFullPathText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReportsFullPathText.Location = new System.Drawing.Point(172, 106);
+            this.ReportsFullPathText.Name = "ReportsFullPathText";
+            this.ReportsFullPathText.Size = new System.Drawing.Size(154, 24);
+            this.ReportsFullPathText.TabIndex = 39;
+            // 
+            // ReportsPathLabel
+            // 
+            this.ReportsPathLabel.AutoSize = true;
+            this.ReportsPathLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReportsPathLabel.Location = new System.Drawing.Point(8, 109);
+            this.ReportsPathLabel.Name = "ReportsPathLabel";
+            this.ReportsPathLabel.Size = new System.Drawing.Size(78, 15);
+            this.ReportsPathLabel.TabIndex = 38;
+            this.ReportsPathLabel.Text = "Reports Path:";
             // 
             // BrowseButton
             // 
@@ -331,34 +366,37 @@ namespace AST.Presentation {
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
-            // ReportsPathLabel
+            // ReportFormatLabel
             // 
-            this.ReportsPathLabel.AutoSize = true;
-            this.ReportsPathLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReportsPathLabel.Location = new System.Drawing.Point(8, 109);
-            this.ReportsPathLabel.Name = "ReportsPathLabel";
-            this.ReportsPathLabel.Size = new System.Drawing.Size(78, 15);
-            this.ReportsPathLabel.TabIndex = 38;
-            this.ReportsPathLabel.Text = "Reports Path:";
+            this.ReportFormatLabel.AutoSize = true;
+            this.ReportFormatLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ReportFormatLabel.Location = new System.Drawing.Point(8, 169);
+            this.ReportFormatLabel.Name = "ReportFormatLabel";
+            this.ReportFormatLabel.Size = new System.Drawing.Size(88, 15);
+            this.ReportFormatLabel.TabIndex = 40;
+            this.ReportFormatLabel.Text = "Report Format:";
             // 
-            // ReportsFullPathText
+            // XMLFormatRadioButton
             // 
-            this.ReportsFullPathText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ReportsFullPathText.Location = new System.Drawing.Point(172, 106);
-            this.ReportsFullPathText.Name = "ReportsFullPathText";
-            this.ReportsFullPathText.Size = new System.Drawing.Size(154, 24);
-            this.ReportsFullPathText.TabIndex = 39;
+            this.XMLFormatRadioButton.AutoSize = true;
+            this.XMLFormatRadioButton.Location = new System.Drawing.Point(172, 168);
+            this.XMLFormatRadioButton.Name = "XMLFormatRadioButton";
+            this.XMLFormatRadioButton.Size = new System.Drawing.Size(81, 18);
+            this.XMLFormatRadioButton.TabIndex = 41;
+            this.XMLFormatRadioButton.TabStop = true;
+            this.XMLFormatRadioButton.Text = "XML Format";
+            this.XMLFormatRadioButton.UseVisualStyleBackColor = true;
             // 
-            // ReportsBrowseButton
+            // TXTFormatRadioButton
             // 
-            this.ReportsBrowseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F);
-            this.ReportsBrowseButton.Location = new System.Drawing.Point(332, 106);
-            this.ReportsBrowseButton.Name = "ReportsBrowseButton";
-            this.ReportsBrowseButton.Size = new System.Drawing.Size(57, 23);
-            this.ReportsBrowseButton.TabIndex = 38;
-            this.ReportsBrowseButton.Text = "Browse";
-            this.ReportsBrowseButton.UseVisualStyleBackColor = true;
-            this.ReportsBrowseButton.Click += new System.EventHandler(this.ReportsBrowseButton_Click);
+            this.TXTFormatRadioButton.AutoSize = true;
+            this.TXTFormatRadioButton.Location = new System.Drawing.Point(268, 168);
+            this.TXTFormatRadioButton.Name = "TXTFormatRadioButton";
+            this.TXTFormatRadioButton.Size = new System.Drawing.Size(80, 18);
+            this.TXTFormatRadioButton.TabIndex = 42;
+            this.TXTFormatRadioButton.TabStop = true;
+            this.TXTFormatRadioButton.Text = "TXT Format";
+            this.TXTFormatRadioButton.UseVisualStyleBackColor = true;
             // 
             // OptionsPanel
             // 
@@ -411,6 +449,9 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label ReportsPathLabel;
         private System.Windows.Forms.Button ReportsBrowseButton;
         private System.Windows.Forms.TextBox ReportsFullPathText;
+        private System.Windows.Forms.Label ReportFormatLabel;
+        private System.Windows.Forms.RadioButton TXTFormatRadioButton;
+        private System.Windows.Forms.RadioButton XMLFormatRadioButton;
 
     }
 }

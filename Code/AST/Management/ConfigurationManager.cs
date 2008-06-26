@@ -13,6 +13,7 @@ namespace AST.Management {
         private static String m_PSToolsFullPath = "";
         private static String m_reportsFullPath = "";
         private static int m_threadPoolSize = 0;
+        private static String m_reportOption = "";
 
         public const int SUCCESS = 0;
         public const int ERROR_WRITING = -1;
@@ -20,6 +21,9 @@ namespace AST.Management {
         public const int ERROR_UNEXPECTED = -3;
         public const int ERROR_BAD_FORMAT = -1;
         public const int ERROR_READING = -2;
+
+        public const String XML_REPORT = "XML";
+        public const String TXT_REPORT = "TXT";
 
         public static int ReadConfiguration(String filename){
             
@@ -31,6 +35,7 @@ namespace AST.Management {
                 m_threadPoolSize = 10;
                 m_PSToolsFullPath = ".//";
                 m_reportsFullPath = ".//";
+                m_reportOption = "";
 
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: configuration file " + Configuration_Filename + " doesn't exist.");
                 System.Diagnostics.Debug.WriteLine("using defaults values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
@@ -65,6 +70,11 @@ namespace AST.Management {
                 if (list.Count > 0) m_reportsFullPath = list[0].InnerText;
                 else return ERROR_BAD_FORMAT;
 
+                //Reading XML Report Option
+                list = xmlDoc.GetElementsByTagName("ReportOption");
+                if (list.Count > 0) m_reportOption = list[0].InnerText;
+                else return ERROR_BAD_FORMAT;
+
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: configuration file " + Configuration_Filename + " found.");
                 System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
 
@@ -76,7 +86,7 @@ namespace AST.Management {
             }
         }
 
-        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize, String reportsPath) {
+        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize, String reportsPath, String reportOption) {
 
             try {
 
@@ -108,6 +118,11 @@ namespace AST.Management {
                 textWriter.WriteString(reportsPath);
                 textWriter.WriteEndElement();
 
+                // Write XML Report Option element
+                textWriter.WriteStartElement("ReportOption", "");
+                textWriter.WriteString(reportOption);
+                textWriter.WriteEndElement();
+
                 // Close root element
                 textWriter.WriteEndDocument();
                 textWriter.Close();
@@ -117,6 +132,7 @@ namespace AST.Management {
                 m_PSToolsFullPath = PSToolsPath;
                 m_threadPoolSize = maxTheardPoolSize;
                 m_reportsFullPath = reportsPath;
+                m_reportOption = reportOption;
 
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: configuration file " + Configuration_Filename + " updated.");
                 System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
@@ -158,6 +174,10 @@ namespace AST.Management {
 
         public static String GetReportFullPath() {
             return m_reportsFullPath;
+        }
+
+        public static String GetReportOption() {
+            return m_reportOption;
         }
 
         private static String ResolveDatabaseName(String connectionString) {

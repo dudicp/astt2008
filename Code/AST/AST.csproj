@@ -63,6 +63,7 @@
     <Compile Include="Management\IResultHandler.cs" />
     <Compile Include="Management\ResultHandler.cs" />
     <Compile Include="Management\ResultHandlerFactory.cs" />
+    <Compile Include="Management\SetIPRH.cs" />
     <Compile Include="Presentation\ExecutionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,7 +79,6 @@
     <Compile Include="Management\ExecutionManager.cs" />
     <Compile Include="Management\IServiceProvider.cs" />
     <Compile Include="Management\ManagementExceptions.cs" />
-    <Compile Include="Management\NetWorkBrowser.cs" />
     <Compile Include="Management\ProviderFactory.cs" />
     <Compile Include="Management\WindowsPlatformProvider.cs" />
     <Compile Include="Presentation\AboutDialog.cs">

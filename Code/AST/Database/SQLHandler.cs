@@ -17,9 +17,11 @@ namespace AST.Database{
     class SQLHandler : IDatabaseHandler{
 
         private String m_connectionString;
+        private Hashtable m_endStations;
 
         public SQLHandler(String connectionString){
             this.m_connectionString = connectionString;
+            m_endStations = new Hashtable();
         }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,6 +187,7 @@ namespace AST.Database{
         /// 2. For each action in this TSC
         ///     2.1. Load Action
         ///     2.2. Load Paramters of this action in this TSC.
+        ///     2.3. Load End-Stations of this action in this TSC.
         /// </summary>
         /// <param name="name">The name of the TSC</param>
         /// <returns>The loaded TSC</returns>
@@ -241,6 +244,23 @@ namespace AST.Database{
                         p.Input = (String)parameterDR.GetValue(4);
 
                         a.AddParameter(p);
+                    }
+
+
+                    SqlDataReader endStationsDR = null;
+                    connection = this.Connect();
+                    endStationsDR = SqlHelper.ExecuteReader(connection, "sp_GetEndStationsInTSC", name, actionName, executionOrder);
+
+                    //2.3 Load End-Stations
+                    while (endStationsDR.Read()) {
+                        int esID = (int)endStationsDR.GetValue(0);
+                        if (this.m_endStations.Contains(esID)) {
+                            EndStationSchedule ess = new EndStationSchedule((EndStation)m_endStations[esID]);
+                            a.AddEndStation(ess);
+                        }
+                        else {
+                            Debug.WriteLine("SQLHandler::LoadTSC:: End-Station: " + esID + " not found in the system.");
+                        }
                     }
                     tsc.AddAction(a); // Adding the action to the tsc.
                 }
@@ -393,6 +413,7 @@ namespace AST.Database{
         /// 3. For each action in the TSC:
         ///     3.1. Update the action in TSC table.
         ///     3.2. Update the parameters in TSC table.
+        ///     3.3. Update the end-stations in EndStationInTSC table.
         /// </summary>
         /// <param name="tsc">The requested TSC</param>
         private void Save(TSC tsc) {
@@ -427,8 +448,13 @@ namespace AST.Database{
                         connection = this.Connect();
                         SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterToTSC", tsc.Name, a.Name, executionOrder, p.Name, p.Input);
                     }
-                    executionOrder++;
 
+                    //3.3. Update the end-stations in EndStationInTSC table.
+                    foreach (EndStationSchedule ess in a.GetEndStations()) {
+                        connection = this.Connect();
+                        SqlHelper.ExecuteNonQuery(connection, "sp_InsertEndStationToTSC", tsc.Name, a.Name, executionOrder, ess.EndStation.ID);
+                    }
+                    executionOrder++;
                 }
             }
             catch (ConnectionFailedException e) { throw e; }
@@ -665,6 +691,7 @@ namespace AST.Database{
 
                 Debug.WriteLine(es.ToString());
             }
+            this.m_endStations = res;
 
             return res;
         }

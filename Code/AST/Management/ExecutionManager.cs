@@ -7,6 +7,7 @@ using System.Threading;
 
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Net;
 
 namespace AST.Management{
 
@@ -104,6 +105,13 @@ namespace AST.Management{
                 o.UpdateCurrrentAction(action.Name, m_action.GetActions().Count);
 
             Queue resultsQueue = Queue.Synchronized(new Queue());
+
+            //In-case we are in Test Script, we need only to run on the local machine.
+            if (action.ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
+                action.ClearEndStations();
+                action.AddEndStation(new EndStationSchedule(new EndStation(0,"LocalHost",IPAddress.Parse("127.0.0.1"),EndStation.OSTypeEnum.WINDOWS,"","",false)));
+            }
+
             int length = action.GetEndStations().Count;
             ManualResetEvent[] doneEvents = new ManualResetEvent[length];
 
@@ -126,7 +134,7 @@ namespace AST.Management{
 
             //Update the screen
             m_progress++;
-            double progress = m_progress / (m_action.GetActions().Count);
+            double progress = ((double)m_progress) / ((double)(m_action.GetActions().Count));
             foreach (ExecutionManagerOutputListener o in m_outputListeners)
                 o.UpdateProgress((int)(progress * 100), resultsQueue);
         }
