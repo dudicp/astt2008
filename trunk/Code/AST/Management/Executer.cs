@@ -41,6 +41,7 @@ namespace AST.Management
                         msg = provider.ExecuteScript(endstation.IP,endstation.Username,endstation.Password,m_action.GetContent(endstation.OSType),command, m_action.Timeout,m_action.Duration);
                         break;
                     case Action.ActionTypeEnum.TEST_SCRIPT:
+                        msg = provider.ExecuteScript(endstation.IP, endstation.Username, endstation.Password, m_action.GetContent(endstation.OSType), command, m_action.Timeout, m_action.Duration);
                         break;
                     default:
                         break;
