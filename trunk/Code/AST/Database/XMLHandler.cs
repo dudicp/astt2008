@@ -55,6 +55,9 @@ namespace AST.Database{
                 // Write ActionName element
                 this.AppendChild("ActionName", res.GetAction().Name, resultNode, xmlDoc);
 
+                // Write ActionType element
+                this.AppendChild("ActionType", res.GetAction().ActionType.ToString(), resultNode, xmlDoc);
+
                 // Write EndStationID element
                 this.AppendChild("EndStationID", "" + res.GetEndStation().ID, resultNode, xmlDoc);
 
@@ -69,6 +72,9 @@ namespace AST.Database{
 
                 // Write EndTime element
                 this.AppendChild("EndTime", res.EndTime.ToString(), resultNode, xmlDoc);
+
+                // Write ErrorCode element
+                this.AppendChild("ErrorCode", ""+res.ErrorCode, resultNode, xmlDoc);
 
                 // Write Status element
                 if (res.Status)

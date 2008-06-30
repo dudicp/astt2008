@@ -10,9 +10,11 @@ namespace AST.Management
         public static IResultHandler GetResultHandler(Action action)
         {
             if (action.Name.Equals("SetIP") && (action.CreatorName.Equals("System")))
-                return SetIPRH.GetInstance();
-            else
-                return ResultHandler.GetInstance();
+                return RHSetIP.GetInstance();
+            if (action.Name.Equals("ChangeIPAddress") && (action.CreatorName.Equals("System")))
+                return RHChangeIP.GetInstance();
+            
+            return ResultHandler.GetInstance();
         }
     }
 }

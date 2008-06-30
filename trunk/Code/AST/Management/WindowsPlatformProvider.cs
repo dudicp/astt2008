@@ -14,6 +14,7 @@ namespace AST.Management{
 
         private const String EXECUTE_COMMAND = "\\psexec.exe";
         private const String KILL_COMMAND = "\\pskill.exe";
+        private const String SCRIPT_FILENAME = "ASTScript.vbs";
         private static WindowsPlatformProvider m_instance = null;
         /// <summary>
         /// 
@@ -38,9 +39,10 @@ namespace AST.Management{
         /// <param name="timeout"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
-        public String ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration){
+        public String ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration, out int errorCode){
 
            String res = "";
+           errorCode = 0;
 
            String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: " + PSToolsCommand + " doesn't found.");
@@ -63,8 +65,9 @@ namespace AST.Management{
            try {
                p.Start();
                if (duration == 0) {
-                   //p.WaitForExit();
+                   p.WaitForExit();
                    res = p.StandardOutput.ReadToEnd();
+                   errorCode = p.ExitCode;
                    Debug.WriteLine("output:\n" + res);
                    p.Close();
                }
@@ -90,20 +93,21 @@ namespace AST.Management{
         /// <param name="timeout"></param>
         /// <param name="duration"></param>
         /// <returns></returns>
-        public String ExecuteScript(IPAddress ip, String username, String password, String filename, String arguments, int timeout, int duration)
+        public String ExecuteScript(IPAddress ip, String username, String password, String filename, String arguments, int timeout, int duration, out int errorCode)
         {
             String res = "";
             try {
                 // 1. Transfer the script to the remote end-station
-                this.GetAccess(ip, username, password);
-                this.CopyScript(ip, filename);
+                //this.GetAccess(ip, username, password);
+                //this.CopyScript(ip, filename);
 
                 // 2. Executing the script remotely
-                String command = "cscript.exe c:\\" + this.ResolveFilename(filename)+ " "+arguments;
-                res = this.ExecuteCmd(ip, username, password, command, timeout, duration);
+                //String command = "cscript.exe c:\\" + this.ResolveFilename(filename)+ " "+arguments;
+                String command = "cscript.exe c:\\" + SCRIPT_FILENAME + " " + arguments;
+                res = this.ExecuteCmd(ip, username, password, command, timeout, duration, out errorCode);
                 // 3. Clean up
-                this.DeleteScript(ip, filename);
-                this.EndAccess(ip);
+                //this.DeleteScript(ip, filename);
+                //this.EndAccess(ip);
                 
                 return res;
             }catch(ManagementException e){
@@ -180,11 +184,16 @@ namespace AST.Management{
         /// </summary>
         /// <param name="ip"></param>
         /// <param name="filename"></param>
-        public void CopyScript(IPAddress ip, String filename) {
+        public void CopyScript(IPAddress ip, String filename, String username, String password) {
             //copy <filename> \\X.X.X.X\C$\<filename>
-            String resolvedFilename = this.ResolveFilename(filename);
+            //String resolvedFilename = this.ResolveFilename(filename);
             try {
-                File.Copy(filename, "\\\\" + ip.ToString() + "\\C$\\" + resolvedFilename, true);
+                this.GetAccess(ip, username, password);
+                File.Copy(filename, "\\\\" + ip.ToString() + "\\C$\\" + SCRIPT_FILENAME, true);
+                this.EndAccess(ip);
+            }
+            catch (ManagementException e) {
+                throw e;
             }catch(Exception e){
                 throw new ExecutionFailedException("Copy script failed.", e);
             }
@@ -196,11 +205,14 @@ namespace AST.Management{
         /// <param name="filename"></param>
         public void DeleteScript(IPAddress ip, String filename) {
             //del \\X.X.X.X\C$\<filename>
-            String resolvedFilename = this.ResolveFilename(filename);
+            //String resolvedFilename = this.ResolveFilename(filename);
             try {
-                File.Delete("\\\\" + ip.ToString() + "\\C$\\" + resolvedFilename);
+                File.Delete("\\\\" + ip.ToString() + "\\C$\\" + SCRIPT_FILENAME);
+                this.EndAccess(ip);
             }
-            catch (Exception e) {
+            catch (ManagementException e) {
+                throw e;
+            }catch (Exception e) {
                 throw new ExecutionFailedException("Deleting script failed.", e);
             }
         }

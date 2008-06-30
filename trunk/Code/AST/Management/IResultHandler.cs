@@ -7,6 +7,6 @@ namespace AST.Management
 {
     interface IResultHandler
     {
-         Result CheckResult(Action action, EndStation endStation,DateTime startTime, DateTime endTime, String message);
+         Result CheckResult(Action action, EndStation endStation,DateTime startTime, DateTime endTime, String message, int errorCode);
     }
 }
