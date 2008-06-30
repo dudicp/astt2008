@@ -23,7 +23,7 @@ namespace AST.Management
         /// <param name="endTime"></param>
         /// <param name="message"></param>
         /// <returns></returns>
-        public Result CheckResult(Action action, EndStation endStation, DateTime startTime, DateTime endTime, string message)
+        public Result CheckResult(Action action, EndStation endStation, DateTime startTime, DateTime endTime, string message, int errorCode)
         {
             String validityString, msg;
             bool status;
@@ -31,7 +31,7 @@ namespace AST.Management
             validityString = action.GetValidityString(endStation.OSType).ToLower();
             msg = message.ToLower();
             status = msg.Contains(validityString);
-            return new Result(action, endStation, startTime, endTime, status, message);
+            return new Result(action, endStation, startTime, endTime, status, message, errorCode);
         }
         /// <summary>
         /// 

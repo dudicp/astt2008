@@ -64,7 +64,8 @@
     <Compile Include="Management\IResultHandler.cs" />
     <Compile Include="Management\ResultHandler.cs" />
     <Compile Include="Management\ResultHandlerFactory.cs" />
-    <Compile Include="Management\SetIPRH.cs" />
+    <Compile Include="Management\RHChangeIP.cs" />
+    <Compile Include="Management\RHSetIP.cs" />
     <Compile Include="Presentation\ExecutionDialog.cs">
       <SubType>Form</SubType>
     </Compile>

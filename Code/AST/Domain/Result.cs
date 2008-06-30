@@ -14,6 +14,7 @@ namespace AST.Domain{
         private DateTime m_endTime;
         private bool m_status;
         private String m_message;
+        private int m_errorCode;
         /// <summary>
         /// 
         /// </summary>
@@ -23,7 +24,8 @@ namespace AST.Domain{
         /// <param name="endTime"></param>
         /// <param name="status"></param>
         /// <param name="message"></param>
-        public Result(Action action, EndStation endStation, DateTime startTime, DateTime endTime, bool status, String message)
+        /// <param name="errorCode"></param>
+        public Result(Action action, EndStation endStation, DateTime startTime, DateTime endTime, bool status, String message, int errorCode)
         {
             m_action = action;
             m_endStation = endStation;
@@ -31,6 +33,7 @@ namespace AST.Domain{
             m_endTime = endTime;
             m_status = status;
             m_message = message;
+            m_errorCode = errorCode;
         }
         /// <summary>
         /// 
@@ -73,6 +76,14 @@ namespace AST.Domain{
         public String Message{
             get { return m_message; }
             set { m_message = value; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ErrorCode {
+            get { return m_errorCode; }
+            set { m_errorCode = value; }
         }
         /// <summary>
         /// 

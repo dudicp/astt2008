@@ -51,30 +51,40 @@ namespace AST.Management
             String command = m_action.GenerateCommand(endstation.OSType);
 
             DateTime startTime = DateTime.Now;
-            // execution of the action by its type
-            try
-            {
+            DateTime endTime;
+            int errorCode;
+            try {
                 switch (m_action.ActionType)
                 {
                     case Action.ActionTypeEnum.COMMAND_LINE:
-                        msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration);
+                        msg = provider.ExecuteCmd(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration, out errorCode);
+                        endTime = DateTime.Now;
+                        res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
                         break;
                     case Action.ActionTypeEnum.SCRIPT:
-                        msg = provider.ExecuteScript(endstation.IP, endstation.Username, endstation.Password, m_action.GetContent(endstation.OSType), command, m_action.Timeout, m_action.Duration);
+                        String filename = m_action.GetContent(endstation.OSType);
+                        // 1. Transfer the script to the remote end-station
+                        provider.CopyScript(endstation.IP, filename, endstation.Username, endstation.Password);
+                        // 2. Executing the script remotely
+                        msg = provider.ExecuteScript(endstation.IP, endstation.Username, endstation.Password, m_action.GetContent(endstation.OSType), command, m_action.Timeout, m_action.Duration, out errorCode);
+                        endTime = DateTime.Now;
+                        res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
+                        // 3. Clean up
+                        //provider.DeleteScript(endstation.IP, filename);
                         break;
                     case Action.ActionTypeEnum.TEST_SCRIPT:
-                        msg = provider.ExecuteScript(endstation.IP, endstation.Username, endstation.Password, m_action.GetContent(endstation.OSType), command, m_action.Timeout, m_action.Duration);
+                        msg = provider.ExecuteScript(endstation.IP, endstation.Username, endstation.Password, m_action.GetContent(endstation.OSType), command, m_action.Timeout, m_action.Duration, out errorCode);
+                        endTime = DateTime.Now;
+                        res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
                         break;
                     default:
+                        res = new Result(m_action, endstation, startTime, startTime, false, "Not a valid action type.", 0);
                         break;
                 }
-                DateTime endTime = DateTime.Now;
-                // check the result string and create a result object 
-                res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg);
             }
             catch (ManagementException e)
             {
-                res = new Result(m_action, endstation, startTime, startTime, false, e.Message);
+                res = new Result(m_action, endstation, startTime, startTime, false, e.Message,0);
             }
             // put the result in the results queue
             m_results.Enqueue(res);

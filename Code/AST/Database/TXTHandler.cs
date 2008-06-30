@@ -30,9 +30,11 @@ namespace AST.Database
 
             tw.WriteLine("-------------------------------------------------");
             tw.WriteLine("Action: " + res.GetAction().Name);
+            tw.WriteLine("Type: " + res.GetAction().ActionType.ToString());
             tw.WriteLine("End-Station: " + res.GetEndStation().Name + "(" + res.GetEndStation().IP.ToString() + ")");
             tw.WriteLine("Start Time: " + res.StartTime.ToString());
             tw.WriteLine("End Time: " + res.EndTime.ToString());
+            tw.WriteLine("Error Code: " + res.ErrorCode);
             if (res.Status)
                 tw.WriteLine("Status: Success");
             else
