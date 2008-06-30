@@ -5,7 +5,9 @@ using System.Text;
 using AST.Domain;
 
 namespace AST.Database{
-
+    /// <summary>
+    /// 
+    /// </summary>
     interface IDatabaseHandler{
 
         AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type);

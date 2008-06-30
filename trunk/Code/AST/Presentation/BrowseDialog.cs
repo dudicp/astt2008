@@ -12,6 +12,9 @@ using System.Diagnostics;
 
 namespace AST.Presentation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class BrowseDialog : Form
     {
 
@@ -19,6 +22,10 @@ namespace AST.Presentation
         private String m_abstractActionName;
         private Hashtable m_info;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selectedType"></param>
         public BrowseDialog(AbstractAction.AbstractActionTypeEnum selectedType) {
             m_selectedType = selectedType;
             m_info = new Hashtable();
@@ -34,7 +41,10 @@ namespace AST.Presentation
             foreach (String name in names)
                 this.listBox.Items.Add(name);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public String GetAbstractActionName(){
             return m_abstractActionName;
         }

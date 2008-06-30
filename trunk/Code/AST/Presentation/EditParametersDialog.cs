@@ -9,10 +9,17 @@ using AST.Domain;
 
 namespace AST.Presentation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class EditParametersDialog : Form
     {
         private Parameter m_param;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="param"></param>
         public EditParametersDialog(Parameter param)
         {
             InitializeComponent();
@@ -33,6 +40,10 @@ namespace AST.Presentation
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Parameter GetParameter(){
             return m_param;
         }

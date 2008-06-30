@@ -11,12 +11,18 @@ using AST.Domain;
 
 namespace AST.Presentation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class WelcomePanel : AST.Presentation.ASTPanel{
 
         private List<RecentEntry> m_recent;
         private const int RECENT_NUMBER = 5;
         private Color m_defaultColor;
 
+        /// <summary>
+        /// 
+        /// </summary>
         public WelcomePanel(){
             m_recent = new List<RecentEntry>();
             InitializeComponent();

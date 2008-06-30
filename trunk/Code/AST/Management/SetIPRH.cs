@@ -5,11 +5,23 @@ using AST.Domain;
 using System.Net;
 
 namespace AST.Management {
-
+    /// <summary>
+    /// 
+    /// </summary>
     class SetIPRH : IResultHandler {
-
+        /// <summary>
+        /// 
+        /// </summary>
         private static SetIPRH m_instance = null;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="endStation"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="message"></param>
+        /// <returns></returns>
         public Result CheckResult(Action action, EndStation endStation, DateTime startTime, DateTime endTime, string message) {
             List<Parameter> parameters = action.GetParameters();
             String NewIPStr = "";
@@ -31,7 +43,10 @@ namespace AST.Management {
             }
             
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         internal static IResultHandler GetInstance() {
             if (m_instance == null)
                 m_instance = new SetIPRH();

@@ -12,10 +12,17 @@ using AST.Management;
 
 
 namespace AST.Presentation {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class EndStationDialog : Form {
 
         private EndStation m_es;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="es"></param>
         public EndStationDialog(EndStation es) {
             this.m_es = es;
             InitializeComponent();
@@ -47,6 +54,10 @@ namespace AST.Presentation {
             else this.OSComboBox.SelectedIndex = 0;//for UNKNOWN Type
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public EndStation GetEndStation() {
             return this.m_es;
         }

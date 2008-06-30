@@ -4,8 +4,13 @@ using System.Text;
 using System.Xml;
 using System.IO;
 
-namespace AST.Management {
-    static class ConfigurationManager {
+namespace AST.Management
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    static class ConfigurationManager
+    {
 
         public const String Configuration_Filename = "config.xml";
         private static String m_databaseConnectionStr = "";
@@ -25,9 +30,16 @@ namespace AST.Management {
         public const String XML_REPORT = "XML";
         public const String TXT_REPORT = "TXT";
 
-        public static int ReadConfiguration(String filename){
-            
-            if (!File.Exists(Configuration_Filename)) {
+        /// <summary>
+        /// method for reading the configuration file
+        /// </summary>
+        /// <param name="filename">the name of the configuration file</param>
+        /// <returns></returns>
+        public static int ReadConfiguration(String filename)
+        {
+
+            if (!File.Exists(Configuration_Filename))
+            {
                 // Initilize to default values when file doesn't exist.
 
                 m_databaseConnectionStr = "Server=" + System.Environment.MachineName + "\\SQLEXPRESS;Database=ASTDB;Integrated Security=True;";
@@ -41,15 +53,17 @@ namespace AST.Management {
                 System.Diagnostics.Debug.WriteLine("using defaults values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
                 return SUCCESS;
             }
-            
+
             //In-case Configuratio file exists
-            try {
+            try
+            {
                 XmlDocument xmlDoc = new XmlDocument();
                 xmlDoc.Load(Configuration_Filename);
 
                 //Reading Database connection string
                 XmlNodeList list = xmlDoc.GetElementsByTagName("DatabaseConnectionString");
-                if (list.Count > 0) {
+                if (list.Count > 0)
+                {
                     m_databaseConnectionStr = list[0].InnerText;
                     m_databaseName = ResolveDatabaseName(m_databaseConnectionStr);
                 }
@@ -79,16 +93,29 @@ namespace AST.Management {
                 System.Diagnostics.Debug.WriteLine("using values: DBConnectionString = " + m_databaseConnectionStr + ", MaxThreadPoolSize = " + m_threadPoolSize + ", PSToolsPath = " + m_PSToolsFullPath + ", ReportsPath = " + m_reportsFullPath);
 
                 return SUCCESS;
-            }catch(System.Xml.XmlException e){
+            }
+            catch (System.Xml.XmlException e)
+            {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::ReadConfiguration:: can't access " + Configuration_Filename + " or XML bad format.");
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_READING;
             }
         }
 
-        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize, String reportsPath, String reportOption) {
+        /// <summary>
+        /// method for creating a new configuration file from the application
+        /// </summary>
+        /// <param name="databaseName">Name of the database</param>
+        /// <param name="PSToolsPath">PSTOOLS path</param>
+        /// <param name="maxTheardPoolSize">Num of maximum threads in the thread pool</param>
+        /// <param name="reportsPath">Paht of report file</param>
+        /// <param name="reportOption">the selected report format (TXT\XML)</param>
+        /// <returns></returns>
+        public static int WriteConfiguration(String databaseName, String PSToolsPath, int maxTheardPoolSize, String reportsPath, String reportOption)
+        {
 
-            try {
+            try
+            {
 
                 String DBConnectionString = "Server=" + databaseName + ";Database=ASTDB;Integrated Security=True;";
 
@@ -139,52 +166,91 @@ namespace AST.Management {
 
                 return SUCCESS;
             }
-            catch (System.InvalidOperationException e) {
+            catch (System.InvalidOperationException e)
+            {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: failed to write to " + Configuration_Filename);
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_UNEXPECTED;
             }
-            catch (System.ArgumentException e) {
+            catch (System.ArgumentException e)
+            {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: Invalid arguments.");
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_INVALID_ARGUMENTS;
             }
-            catch (System.Exception e) {
+            catch (System.Exception e)
+            {
                 System.Diagnostics.Debug.WriteLine("ConfigurationManager::WriteConfiguration:: failed to save " + Configuration_Filename);
                 System.Diagnostics.Debug.WriteLine(e.Message);
                 return ERROR_WRITING;
             }
         }
 
-        public static String GetDBConnectionString() {
+        /// <summary>
+        /// method for getting the connection string 
+        /// </summary>
+        /// <returns>the connection string</returns>
+        public static String GetDBConnectionString()
+        {
             return m_databaseConnectionStr;
         }
 
-        public static String GetDatabaseName() {
+        /// <summary>
+        /// method for getting the database name
+        /// </summary>
+        /// <returns>the database name</returns>
+        public static String GetDatabaseName()
+        {
             return m_databaseName;
         }
 
-        public static int GetMaxThreadPoolSize() {
+        /// <summary>
+        /// method for getting the maximum number of threads in the thread pool
+        /// </summary>
+        /// <returns>the number of maximum threads in the thread pool</returns>
+        public static int GetMaxThreadPoolSize()
+        {
             return m_threadPoolSize;
         }
 
-        public static String GetPSToolsFullPath() {
+        /// <summary>
+        /// method for getting the PSTOOLS path
+        /// </summary>
+        /// <returns>PSTOOLS path</returns>
+        public static String GetPSToolsFullPath()
+        {
             return m_PSToolsFullPath;
         }
 
-        public static String GetReportFullPath() {
+        /// <summary>
+        /// method for getting the report full path
+        /// </summary>
+        /// <returns>the report full path</returns>
+        public static String GetReportFullPath()
+        {
             return m_reportsFullPath;
         }
 
-        public static String GetReportOption() {
+        /// <summary>
+        /// method for getting the selected report format ( TXT\XML )
+        /// </summary>
+        /// <returns>the report file selected format</returns>
+        public static String GetReportOption()
+        {
             return m_reportOption;
         }
 
-        private static String ResolveDatabaseName(String connectionString) {
+        /// <summary>
+        /// method for resloving the database name from the connection string
+        /// </summary>
+        /// <param name="connectionString">the connection string</param>
+        /// <returns>the database name</returns>
+        private static String ResolveDatabaseName(String connectionString)
+        {
             // Server=CPUNAME\SQLEXPRESS;Database=ASTDB;Integrated Security=True;
             int startIndex = connectionString.IndexOf("=");
             int endIndex = connectionString.IndexOf(";");
-            if ((startIndex > 0) && (endIndex > 0)) return connectionString.Substring(startIndex+1, endIndex - startIndex -1);
+            if ((startIndex > 0) && (endIndex > 0)) return connectionString.Substring(startIndex + 1, endIndex - startIndex - 1);
             else return connectionString;
         }
 

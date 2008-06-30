@@ -10,13 +10,20 @@ using AST.Management;
 using System.Collections;
 
 namespace AST.Presentation {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class CreateTSCPanel : AST.Presentation.ASTPanel {
 
         private AbstractAction m_abstractAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
         private Hashtable m_actions;
         private bool m_isNew;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="type"></param>
         public CreateTSCPanel(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             m_abstractAction = a;
             m_type = type;
@@ -29,7 +36,9 @@ namespace AST.Presentation {
             Init();
         }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
         public void SetAttributes() {
 
             if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
@@ -77,7 +86,9 @@ namespace AST.Presentation {
                 DescriptionText.Text = m_abstractAction.Description;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void Init() {
 
             this.ActionsListBox.Items.Clear();
@@ -97,14 +108,22 @@ namespace AST.Presentation {
             this.SelectedTreeView.Nodes.Add(node);
             this.SelectedTreeView.Nodes[0].Expand();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem != null) {
                 this.ActionDescriptionText.Text = (String)this.m_actions[this.ActionsListBox.SelectedItem];
                 this.SelectActionButton.Enabled = true;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectedTreeView_AfterSelect(object sender, TreeViewEventArgs e) {
 
             if (this.SelectedTreeView.SelectedNode == null) return;
@@ -128,7 +147,11 @@ namespace AST.Presentation {
             if (SelectedTreeView.SelectedNode.Index < this.SelectedTreeView.SelectedNode.Parent.Nodes.Count - 1) this.MoveDownActionButton.Enabled = true;
             else this.MoveDownActionButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if ((this.ActionsListBox.SelectedIndex < 0) || (this.ActionsListBox.SelectedIndex >= this.m_actions.Count)) {
@@ -152,6 +175,11 @@ namespace AST.Presentation {
             this.SettingsButton.Enabled = true;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UnselectActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if (this.SelectedTreeView.SelectedNode == null) {
@@ -171,6 +199,11 @@ namespace AST.Presentation {
                 this.MoveDownActionButton.Enabled = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveUpActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if (this.SelectedTreeView.SelectedNode == null) return;
@@ -198,6 +231,11 @@ namespace AST.Presentation {
             if (this.SelectedTreeView.SelectedNode.Index == 0) this.MoveUpActionButton.Enabled = false;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveDownActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if (this.SelectedTreeView.SelectedNode == null) return;
@@ -225,6 +263,11 @@ namespace AST.Presentation {
             this.SelectedTreeView.SelectedNode = lowerNode;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SettingsButton_Click(object sender, EventArgs e) {
             SettingsDialog sd;
             sd = new SettingsDialog(((ASTNode)(this.SelectedTreeView.SelectedNode)).Value, ((ASTNode)(this.SelectedTreeView.SelectedNode)).Type);
@@ -232,6 +275,11 @@ namespace AST.Presentation {
             if (sd.ShowDialog() == DialogResult.OK) { }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MyCancelButton_Click(object sender, EventArgs e) {
             //Return to the welcome screen
             DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
@@ -240,6 +288,11 @@ namespace AST.Presentation {
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e) {
             //Save the Abstract Action
             if (!this.CheckForm()) return;
@@ -268,6 +321,10 @@ namespace AST.Presentation {
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private bool CheckForm() {
             bool res = true;
             String message = "The following attributes are invalid:\n";

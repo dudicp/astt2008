@@ -6,22 +6,38 @@ using System.Diagnostics;
 using System.IO;
 
 namespace AST.Management{
-
+    /// <summary>
+    /// 
+    /// </summary>
     class WindowsPlatformProvider : IServiceProvider{
 
 
         private const String EXECUTE_COMMAND = "\\psexec.exe";
         private const String KILL_COMMAND = "\\pskill.exe";
         private static WindowsPlatformProvider m_instance = null;
-        
+        /// <summary>
+        /// 
+        /// </summary>
         private WindowsPlatformProvider(){}
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public static WindowsPlatformProvider GetInstance(){
             if (m_instance == null) 
                 m_instance = new WindowsPlatformProvider();
             return m_instance;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="cmd"></param>
+        /// <param name="timeout"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         public String ExecuteCmd(IPAddress ip, String username, String password, String cmd, int timeout, int duration){
 
            String res = "";
@@ -63,7 +79,17 @@ namespace AST.Management{
            }
            return res;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="filename"></param>
+        /// <param name="arguments"></param>
+        /// <param name="timeout"></param>
+        /// <param name="duration"></param>
+        /// <returns></returns>
         public String ExecuteScript(IPAddress ip, String username, String password, String filename, String arguments, int timeout, int duration)
         {
             String res = "";
@@ -86,7 +112,12 @@ namespace AST.Management{
         }
 
     #region Execute Script Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
         public void GetAccess(IPAddress ip, String username, String password){
             String account = "";
             if (username.Length != 0) account = "/user:" + username + " " + password;
@@ -115,7 +146,10 @@ namespace AST.Management{
                 throw new ExecutionFailedException("Getting access to: " + ip.ToString() + " Failed.", e);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
         public void EndAccess(IPAddress ip) {
 
             //net use \\X.X.X.X\C$ /dele
@@ -141,7 +175,11 @@ namespace AST.Management{
                 throw new ExecutionFailedException("Deleting access to: " + ip.ToString() + " Failed.", e);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="filename"></param>
         public void CopyScript(IPAddress ip, String filename) {
             //copy <filename> \\X.X.X.X\C$\<filename>
             String resolvedFilename = this.ResolveFilename(filename);
@@ -151,7 +189,11 @@ namespace AST.Management{
                 throw new ExecutionFailedException("Copy script failed.", e);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ip"></param>
+        /// <param name="filename"></param>
         public void DeleteScript(IPAddress ip, String filename) {
             //del \\X.X.X.X\C$\<filename>
             String resolvedFilename = this.ResolveFilename(filename);
@@ -162,7 +204,11 @@ namespace AST.Management{
                 throw new ExecutionFailedException("Deleting script failed.", e);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="fullPathFilename"></param>
+        /// <returns></returns>
         private String ResolveFilename(String fullPathFilename) {
             int index = fullPathFilename.LastIndexOf("\\");
             if (index >= 0) {

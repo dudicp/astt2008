@@ -13,12 +13,18 @@ using Microsoft.ApplicationBlocks.Data;
 using System.Diagnostics;
 
 namespace AST.Database{
-    
+    /// <summary>
+    /// this class is responsible for handeling actions on a SQL Server database 
+    /// </summary>
     class SQLHandler : IDatabaseHandler{
 
         private String m_connectionString;
         private Hashtable m_endStations;
-
+        
+        /// <summary>
+        /// CTor for the SQLHandler
+        /// </summary>
+        /// <param name="connectionString"></param>
         public SQLHandler(String connectionString){
             this.m_connectionString = connectionString;
             m_endStations = new Hashtable();
@@ -27,7 +33,10 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 //      Connection Method
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// Method for connecting to the SQL Server database
+        /// </summary>
+        /// <returns>the connection object (SqlConnection) to the database</returns>
         private SqlConnection Connect(){
             try {
                 Debug.WriteLine("Connecting to: " + this.m_connectionString);
@@ -44,6 +53,13 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
         
     #region Load Methods
+       
+        /// <summary>
+        /// Method for Loading an AbstractAction from the Database
+        /// </summary>
+        /// <param name="name">Action name</param>
+        /// <param name="type">Action Type(Action\TSC\TP)</param>
+        /// <returns>AbstractAction object</returns>
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
                 case AbstractAction.AbstractActionTypeEnum.ACTION: return LoadAction(name);
@@ -51,7 +67,11 @@ namespace AST.Database{
                 default : return LoadTP(name);
             }
         }
-
+        /// <summary>
+        /// method for loading an action from a SQL database.
+        /// </summary>
+        /// <param name="name">action name</param>
+        /// <returns>Action object that was loaded from the DB</returns>
         private Action LoadAction(String name) {
 
             ///////////////////
@@ -121,7 +141,12 @@ namespace AST.Database{
 
             return a;
         }
-
+        /// <summary>
+        /// method for loading a parameter from a SQL database.
+        /// </summary>
+        /// <param name="actionName">the name of the action containing the parameter</param>
+        /// <param name="parameterName">the parameter name</param>
+        /// <returns>Parameter object that was loaded from the DB</returns>
         private Parameter LoadParameter(String actionName, String parameterName) {
             //  1. Load Parameter
             SqlConnection connection;
@@ -338,7 +363,11 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #region Save Methods
-
+        /// <summary>
+        /// method for Saving AbstractActions (Action\TSC\TP) on the SQL database.
+        /// </summary>
+        /// <param name="action">the AbstractAction to save on the DB</param>
+        /// <param name="type">the action type (Action\TSC\TP)</param>
         public void Save(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
@@ -352,7 +381,10 @@ namespace AST.Database{
                     break;
             }
         }
-
+        /// <summary>
+        /// method for Saving End-stations on the SQL database.
+        /// </summary>
+        /// <param name="es">the end-station to save on the DB</param>
         public void Save(EndStation es) {
             try {
                 String storedProcedureName;
@@ -369,7 +401,10 @@ namespace AST.Database{
                 throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
             }
         }
-
+        /// <summary>
+        /// method for Saving Action on the SQL database.
+        /// </summary>
+        /// <param name="action">the Action to save on the DB</param>
         private void Save(Action action) {
 
             // 1. Saving Action
@@ -470,7 +505,7 @@ namespace AST.Database{
         /// 2. Saving the TP information.
         /// 3. Saving each TSC in the TP.
         /// </summary>
-        /// <param name="tsc">The requested TP</param>
+        /// <param name="tp">The requested TP</param>
         private void Save(TP tp) {
 
             // 1. Deleting the old TSC if exists.
@@ -503,7 +538,11 @@ namespace AST.Database{
                 throw new QueryFailedException("Saving TP: " + tp.Name + " failed.", e);
             }
         }
-
+        /// <summary>
+        /// method for saving Parameters on the DB
+        /// </summary>
+        /// <param name="p">the parameter to save on the DB</param>
+        /// <param name="actionName">the name of the action containing the parameter</param>
         public void Save(Parameter p, String actionName) {
             // 1. Saving Parameter
             SqlConnection connection;
@@ -543,8 +582,13 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #region Delete Methods
-
-        public void Delete(String name, AbstractAction.AbstractActionTypeEnum type) {
+        /// <summary>
+        /// method for deleting AbstractActions from the DB
+        /// </summary>
+        /// <param name="name">the AbstractAction to delete from the DB</param>
+        /// <param name="type">the action type (Action\TSC\TP)</param>
+        public void Delete(String name, AbstractAction.AbstractActionTypeEnum type)
+        {
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
                     DeleteAction(name);
@@ -557,8 +601,12 @@ namespace AST.Database{
                     break;
             }
         }
-
-        public void Delete(EndStation es) {
+        /// <summary>
+        /// method for deleting End-stations on the SQL database.
+        /// </summary>
+        /// <param name="es">the end-station to delete from the DB</param>
+        public void Delete(EndStation es)
+        {
             try {
                 SqlConnection connection = this.Connect();
                 SqlHelper.ExecuteNonQuery(connection, "sp_DeleteEndStation", es.ID);
@@ -571,7 +619,10 @@ namespace AST.Database{
                 throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
             }
         }
-
+        /// <summary>
+        /// method for deleting Actions from the DB
+        /// </summary>
+        /// <param name="name">the Action name</param>
         private void DeleteAction(String name) {
             try {
                 SqlConnection connection = this.Connect();
@@ -583,8 +634,12 @@ namespace AST.Database{
                 throw new QueryFailedException("Deleting action: " + name + " failed.", e);
             }
         }
-
-        private void DeleteTSC(String name) {
+        /// <summary>
+        /// method for deleting TSC from the DB
+        /// </summary>
+        /// <param name="name">the TSC name</param>
+        private void DeleteTSC(String name)
+        {
             try {
                 SqlConnection connection = this.Connect();
                 SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSC", name);
@@ -595,8 +650,12 @@ namespace AST.Database{
                 throw new QueryFailedException("Deleting TSC: " + name + " failed.", e);
             }
         }
-
-        private void DeleteTP(String name) {
+        /// <summary>
+        /// method for deleting TP from the DB
+        /// </summary>
+        /// <param name="name">the TP name</param>
+        private void DeleteTP(String name)
+        {
             try {
                 SqlConnection connection = this.Connect();
                 SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTP", name);
@@ -607,7 +666,11 @@ namespace AST.Database{
                 throw new QueryFailedException("Deleting TP: " + name + " failed.", e);
             }
         }
-
+        /// <summary>
+        /// method for deleting Parameters from the DB
+        /// </summary>
+        /// <param name="p">the parameter name</param>
+        /// <param name="actionName">the name of the action containing the parameter</param>
         public void Delete(Parameter p, String actionName) {
             try {
                 SqlConnection connection = this.Connect();
@@ -627,7 +690,11 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #region Get Methods
-
+        /// <summary>
+        /// method for getting AbstractActions by type
+        /// </summary>
+        /// <param name="type">the AbstractAction type (Action\TSC\TP)</param>
+        /// <returns>HashTable of all the actions of the requested type</returns>
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type) {
             switch (type){
                 case AbstractAction.AbstractActionTypeEnum.ACTION: return GetActionsInfo();
@@ -635,7 +702,10 @@ namespace AST.Database{
                 default: return GetTPsInfo();
             }            
         }
-
+        /// <summary>
+        /// method for getting all End-stations in the DB
+        /// </summary>
+        /// <returns>HashTable of all the end-stations in the DB</returns>
         public Hashtable GetAllEndStations() {
             SqlDataReader dr = null;
             Hashtable res = new Hashtable();
@@ -695,7 +765,10 @@ namespace AST.Database{
 
             return res;
         }
-
+        /// <summary>
+        /// method for getting all the Actions in the DB
+        /// </summary>
+        /// <returns>HashTable of all the actions in the BB</returns>
         private Hashtable GetActionsInfo() {
             Hashtable info = new Hashtable();
             SqlDataReader dr = null;
@@ -716,8 +789,12 @@ namespace AST.Database{
             }
             return info;
         }
-
-        private Hashtable GetTSCsInfo() {
+        /// <summary>
+        /// method for getting all the TSCs in the DB
+        /// </summary>
+        /// <returns>HashTable of all the TSCs in the BB</returns>
+        private Hashtable GetTSCsInfo()
+        {
             Hashtable info = new Hashtable();
             SqlDataReader dr = null;
             try {
@@ -737,8 +814,12 @@ namespace AST.Database{
             }
             return info;
         }
-
-        private Hashtable GetTPsInfo() {
+        /// <summary>
+        /// method for getting all the TPs in the DB
+        /// </summary>
+        /// <returns>HashTable of all the TPs in the BB</returns>
+        private Hashtable GetTPsInfo()
+        {
             Hashtable info = new Hashtable();
             SqlDataReader dr = null;
             try {
@@ -758,17 +839,24 @@ namespace AST.Database{
             }
             return info;
         }
-
+        /// <summary>
+        /// method for getting the most recently added Actions in the DB
+        /// </summary>
+        /// <param name="recent">the number of recent AbstractActions to return</param>
+        /// <returns>List of the most recently added Actions</returns>
         public List<RecentEntry> GetRecent(int recent) {
+            // retrive all the recent AbstractActions by their type
             List<RecentEntry> recentActions = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.ACTION);
             List<RecentEntry> recentTSCs = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.TSC);
             List<RecentEntry> recentTPs = this.GetRecent(recent, AbstractAction.AbstractActionTypeEnum.TP);
 
+            // combine all the  lists in to one big list
             List<RecentEntry> allRecents = new List<RecentEntry>();
             allRecents.AddRange(recentActions);
             allRecents.AddRange(recentTSCs);
             allRecents.AddRange(recentTPs);
 
+            // sort the list by order of recently added
             allRecents.Sort(RecentEntry.Comparison);
 
             List<RecentEntry> res = new List<RecentEntry>();
@@ -778,7 +866,12 @@ namespace AST.Database{
 
             return res;
         }
-
+        /// <summary>
+        /// method for getting the most recently added Actions in the DB by their type
+        /// </summary>
+        /// <param name="recent">the number of recent AbstractActions to return</param>
+        /// <param name="type"></param>
+        /// <returns>List of recently added actions by their type</returns>
         public List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type) {
             String storedProcedureName;
             switch (type) {
@@ -812,7 +905,11 @@ namespace AST.Database{
             }
             return info;
         }
-
+        /// <summary>
+        /// method for getting all the parameters defined in an action
+        /// </summary>
+        /// <param name="actionName">the name of the action containing the parameters</param>
+        /// <returns>List of all the parameters in defined in the action</returns>
         public List<Parameter> GetParameters(String actionName) {
             List<Parameter> res = new List<Parameter>();
 
@@ -844,9 +941,15 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #region IsExist Methods
-
+        /// <summary>
+        /// method for checking if an AbstractAction exists on the DB
+        /// </summary>
+        /// <param name="action">the action name</param>
+        /// <param name="type">the action type (Action\TSC\TP)</param>
+        /// <returns>true if the action exists on the DB</returns>
         public bool IsExist(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
             String storedProcedureName = "";
+            // select the apropriate store procedure to call
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
                     storedProcedureName = "sp_GetAction";
@@ -860,8 +963,10 @@ namespace AST.Database{
             }
 
             try {
+                // connect to the DB
                 SqlConnection connection = this.Connect();
                 SqlDataReader dr = null;
+                // read data from DB
                 dr = SqlHelper.ExecuteReader(connection, storedProcedureName, action.Name);
                 return dr.HasRows;
             }
@@ -872,11 +977,18 @@ namespace AST.Database{
             }
 
         }
-
-        public bool IsExist(EndStation es) {
+        /// <summary>
+        /// method for checking if an End-station exists on the DB
+        /// </summary>
+        /// <param name="es">the End-station</param>
+        /// <returns>true if the End-station exists on the DB</returns>
+        public bool IsExist(EndStation es)
+        {
             try {
+                // connect to the DB
                 SqlConnection connection = this.Connect();
                 SqlDataReader dr = null;
+                // Read Data from the DB 
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetEndStation", es.ID);
                 return dr.HasRows;
             }
@@ -886,8 +998,14 @@ namespace AST.Database{
                 throw new QueryFailedException("Loading information of end-station: " + es.Name + " failed.", e);
             }
         }
-
-        public bool IsExist(Parameter p, String actionName) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="p">the parameter</param>
+        /// <param name="actionName">the name of the action containing the parameter</param>
+        /// <returns>true if the parameter exists on the DB</returns>
+        public bool IsExist(Parameter p, String actionName)
+        {
             try {
                 SqlConnection connection = this.Connect();
                 SqlDataReader dr = null;
@@ -908,7 +1026,11 @@ namespace AST.Database{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
     #region Other Methods
-
+        /// <summary>
+        /// method for getting the OS type 
+        /// </summary>
+        /// <param name="str">the string describing the OS Type</param>
+        /// <returns>OSTypeEnum compatible with the str param</returns>
         private EndStation.OSTypeEnum GetOSType(String str){
             switch (str)
             {
@@ -919,7 +1041,11 @@ namespace AST.Database{
                     return EndStation.OSTypeEnum.UNKNOWN;
             }
         }
-
+        /// <summary>
+        /// method for getting the AbstractAction type 
+        /// </summary>
+        /// <param name="str">the string describing the AbstractAction Type</param>
+        /// <returns>ActionTypeEnum compatible with the str param</returns>
         private Action.ActionTypeEnum GetActionType(String str){
             switch (str){
                 case "COMMAND_LINE": return Action.ActionTypeEnum.COMMAND_LINE;
@@ -930,8 +1056,13 @@ namespace AST.Database{
                     throw new InvalidTypeException("Unknown action type " + str);
             }
         }
-
-        private Parameter.ParameterTypeEnum GetParameterType(String str){
+        /// <summary>
+        /// method for getting the Parameter type 
+        /// </summary>
+        /// <param name="str">the string describing the Parameter Type</param>
+        /// <returns>ParameterTypeEnum compatible with the str param</returns>
+        private Parameter.ParameterTypeEnum GetParameterType(String str)
+        {
             switch (str){
                 case "Input": return Parameter.ParameterTypeEnum.Input;
                 case "Option": return Parameter.ParameterTypeEnum.Option;

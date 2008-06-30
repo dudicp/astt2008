@@ -1,16 +1,28 @@
 using System;
 
 namespace AST.Domain{
-
+    /// <summary>
+    /// 
+    /// </summary>
     public class Result{
-
+        /// <summary>
+        /// 
+        /// </summary>
         private Action m_action;
         private EndStation m_endStation;
         private DateTime m_startTime;
         private DateTime m_endTime;
         private bool m_status;
         private String m_message;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="endStation"></param>
+        /// <param name="startTime"></param>
+        /// <param name="endTime"></param>
+        /// <param name="status"></param>
+        /// <param name="message"></param>
         public Result(Action action, EndStation endStation, DateTime startTime, DateTime endTime, bool status, String message)
         {
             m_action = action;
@@ -20,35 +32,52 @@ namespace AST.Domain{
             m_status = status;
             m_message = message;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public Action GetAction(){
             return m_action;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public EndStation GetEndStation() {
             return m_endStation;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime StartTime{
             get { return m_startTime; }
             set { m_startTime = value; }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public DateTime EndTime {
             get { return m_endTime; }
             set { m_endTime = value; }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Status{
             get { return m_status; }
             set { m_status = value; }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public String Message{
             get { return m_message; }
             set { m_message = value; }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             String status = "Failed";

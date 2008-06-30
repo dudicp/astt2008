@@ -10,6 +10,9 @@ using AST.Domain;
 using AST.Management;
 
 namespace AST.Presentation {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class ExecutionDialog : Form {
 
         private Hashtable m_actionsInfo;
@@ -21,7 +24,9 @@ namespace AST.Presentation {
         private AbstractAction m_rootAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
         private String m_reportName;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public ExecutionDialog() {
             m_activeAction = null;
             m_rootAction = null;
@@ -32,7 +37,11 @@ namespace AST.Presentation {
             InitializeComponent();            
             SetAbstractActionsInfo();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="type"></param>
         public ExecutionDialog(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             m_activeAction = a;
             m_rootAction = a;
@@ -45,21 +54,32 @@ namespace AST.Presentation {
             SetAbstractActionsInfo();
             SelectAbstractAction();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public AbstractAction GetAbstractAction() {
             return this.m_rootAction;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public String GetReportName() {
             return this.m_reportName;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public AbstractAction.AbstractActionTypeEnum GetAbstractActionType() {
             return m_type;
         }
 
     #region Abstract Action Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetAbstractActionsInfo() {
             this.ActionsListBox.Items.Clear();
             this.TSCsListBox.Items.Clear();
@@ -84,7 +104,9 @@ namespace AST.Presentation {
             foreach (String name in names)
                 this.TPsListBox.Items.Add(name);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SelectAbstractAction() {
             switch (m_type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
@@ -105,7 +127,11 @@ namespace AST.Presentation {
                     break;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem != null) {
                 this.DescriptionText.Text = (String)this.m_actionsInfo[this.ActionsListBox.SelectedItem];
@@ -113,7 +139,11 @@ namespace AST.Presentation {
                 this.TSCsListBox.ClearSelected();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TSCsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.TSCsListBox.SelectedItem != null) {
                 this.DescriptionText.Text = (String)this.m_TSCsInfo[this.TSCsListBox.SelectedItem];
@@ -121,7 +151,11 @@ namespace AST.Presentation {
                 this.TPsListBox.ClearSelected();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TPsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             if (this.TPsListBox.SelectedItem != null) {
                 this.DescriptionText.Text = (String)this.m_TPsInfo[this.TPsListBox.SelectedItem];
@@ -129,7 +163,11 @@ namespace AST.Presentation {
                 this.TSCsListBox.ClearSelected();
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ActionsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem == null) return;
             m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
@@ -173,7 +211,11 @@ namespace AST.Presentation {
             //Enable the execute button
             this.ExecuteButton.Enabled = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TSCsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TSCsListBox.SelectedItem == null) return;
             m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
@@ -198,7 +240,11 @@ namespace AST.Presentation {
             //Enable the execute button
             this.ExecuteButton.Enabled = true;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TPsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TPsListBox.SelectedItem == null) return;
             m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
@@ -227,7 +273,9 @@ namespace AST.Presentation {
     #endregion
 
     #region TreeView Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetTreeView() {
             this.TreeView.Nodes.Clear();
             this.TreeView.HideSelection = false;
@@ -236,7 +284,11 @@ namespace AST.Presentation {
             this.TreeView.Nodes.Add(node);
             this.TreeView.Nodes[0].Expand();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TreeView_AfterSelect(object sender, TreeViewEventArgs e) {
 
             if (this.TreeView.SelectedNode == null) return;
@@ -255,7 +307,11 @@ namespace AST.Presentation {
             if ((TreeView.SelectedNode.Level == 1) && (TreeView.SelectedNode.Index < this.TreeView.SelectedNode.Parent.GetNodeCount(false) - 1)) this.MoveDownActionButton.Enabled = true;
             else this.MoveDownActionButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveUpActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if (this.TreeView.SelectedNode == null) return;
@@ -294,7 +350,11 @@ namespace AST.Presentation {
             }
 
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveDownActionButton_Click(object sender, EventArgs e) {
             //Checks index validity
             if (this.TreeView.SelectedNode == null) return;
@@ -331,7 +391,11 @@ namespace AST.Presentation {
                 ((TP)this.m_rootAction).GetTSCs()[index + 1] = tmp;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TreeView_OnDoubleClick(object sender, EventArgs e) {
 
             if (this.TreeView.SelectedNode == null) return;
@@ -364,7 +428,10 @@ namespace AST.Presentation {
     #endregion
 
     #region End-Stations Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
         private void SetEndStations(AbstractAction a) {
             this.m_endStations = new List<EndStation>();
             this.EndStationsListBox.Items.Clear();
@@ -387,7 +454,11 @@ namespace AST.Presentation {
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NewEndStationButton_Click(object sender, EventArgs e) {
             EndStationDialog esd = new EndStationDialog(null);
             if (esd.ShowDialog() == DialogResult.OK) {
@@ -397,7 +468,11 @@ namespace AST.Presentation {
                 this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditButton_Click(object sender, EventArgs e) {
 
             //In case we are in the upper list box.
@@ -426,7 +501,11 @@ namespace AST.Presentation {
                 }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectEndStationButton_Click(object sender, EventArgs e) {
             if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) {
                 this.SelectEndStationButton.Enabled = false;
@@ -444,7 +523,11 @@ namespace AST.Presentation {
                 this.EditButton.Enabled = false;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UnselectEndStationButton_Click(object sender, EventArgs e) {
             if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_activeAction.GetEndStations().Count)) {
                 this.UnselectEndStationButton.Enabled = false;
@@ -465,7 +548,11 @@ namespace AST.Presentation {
             if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= (this.m_activeAction.GetEndStations().Count - 1)))
                 this.MoveDownEndStationButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.SelectEndStationButton.Enabled = false;
             if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) return;
@@ -475,7 +562,11 @@ namespace AST.Presentation {
 
             this.SetUnselectedMenuItemDetails();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.UnselectEndStationButton.Enabled = false;
             if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_activeAction.GetEndStations().Count)) return;
@@ -489,19 +580,27 @@ namespace AST.Presentation {
 
             this.SetSelectedMenuItemDetails();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetSelectedMenuItemDetails() {
             this.IPMenuItem.Text = "IP:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.IP;
             this.UsernameMenuItem.Text = "Username:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.Username;
             this.OSTypeMenuItem.Text = "OS Type:  " + this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation.OSType;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetUnselectedMenuItemDetails() {
             this.IPMenuItem.Text = "IP:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].IP;
             this.UsernameMenuItem.Text = "Username:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].Username;
             this.OSTypeMenuItem.Text = "OS Type:  " + this.m_endStations[this.EndStationsListBox.SelectedIndex].OSType;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveUpEndStationButton_Click(object sender, EventArgs e) {
             if ((this.SelectedEndStationsListBox.SelectedIndex <= 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_activeAction.GetEndStations().Count))
                 return;
@@ -517,7 +616,11 @@ namespace AST.Presentation {
             this.m_activeAction.GetEndStations().Insert(this.SelectedEndStationsListBox.SelectedIndex, ess);
             this.SelectedEndStationsListBox.SelectedIndex--;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveDownEndStationButton_Click(object sender, EventArgs e) {
             if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= (this.m_activeAction.GetEndStations().Count - 1)))
                 return;
@@ -538,7 +641,10 @@ namespace AST.Presentation {
     #endregion
 
     #region Parameters Methods
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
         private void SetParameters(Action a) {
 
             this.SelectedParametersListBox.Items.Clear();
@@ -578,7 +684,11 @@ namespace AST.Presentation {
                 this.DurationCheckBox.Checked = true;
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.SelectParameterButton.Enabled = false;
             if ((this.ParametersListBox.SelectedIndex < 0) || (this.ParametersListBox.SelectedIndex >= this.m_parameters.Count)) return;
@@ -594,7 +704,11 @@ namespace AST.Presentation {
             this.InputTextBox.Text = this.m_parameters[this.ParametersListBox.SelectedIndex].Input;
             this.SelectedParametersListBox.ClearSelected();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SelectedParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.UnselectParameterButton.Enabled = false;
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count)) return;
@@ -615,7 +729,11 @@ namespace AST.Presentation {
             this.DescriptionText.Text = ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Description;
             this.ParametersListBox.ClearSelected();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void UnselectParameterButton_Click(object sender, EventArgs e) {
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count)) {
                 this.UnselectParameterButton.Enabled = false;
@@ -636,7 +754,11 @@ namespace AST.Presentation {
 
             this.InputTextBox.Clear();
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void SetParameterValue(object sender, EventArgs e) {
             
             // In case we are in the upper list box.
@@ -651,7 +773,11 @@ namespace AST.Presentation {
                 ((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Input = this.InputTextBox.Text;
             }
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void SelectParameterButton_Click(object sender, EventArgs e) {
             if ((this.ParametersListBox.SelectedIndex < 0) || (this.ParametersListBox.SelectedIndex >= this.m_parameters.Count)) {
                 this.SelectParameterButton.Enabled = false;
@@ -668,7 +794,11 @@ namespace AST.Presentation {
             if (ParametersListBox.Items.Count == 0)
                 this.SelectParameterButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveUpParameterButton_Click(object sender, EventArgs e) {
             if ((this.SelectedParametersListBox.SelectedIndex <= 0) || (this.SelectedParametersListBox.SelectedIndex >= ((Action)this.m_activeAction).GetParameters().Count))
                 return;
@@ -684,7 +814,11 @@ namespace AST.Presentation {
             ((Action)this.m_activeAction).GetParameters().Insert(this.SelectedParametersListBox.SelectedIndex, p);
             this.SelectedParametersListBox.SelectedIndex--;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MoveDownParameterButton_Click(object sender, EventArgs e) {
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= (((Action)this.m_activeAction).GetParameters().Count - 1)))
                 return;
@@ -705,31 +839,55 @@ namespace AST.Presentation {
     #endregion
 
     #region Misc Methods
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
             this.DelayNumericUpDown.Enabled = this.DelayCheckBox.Checked;
             if (!this.DelayCheckBox.Checked) ((Action)m_activeAction).Delay = 0;
             else ((Action)m_activeAction).Delay = (int)this.DelayNumericUpDown.Value;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
             this.DurationNumericUpDown.Enabled = this.DurationCheckBox.Checked;
             if (!this.DurationCheckBox.Checked) ((Action)m_activeAction).Duration = 0;
             else ((Action)m_activeAction).Duration = (int)this.DurationNumericUpDown.Value;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void DelayNumericUpDown_ValueChanged(object sender, EventArgs e) {
             ((Action)m_activeAction).Delay = (int)this.DelayNumericUpDown.Value;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void DurationNumericUpDown_ValueChanged(object sender, EventArgs e) {
             ((Action)m_activeAction).Duration = (int)this.DurationNumericUpDown.Value;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void ReportNameCheckBox_CheckedChanged(object sender, EventArgs e) {
             this.ReportNameTextBox.Enabled = this.ReportNameCheckBox.Checked;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void ExecuteButton_Click(object sender, EventArgs e) {
 
             //Getting report name
@@ -758,7 +916,11 @@ namespace AST.Presentation {
 
             DialogResult = DialogResult.OK;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="sender"></param>
+/// <param name="e"></param>
         private void MyCancelButton_Click(object sender, EventArgs e) {
             DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.No) return;
@@ -767,7 +929,10 @@ namespace AST.Presentation {
         }
 
     #endregion     
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         private String GenerateTmpReportName() {
             String reportName = this.m_rootAction.Name + " " + DateTime.Now.ToString();
             reportName = reportName.Replace(":", "-");

@@ -9,11 +9,21 @@ using System.IO;
 
 
 namespace AST.Database{
-
+    /// <summary>
+    /// this class is responsible for creating a .XML result file
+    /// </summary>
     class XMLHandler : IResultHandler{
-
+        
+        /// <summary>
+        /// CTor for XMLHandler class
+        /// </summary>
         public XMLHandler() { }
-
+        
+        /// <summary>
+        /// Method for saving a result object on the report file.
+        /// </summary>
+        /// <param name="res">a result object</param>
+        /// <param name="reportName">the report filename</param>
         public void Save(Result res, String reportName){
             try {
                 if (!File.Exists(reportName + ".xml")) {
@@ -90,7 +100,12 @@ namespace AST.Database{
             }
         }
 
-        public void ShowReport(String reportName) {
+        /// <summary>
+        /// Method for showing a report.
+        /// </summary>
+        /// <param name="reportName">the report name</param>
+        public void ShowReport(String reportName)
+        {
             if (!File.Exists(reportName + ".xml")) {
                 throw new OpenFileFailedException("File: " + reportName + ".xml doesn't exist.");
             }
@@ -107,6 +122,7 @@ namespace AST.Database{
             }
         }
 
+        // Method for appending a child node
         private void AppendChild(String name, String value, XmlElement node, XmlDocument xmlDoc) {
             try {
                 XmlElement appendedElement = xmlDoc.CreateElement(name);
@@ -119,6 +135,7 @@ namespace AST.Database{
             }
         }
 
+        // Method for resolving the full path filename
         private String ResolveReportName(String fullPathReportName) {
             try {
                 int index = fullPathReportName.LastIndexOf("\\");

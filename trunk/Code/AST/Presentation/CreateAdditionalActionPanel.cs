@@ -8,9 +8,13 @@ using System.Windows.Forms;
 using AST.Domain;
 using AST.Management;
 
-namespace AST.Presentation{
-
-    public partial class CreateAdditionalActionPanel : AST.Presentation.ASTPanel{
+namespace AST.Presentation
+{
+/// <summary>
+/// 
+/// </summary>
+    public partial class CreateAdditionalActionPanel : AST.Presentation.ASTPanel
+    {
 
         private Action m_action;
         private List<Parameter> m_parameters;
@@ -18,51 +22,67 @@ namespace AST.Presentation{
         private List<Parameter> m_changedParameters;
         private List<Parameter> m_removedParameters;
         private bool m_isNew;
-
-        public CreateAdditionalActionPanel(Action a){
+/// <summary>
+/// 
+/// </summary>
+/// <param name="a"></param>
+        public CreateAdditionalActionPanel(Action a)
+        {
             m_action = a;
             m_isNew = false;
             m_newParameters = new List<Parameter>();
             m_changedParameters = new List<Parameter>();
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
-            if (a != null) {
+            if (a != null)
+            {
                 this.m_action.CreationTime = DateTime.Now;
                 this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
                 Title.Text = "Edit Additional Action";
                 SetActionAttributes();
             }
-            else {
+            else
+            {
                 m_isNew = true;
                 this.m_parameters = new List<Parameter>();
                 this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
                 Title.Text = "Create Additional Action";
             }
         }
-
-        private void SetActionAttributes(){
+/// <summary>
+/// 
+/// </summary>
+        private void SetActionAttributes()
+        {
             SetActionDetails();
             OScomboBox.SelectedIndex = 0;
             SetActionContent(OScomboBox.SelectedIndex);
             SetActionParameters(0);
         }
-
-        private void SetActionDetails(){
+/// <summary>
+/// 
+/// </summary>
+        private void SetActionDetails()
+        {
             ActionNameText.Text = m_action.Name;
             ActionNameText.Enabled = false;
             CreatorNameText.Text = m_action.CreatorName;
-            switch (m_action.ActionType){
-                case Action.ActionTypeEnum.COMMAND_LINE:{
+            switch (m_action.ActionType)
+            {
+                case Action.ActionTypeEnum.COMMAND_LINE:
+                    {
                         CommandLineRadio.Checked = true;
                         ContentLabel.Text = "Command Line:";
                         break;
                     }
-                case Action.ActionTypeEnum.SCRIPT:{
+                case Action.ActionTypeEnum.SCRIPT:
+                    {
                         ScriptRadio.Checked = true;
                         ContentLabel.Text = "Script Filename:";
                         break;
                     }
-                case Action.ActionTypeEnum.TEST_SCRIPT:{
+                case Action.ActionTypeEnum.TEST_SCRIPT:
+                    {
                         TestScriptRadio.Checked = true;
                         ContentLabel.Text = "Script Filename:";
                         break;
@@ -70,8 +90,12 @@ namespace AST.Presentation{
             }
             DescriptionText.Text = m_action.Description;
         }
-
-        private void SetActionContent(int OSTypeSelection){
+/// <summary>
+/// 
+/// </summary>
+/// <param name="OSTypeSelection"></param>
+        private void SetActionContent(int OSTypeSelection)
+        {
             EndStation.OSTypeEnum OSType = ConvertSelectionToOSType(OSTypeSelection);
             ContentText.Text = m_action.GetContent(OSType);
             ValidityText.Text = m_action.GetValidityString(OSType);
@@ -79,7 +103,10 @@ namespace AST.Presentation{
             else ValidityCheckBox.Checked = false;
             TimeoutText.Value = m_action.Timeout;
         }
-
+/// <summary>
+/// 
+/// </summary>
+/// <param name="selectedIndex"></param>
         private void SetActionParameters(int selectedIndex)
         {
             String[] names = new String[this.m_parameters.Count];
@@ -101,6 +128,11 @@ namespace AST.Presentation{
                 EditParameterButton.Enabled = false;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="selection"></param>
+        /// <returns></returns>
         public static EndStation.OSTypeEnum ConvertSelectionToOSType(int selection)
         {
             switch (selection)
@@ -119,21 +151,33 @@ namespace AST.Presentation{
                     }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void OScomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetActionContent(OScomboBox.SelectedIndex);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void SaveOSButton_Click(object sender, EventArgs e)
         {
             if (!this.CheckActionContent()) return;
             EndStation.OSTypeEnum OSType = ConvertSelectionToOSType(OScomboBox.SelectedIndex);
-            m_action.AddContent(OSType,ContentText.Text);
+            m_action.AddContent(OSType, ContentText.Text);
             m_action.Timeout = (int)TimeoutText.Value;
             if (ValidityCheckBox.Checked) m_action.AddValidityString(OSType, ValidityText.Text);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveOSButton_Click(object sender, EventArgs e)
         {
             EndStation.OSTypeEnum OSType = ConvertSelectionToOSType(OScomboBox.SelectedIndex);
@@ -141,7 +185,11 @@ namespace AST.Presentation{
             m_action.RemoveValidityString(OSType);
             SetActionContent(OScomboBox.SelectedIndex);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void RemoveParameterButton_Click(object sender, EventArgs e)
         {
             if (this.ParametersComboBox.SelectedItem == null) return;
@@ -150,14 +198,22 @@ namespace AST.Presentation{
             this.m_parameters.Remove(this.m_parameters[paramIndex]); //Removed from screen
             SetActionParameters(0);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog browse = new OpenFileDialog();
             if (browse.ShowDialog() == DialogResult.OK)
                 ContentText.Text = browse.FileName;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditParameterButton_Click(object sender, EventArgs e)
         {
             if (this.ParametersComboBox.SelectedItem == null) return;
@@ -169,8 +225,13 @@ namespace AST.Presentation{
                 SetActionParameters(ParametersComboBox.SelectedIndex);
             }
         }
-
-        private void NewParameterButton_Click(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NewParameterButton_Click(object sender, EventArgs e)
+        {
             EditParametersDialog ed = new EditParametersDialog(null);
             if (ed.ShowDialog() == DialogResult.OK)
             {
@@ -179,28 +240,48 @@ namespace AST.Presentation{
                 SetActionParameters(0);
             }
         }
-
-        private void CommandLineRadio_CheckedChanged(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void CommandLineRadio_CheckedChanged(object sender, EventArgs e)
+        {
             ContentLabel.Text = "Command Line:";
             BrowseButton.Enabled = false;
         }
-
-        private void ScriptRadio_CheckedChanged(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ScriptRadio_CheckedChanged(object sender, EventArgs e)
+        {
             ContentLabel.Text = "Script Filename:";
             BrowseButton.Enabled = true;
         }
-
-        private void TestScriptRadio_CheckedChanged(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void TestScriptRadio_CheckedChanged(object sender, EventArgs e)
+        {
             ContentLabel.Text = "Script Filename:";
             BrowseButton.Enabled = true;
         }
-
-        private void okButton_Click(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void okButton_Click(object sender, EventArgs e)
+        {
             //Save the action
             if (!this.CheckForm()) return;
             this.m_action.Name = this.ActionNameText.Text;
             this.m_action.CreatorName = this.CreatorNameText.Text;
-            
+
             if (this.CommandLineRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.COMMAND_LINE;
             else if (this.ScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.SCRIPT;
             else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
@@ -212,45 +293,62 @@ namespace AST.Presentation{
                 ASTManager.GetInstance().Save(p, this.m_action, true);//Save New Parameters Created
 
             foreach (Parameter p in this.m_changedParameters)
-                ASTManager.GetInstance().Save(p,this.m_action, false);//Save Parameters Modified
+                ASTManager.GetInstance().Save(p, this.m_action, false);//Save Parameters Modified
 
             foreach (Parameter p in this.m_removedParameters)
                 ASTManager.GetInstance().Delete(p, this.m_action);//Delete Parameters Removed
 
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
-
-        private void MyCancelButton_Click(object sender, EventArgs e){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MyCancelButton_Click(object sender, EventArgs e)
+        {
             //Return to the welcome screen
             DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.No) return;
-            
+
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
-
-        private bool CheckForm() {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckForm()
+        {
             bool res = true;
             String message = "The following attributes are invalid:\n";
-            if (this.ActionNameText.Text.Length == 0) {
+            if (this.ActionNameText.Text.Length == 0)
+            {
                 message += "Action name\n";
                 res = false;
             }
-            if (this.CreatorNameText.Text.Length == 0) {
+            if (this.CreatorNameText.Text.Length == 0)
+            {
                 message += "Creator name\n";
                 res = false;
             }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return res;
         }
-
-        private bool CheckActionContent() {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckActionContent()
+        {
             bool res = true;
             String message = "The following attributes are invalid:\n";
-            if (this.OScomboBox.SelectedItem == null) {
+            if (this.OScomboBox.SelectedItem == null)
+            {
                 message += "OS Type\n";
                 res = false;
             }
-            if (this.ContentText.Text.Length == 0) {
+            if (this.ContentText.Text.Length == 0)
+            {
                 message += "Command/Script empty\n";
                 res = false;
             }
