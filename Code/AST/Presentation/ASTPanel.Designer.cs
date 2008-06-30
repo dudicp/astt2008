@@ -1,5 +1,8 @@
 namespace AST.Presentation
 {
+    /// <summary>
+    /// 
+    /// </summary>
     partial class ASTPanel
     {
         /// <summary> 

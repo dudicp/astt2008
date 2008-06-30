@@ -9,18 +9,28 @@ using AST.Management;
 using AST.Domain;
 
 namespace AST.Presentation {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class ExecutionPanel : AST.Presentation.ASTPanel {
 
         private AbstractAction m_abstractAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="type"></param>
         public ExecutionPanel(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             this.m_abstractAction = a;
             this.m_type = type;
             InitializeComponent();
             SetExecutionDetails(type);
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
         private void SetExecutionDetails(AbstractAction.AbstractActionTypeEnum type) {
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION: {
@@ -37,7 +47,9 @@ namespace AST.Presentation {
                     }
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetSingleActionDetails() {
             this.Title.Text = "Execute Single Action";
             this.TimesNumericUpDown.Enabled = false;
@@ -45,30 +57,46 @@ namespace AST.Presentation {
             System.Windows.Forms.TreeNode actionNode = new System.Windows.Forms.TreeNode(this.m_abstractAction.Name);
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] { actionNode });
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetTSCDetails() {
             this.Title.Text = "Execute Test Scenario";
             this.TimesNumericUpDown.Enabled = false;
             this.SettingsButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         private void SetTPDetails() {
             this.Title.Text = "Execute Test Plan";
             this.SettingsButton.Enabled = false;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e) {
             //Only for Action type by Hight and m_abstractAction type
             this.SettingsButton.Enabled = true;
             this.DescriptionText.Text = this.m_abstractAction.Description;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void EditActionButton_Click(object sender, EventArgs e) {
             //this.EditActionButton.Enabled = false;
             SettingsDialog ea = new SettingsDialog((Action)this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.ACTION);
             if (ea.ShowDialog() == DialogResult.OK) {}
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ExecuteButton_Click(object sender, EventArgs e) {
 
             String reportName;
@@ -92,7 +120,11 @@ namespace AST.Presentation {
 
             ASTManager.GetInstance().DisplayWelcomeScreen();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MyCancelButton_Click(object sender, EventArgs e) {
             //Return to the welcome screen
             DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);

@@ -1,11 +1,16 @@
 using System;
 using System.Collections;
 
-namespace AST.Domain{
+namespace AST.Domain
+{
 
-    public class Parameter{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class Parameter
+    {
 
-        public enum ParameterTypeEnum {Input, Option, Both, None};
+        public enum ParameterTypeEnum { Input, Option, Both, None };
         private String m_name;
         private String m_description;
         private ParameterTypeEnum m_type;
@@ -14,7 +19,16 @@ namespace AST.Domain{
         private String m_input;
         private bool m_isDefault;
 
-        public Parameter(String name, String description, ParameterTypeEnum type, String validityExp, bool isDefault){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="type"></param>
+        /// <param name="validityExp"></param>
+        /// <param name="isDefault"></param>
+        public Parameter(String name, String description, ParameterTypeEnum type, String validityExp, bool isDefault)
+        {
             m_name = name;
             m_description = description;
             m_type = type;
@@ -23,59 +37,104 @@ namespace AST.Domain{
             m_input = "";
             m_isDefault = isDefault;
         }
-
-        public String Name{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Name
+        {
             get { return m_name; }
             set { m_name = value; }
         }
-
-        public String Description{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Description
+        {
             get { return m_description; }
             set { m_description = value; }
         }
-
-        public ParameterTypeEnum Type{
+        /// <summary>
+        /// 
+        /// </summary>
+        public ParameterTypeEnum Type
+        {
             get { return m_type; }
             set { m_type = value; }
         }
-
-        public String ValidityExp{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String ValidityExp
+        {
             get { return m_validityExp; }
             set { m_validityExp = value; }
         }
-
-        public String Input{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Input
+        {
             get { return m_input; }
             set { m_input = value; }
         }
-
-        public bool IsDefault {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDefault
+        {
             get { return m_isDefault; }
             set { m_isDefault = value; }
         }
-
-        public String GetValue(EndStation.OSTypeEnum osType){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="osType"></param>
+        /// <returns></returns>
+        public String GetValue(EndStation.OSTypeEnum osType)
+        {
             return (String)m_values[osType];
         }
-
-        public Hashtable GetAllValues() {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public Hashtable GetAllValues()
+        {
             return this.m_values;
         }
-
-        public void AddValue(EndStation.OSTypeEnum osType, String value){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="osType"></param>
+        /// <param name="value"></param>
+        public void AddValue(EndStation.OSTypeEnum osType, String value)
+        {
             if (m_values.Contains(osType)) m_values.Remove(osType);
             m_values.Add(osType, value);
         }
-
-        public void RemoveValue(EndStation.OSTypeEnum osType){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="osType"></param>
+        public void RemoveValue(EndStation.OSTypeEnum osType)
+        {
             m_values.Remove(osType);
         }
-
-        public bool ValidateValue(){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public bool ValidateValue()
+        {
             return true;
         }
-
-        public override bool Equals(Object o) {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="o"></param>
+        /// <returns></returns>
+        public override bool Equals(Object o)
+        {
             if (((Parameter)o).Name != this.Name) return false;
             else return true;
         }

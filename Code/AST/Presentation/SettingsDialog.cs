@@ -10,7 +10,10 @@ using AST.Management;
 using System.Collections;
 
 namespace AST.Presentation {
-
+    
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class SettingsDialog : Form {
 
 
@@ -21,6 +24,11 @@ namespace AST.Presentation {
         private List<EndStation> m_endStations;
         private List<EndStation> m_selectedEndStations;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="type"></param>
         public SettingsDialog(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
             this.m_action = a;
             this.m_type = type;

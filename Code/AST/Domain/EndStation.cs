@@ -2,10 +2,13 @@ using System;
 using System.Net;
 
 
-namespace AST.Domain{
-
-    public class EndStation{
-
+namespace AST.Domain
+{
+    /// <summary>
+    /// 
+    /// </summary>
+    public class EndStation
+    {
         public enum OSTypeEnum { WINDOWS, UNIX, UNKNOWN };//T.D
         public enum OSVersionEnum { None, WIN2000, WINXP, VISTA };//T.D
         public enum StateEnum { Unknown, Idle, Hibernate, Sleep };//T.D
@@ -20,8 +23,18 @@ namespace AST.Domain{
         private String m_password;
         private StateEnum m_state;
         private bool m_isDefault;
-
-        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password, bool isDefault){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="ip"></param>
+        /// <param name="osType"></param>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="isDefault"></param>
+        public EndStation(int id, String name, IPAddress ip, OSTypeEnum osType, String username, String password, bool isDefault)
+        {
             m_id = id;
             m_name = name;
             m_ip = ip;
@@ -33,58 +46,92 @@ namespace AST.Domain{
             m_state = StateEnum.Unknown;
             m_isDefault = isDefault;
         }
-
-        public int ID{
+        /// <summary>
+        /// 
+        /// </summary>
+        public int ID
+        {
             get { return m_id; }
             set { m_id = value; }
         }
-
-        public String Name{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Name
+        {
             get { return m_name; }
             set { m_name = value; }
         }
-
-        public IPAddress IP{
+        /// <summary>
+        /// 
+        /// </summary>
+        public IPAddress IP
+        {
             get { return m_ip; }
             set { m_ip = value; }
         }
-
-        public String MAC{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String MAC
+        {
             get { return m_mac; }
             set { m_mac = value; }
         }
-
-        public OSTypeEnum OSType{
+        /// <summary>
+        /// 
+        /// </summary>
+        public OSTypeEnum OSType
+        {
             get { return m_osType; }
             set { m_osType = value; }
         }
-
-        public OSVersionEnum OSVersion{
+        /// <summary>
+        /// 
+        /// </summary>
+        public OSVersionEnum OSVersion
+        {
             get { return m_osVersion; }
             set { m_osVersion = value; }
         }
-
-        public String Username{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Username
+        {
             get { return m_username; }
             set { m_username = value; }
         }
-
-        public String Password{
+        /// <summary>
+        /// 
+        /// </summary>
+        public String Password
+        {
             get { return m_password; }
             set { m_password = value; }
         }
-
-        public StateEnum State{
+        /// <summary>
+        /// 
+        /// </summary>
+        public StateEnum State
+        {
             get { return m_state; }
             set { m_state = value; }
         }
-
-        public bool IsDefault {
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsDefault
+        {
             get { return m_isDefault; }
             set { m_isDefault = value; }
         }
-
-        public override String ToString(){
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override String ToString()
+        {
             return this.ID + " " + this.m_name + " " + this.m_ip.ToString() + " " + this.m_mac + " " + this.m_osType + " " + this.m_osVersion + " " + this.m_username + " " + this.m_password + " " + this.m_state;
         }
     }

@@ -10,10 +10,16 @@ using AST.Domain;
 using System.Collections;
 
 namespace AST.Presentation {
+    /// <summary>
+    /// 
+    /// </summary>
     public partial class OptionsPanel : AST.Presentation.ASTPanel {
 
         private List<EndStation> m_endStations;
-
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public OptionsPanel() {
             InitializeComponent();
             InitEndStations();
