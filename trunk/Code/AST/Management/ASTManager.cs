@@ -7,6 +7,7 @@ using AST.Domain;
 using AST.Database;
 
 using System.Windows.Forms;
+using System.Diagnostics;
 
 
 namespace AST.Management
@@ -199,7 +200,9 @@ namespace AST.Management
             {
                 this.m_databaseManager.SaveResult(res, reportName);
             }
-            catch (SaveReportException e) { }
+            catch (SaveReportException e) {
+                Debug.WriteLine(e.Message);
+            }
         }
 
         /// <summary>

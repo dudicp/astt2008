@@ -1,0 +1,1 @@
+Wscript.StdOut.WriteLine("OK")
