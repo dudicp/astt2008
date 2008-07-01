@@ -1008,7 +1008,7 @@ values
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
 values
-('Notepad','WINDOWS','notepad.exe','');
+('Notepad','WINDOWS','-i notepad.exe','');
 
 INSERT INTO Actions
 (Name,Description,Type,Timeout,CreatorName,CreationTime)
@@ -1054,3 +1054,188 @@ INSERT INTO EndStations
 (ID,Name,IPAddress,MACAddress,OSType,OSVersion,Username,Password,IsDefault)
 values
 (0,'End-Station','1.1.1.1','','WINDOWS','','','','False');
+
+-- 1. Shutdown CLI
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime)
+values
+('Shutdown','This action turn off the remote end-station.','COMMAND_LINE',20,'System','01/01/08');
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('Shutdown','WINDOWS','shutdown','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Shutdown','ShutdownOPT','Shutdown the computer.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Shutdown','ShutdownOPT','WINDOWS','/s');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Shutdown','ForceOPT','Force running applications to close without forewarning users.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Shutdown','ForceOPT','WINDOWS','/f');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Shutdown','NoWarning','Turn off the local computer with no time-out or warning.','Option','','','False');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Shutdown','NoWarning','WINDOWS','/p');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Shutdown','Timeout','Set the time-out period before shutdown to xxx seconds.The valid range is 0-600, with a default of 30.Using this parameter implies using ForceOPT parameter.','Both','30','','False');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Shutdown','Timeout','WINDOWS','/t');
+
+-- 2. Restart CLI
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime)
+values
+('Restart','This action restart the remote end-station.','COMMAND_LINE',20,'System','01/01/08');
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('Restart','WINDOWS','shutdown','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Restart','RestartOPT','Shutdown and restart the computer.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Restart','RestartOPT','WINDOWS','/r');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Restart','ForceOPT','Force running applications to close without forewarning users.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Restart','ForceOPT','WINDOWS','/f');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Restart','Timeout','Set the time-out period before shutdown to xxx seconds.The valid range is 0-600, with a default of 30.Using this parameter implies using ForceOPT parameter.','Both','30','','False');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Restart','Timeout','WINDOWS','/t');
+
+-- 3. Hibernate CLI
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime)
+values
+('Hibernate','This action hibernate the remote end-station.','COMMAND_LINE',20,'System','01/01/08');
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('Hibernate','WINDOWS','shutdown','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Hibernate','HibernateOPT','Hibernate the local computer.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Hibernate','HibernateOPT','WINDOWS','/h');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Hibernate','ForceOPT','Force running applications to close without forewarning users.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Hibernate','ForceOPT','WINDOWS','/f');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Hibernate','Timeout','Set the time-out period before shutdown to xxx seconds.The valid range is 0-600, with a default of 30.Using this parameter implies using ForceOPT parameter.','Both','30','','False');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Hibernate','Timeout','WINDOWS','/t');
+
+-- 4 Logoff CLI
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime)
+values
+('Logoff','This action logoff the current user on the remote end-station.','COMMAND_LINE',20,'System','01/01/08');
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('Logoff','WINDOWS','shutdown','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Logoff','LogoffOPT','Logoff the current user on the remote end-station.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Logoff','LogoffOPT','WINDOWS','/l');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('Logoff','ForceOPT','Force running applications to close without forewarning users.','Option','','','True');
+
+INSERT INTO ParameterValues
+(ActionName,ParameterName,OSType,Value)
+values
+('Logoff','ForceOPT','WINDOWS','/f');
+
+-- 5 Change IP Address
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime)
+values
+('ChangeIPAddress','This action change the IP address of the remote end-station.','SCRIPT',20,'System','01/01/08');
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('ChangeIPAddress','WINDOWS','../Scripts/ChangeIPAddress.vbs','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('ChangeIPAddress','NewIP','The new wanted IP address','Input','192.168.2.8','','True');
