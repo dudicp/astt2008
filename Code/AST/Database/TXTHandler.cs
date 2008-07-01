@@ -26,22 +26,37 @@ namespace AST.Database
         /// <param name="reportName">the report filename</param>
         public void Save(Result res, String reportName)
         {
-            TextWriter tw = new StreamWriter(reportName + ".txt", true);
+            try {
 
-            tw.WriteLine("-------------------------------------------------");
-            tw.WriteLine("Action: " + res.GetAction().Name);
-            tw.WriteLine("Type: " + res.GetAction().ActionType.ToString());
-            tw.WriteLine("End-Station: " + res.GetEndStation().Name + "(" + res.GetEndStation().IP.ToString() + ")");
-            tw.WriteLine("Start Time: " + res.StartTime.ToString());
-            tw.WriteLine("End Time: " + res.EndTime.ToString());
-            tw.WriteLine("Error Code: " + res.ErrorCode);
-            if (res.Status)
-                tw.WriteLine("Status: Success");
-            else
-                tw.WriteLine("Status: Failed");
-            tw.WriteLine("Message: \n" + res.Message);
-            tw.WriteLine("-------------------------------------------------");
-            tw.Close();
+                TextWriter tw = new StreamWriter(reportName + ".txt", true);
+
+                tw.WriteLine("-------------------------------------------------");
+                tw.WriteLine("Action: " + res.GetAction().Name);
+                tw.WriteLine("Type: " + res.GetAction().ActionType.ToString());
+                tw.WriteLine("End-Station: " + res.GetEndStation().Name + "(" + res.GetEndStation().IP.ToString() + ")");
+                tw.WriteLine("Start Time: " + res.StartTime.ToString());
+                tw.WriteLine("End Time: " + res.EndTime.ToString());
+                tw.WriteLine("Error Code: " + res.ErrorCode);
+                if (res.Status)
+                    tw.WriteLine("Status: Success");
+                else
+                    tw.WriteLine("Status: Failed");
+                tw.WriteLine("Message: \n" + res.Message);
+                tw.WriteLine("-------------------------------------------------");
+                tw.Close();
+            }
+            catch (System.IO.DirectoryNotFoundException e) {
+                throw new SaveReportException("Directory not found: " + reportName + ".xml", e);
+            }
+            catch (System.Security.SecurityException e) {
+                throw new SaveReportException("Insufficient security privileges to create report file.", e);
+            }
+            catch (System.UnauthorizedAccessException e) {
+                throw new SaveReportException("Insufficient access privileges to create report file.", e);
+            }
+            catch (Exception e) {
+                throw new SaveReportException("Failed creating report file: " + reportName + ".xml", e);
+            }
         }
 
         /// <summary>

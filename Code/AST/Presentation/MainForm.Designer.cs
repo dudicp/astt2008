@@ -188,14 +188,14 @@ namespace AST.Presentation
             // ExecuteStripMenuItem
             // 
             this.ExecuteStripMenuItem.Name = "ExecuteStripMenuItem";
-            this.ExecuteStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ExecuteStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.ExecuteStripMenuItem.Text = "Execute";
             this.ExecuteStripMenuItem.Click += new System.EventHandler(this.ExecuteStripMenuItem_Click);
             // 
             // SettingsToolStripMenuItem
             // 
             this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.SettingsToolStripMenuItem.Text = "Settings";
             this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
@@ -211,16 +211,16 @@ namespace AST.Presentation
             // AboutMenuItem
             // 
             this.AboutMenuItem.Name = "AboutMenuItem";
-            this.AboutMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.AboutMenuItem.Size = new System.Drawing.Size(152, 22);
             this.AboutMenuItem.Text = "About";
             this.AboutMenuItem.Click += new System.EventHandler(this.AboutMenuItem_Click);
             // 
             // HelpMenuItem
             // 
-            this.HelpMenuItem.Enabled = false;
             this.HelpMenuItem.Name = "HelpMenuItem";
-            this.HelpMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.HelpMenuItem.Size = new System.Drawing.Size(152, 22);
             this.HelpMenuItem.Text = "Help";
+            this.HelpMenuItem.Click += new System.EventHandler(this.HelpMenuItem_Click);
             // 
             // astPanel
             // 

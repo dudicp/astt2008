@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using AST.Domain;
 using AST.Management;
+using System.IO;
 
 namespace AST.Presentation{
     /// <summary>
@@ -16,6 +17,10 @@ namespace AST.Presentation{
         /// <summary>
         /// 
         /// </summary>
+        /// 
+
+        private const String USER_MANUAL_FILE = "Documents\\UserManual.pdf";
+
         public MainForm(){
             this.MaximizeBox = false;
 
@@ -269,6 +274,31 @@ namespace AST.Presentation{
 
                 pd.ShowDialog();
             }
+        }
+
+        /// <summary>
+        /// Method for displaying the user manuel.
+        /// </summary>
+        public void DisplayUserManuel() {
+            if (!File.Exists(USER_MANUAL_FILE)) {
+                this.DisplayErrorMessage("File: " + USER_MANUAL_FILE + " doesn't found.");
+                return;
+            }
+            System.Diagnostics.ProcessStartInfo procFormsBuilderStartInfo = new System.Diagnostics.ProcessStartInfo();
+            procFormsBuilderStartInfo.FileName = USER_MANUAL_FILE;
+            procFormsBuilderStartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Maximized;
+            System.Diagnostics.Process procFormsBuilder = new System.Diagnostics.Process();
+            try {
+                procFormsBuilder.StartInfo = procFormsBuilderStartInfo;
+                procFormsBuilder.Start();
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unable to open the report file: " + USER_MANUAL_FILE);
+            }
+        }
+
+        private void HelpMenuItem_Click(object sender, EventArgs e) {
+            this.DisplayUserManuel();
         }
 
     }

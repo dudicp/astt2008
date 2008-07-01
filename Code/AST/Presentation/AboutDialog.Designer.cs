@@ -34,7 +34,7 @@ namespace AST.Presentation
             this.DevelopersLabel = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
+            this.LinkLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // AboutText
@@ -43,9 +43,9 @@ namespace AST.Presentation
             this.AboutText.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.AboutText.Location = new System.Drawing.Point(12, 45);
             this.AboutText.Name = "AboutText";
-            this.AboutText.Size = new System.Drawing.Size(135, 16);
+            this.AboutText.Size = new System.Drawing.Size(68, 16);
             this.AboutText.TabIndex = 3;
-            this.AboutText.Text = "Prototype version: ";
+            this.AboutText.Text = "Version: ";
             // 
             // Title
             // 
@@ -60,7 +60,7 @@ namespace AST.Presentation
             // CloseButton
             // 
             this.CloseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CloseButton.Location = new System.Drawing.Point(88, 201);
+            this.CloseButton.Location = new System.Drawing.Point(85, 188);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(75, 23);
             this.CloseButton.TabIndex = 1;
@@ -72,7 +72,7 @@ namespace AST.Presentation
             // 
             this.DevelopersLabel.AutoSize = true;
             this.DevelopersLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DevelopersLabel.Location = new System.Drawing.Point(12, 77);
+            this.DevelopersLabel.Location = new System.Drawing.Point(12, 88);
             this.DevelopersLabel.Name = "DevelopersLabel";
             this.DevelopersLabel.Size = new System.Drawing.Size(81, 15);
             this.DevelopersLabel.TabIndex = 5;
@@ -82,38 +82,39 @@ namespace AST.Presentation
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(144, 45);
+            this.label1.Location = new System.Drawing.Point(114, 45);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(28, 16);
             this.label1.TabIndex = 6;
-            this.label1.Text = "0.1";
+            this.label1.Text = "1.0";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(12, 92);
+            this.label2.Location = new System.Drawing.Point(114, 88);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 48);
             this.label2.TabIndex = 7;
             this.label2.Text = "Dudi Patimer\r\nAdi Shachar\r\nYaniv Cohen";
             // 
-            // label3
+            // LinkLabel
             // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Lucida Sans Unicode", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(67, 163);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(125, 18);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "Coming Soon.";
+            this.LinkLabel.AutoSize = true;
+            this.LinkLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.LinkLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.LinkLabel.Location = new System.Drawing.Point(12, 160);
+            this.LinkLabel.Name = "LinkLabel";
+            this.LinkLabel.Size = new System.Drawing.Size(208, 16);
+            this.LinkLabel.TabIndex = 8;
+            this.LinkLabel.Text = "http://www.cs.bgu.ac.il/~adishach";
             // 
             // AboutDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(240, 232);
-            this.Controls.Add(this.label3);
+            this.ClientSize = new System.Drawing.Size(240, 223);
+            this.Controls.Add(this.LinkLabel);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.DevelopersLabel);
@@ -136,6 +137,6 @@ namespace AST.Presentation
         private System.Windows.Forms.Label DevelopersLabel;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label LinkLabel;
     }
 }
