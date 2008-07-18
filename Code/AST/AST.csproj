@@ -66,11 +66,35 @@
     <Compile Include="Management\ResultHandlerFactory.cs" />
     <Compile Include="Management\RHChangeIP.cs" />
     <Compile Include="Management\RHSetIP.cs" />
+    <Compile Include="Presentation\CreateAdditionalActionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\CreateAdditionalActionDialog.Designer.cs">
+      <DependentUpon>CreateAdditionalActionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\CreateTSCDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\CreateTSCDialog.Designer.cs">
+      <DependentUpon>CreateTSCDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentation\ExecutionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentation\ExecutionDialog.Designer.cs">
       <DependentUpon>ExecutionDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\ExecutionPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentation\ExecutionPanel.Designer.cs">
+      <DependentUpon>ExecutionPanel.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentation\OptionsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentation\OptionsDialog.Designer.cs">
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentation\ProgressDialog.cs">
       <SubType>Form</SubType>
@@ -127,12 +151,6 @@
     <Compile Include="Presentation\EndStationDialog.Designer.cs">
       <DependentUpon>EndStationDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\ExecutionPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Presentation\ExecutionPanel.Designer.cs">
-      <DependentUpon>ExecutionPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -172,9 +190,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Presentation\CreateAdditionalActionDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CreateAdditionalActionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\CreateTSCDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CreateTSCDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\ExecutionDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ExecutionDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\ExecutionPanel.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ExecutionPanel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentation\OptionsDialog.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OptionsDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\ProgressDialog.resx">
       <SubType>Designer</SubType>
@@ -207,10 +241,6 @@
     <EmbeddedResource Include="Presentation\EndStationDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EndStationDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\ExecutionPanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ExecutionPanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentation\MainForm.resx">
       <SubType>Designer</SubType>

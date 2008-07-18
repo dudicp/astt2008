@@ -41,6 +41,7 @@ namespace AST.Database
                     tw.WriteLine("Status: Success");
                 else
                     tw.WriteLine("Status: Failed");
+                tw.WriteLine("Validity String: " + res.GetAction().GetValidityString(EndStation.OSTypeEnum.WINDOWS));
                 tw.WriteLine("Message: \n" + res.Message);
                 tw.WriteLine("-------------------------------------------------");
                 tw.Close();

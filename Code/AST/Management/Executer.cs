@@ -107,7 +107,7 @@ namespace AST.Management
         private String ExecuteTestScript(String filename, String arguments, out int errorCode) {
             String res = "";
             errorCode = 0;
-            if (!File.Exists(filename)) throw new FileNotExistException("The script file: " + filename + " doesn't found.");
+            if (!File.Exists(filename)) throw new FileNotExistException("The script file " + filename + " isn't found.");
 
             String command = "cscript.exe";
             String args = " " + filename + " " + arguments;

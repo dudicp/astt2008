@@ -45,7 +45,7 @@ namespace AST.Management{
            errorCode = 0;
 
            String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
-           if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file: " + PSToolsCommand + " doesn't found.");
+           if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file " + PSToolsCommand + " isn't found.");
 
            String timeoutStr = "";
            if (username.Length != 0) username = " -u " + username;

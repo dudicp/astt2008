@@ -30,7 +30,7 @@ namespace AST.Presentation{
 
             InitializeComponent();
             this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.WelcomePanel();
+            this.astPanel = new AST.Presentation.ExecutionPanel();
             this.SuspendLayout();
             this.Controls.Add(this.astPanel);
             this.ResumeLayout(false);
@@ -50,11 +50,7 @@ namespace AST.Presentation{
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void NewAdditionalActionMenuItem_Click(object sender, EventArgs e){
-            this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.CreateAdditionalActionPanel(null);
-            this.SuspendLayout();
-            this.Controls.Add(this.astPanel);
-            this.ResumeLayout(false);
+            CreateAdditionalAction(null);      
         }
 
 
@@ -63,7 +59,7 @@ namespace AST.Presentation{
         /// </summary>
         public void DisplayWelcomeScreen() {
             this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.WelcomePanel();
+            this.astPanel = new AST.Presentation.ExecutionPanel();
             this.SuspendLayout();
             this.Controls.Add(this.astPanel);
             this.ResumeLayout(false);
@@ -110,11 +106,7 @@ namespace AST.Presentation{
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void NewTestScenarioMenuItem_Click(object sender, EventArgs e) {
-            this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.CreateTSCPanel(null, AbstractAction.AbstractActionTypeEnum.TSC);
-            this.SuspendLayout();
-            this.Controls.Add(this.astPanel);
-            this.ResumeLayout(false);
+            CreateTSC(null);
         }
 
         /// <summary>
@@ -123,11 +115,8 @@ namespace AST.Presentation{
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void NewTestPlanMenuItem_Click(object sender, EventArgs e) {
-            this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.CreateTSCPanel(null, AbstractAction.AbstractActionTypeEnum.TP);
-            this.SuspendLayout();
-            this.Controls.Add(this.astPanel);
-            this.ResumeLayout(false);
+            CreateTP(null);
+       
         }
 
         /// <summary>
@@ -171,23 +160,57 @@ namespace AST.Presentation{
                     return;
                 }
                 AbstractAction a = ASTManager.GetInstance().Load(name, type);
-                this.astPanel.Dispose();
-
                 switch (type) {
                     case AbstractAction.AbstractActionTypeEnum.ACTION:
-                        this.astPanel = new AST.Presentation.CreateAdditionalActionPanel((Action)a);
+                        CreateAdditionalAction((Action)a);
                         break;
                     case AbstractAction.AbstractActionTypeEnum.TSC:
-                        this.astPanel = new AST.Presentation.CreateTSCPanel(a, type);
+                        CreateTSC((TSC)a);
                         break;
                     case AbstractAction.AbstractActionTypeEnum.TP:
-                        this.astPanel = new AST.Presentation.CreateTSCPanel(a,type);
+                        CreateTP((TP)a);
                         break;
                     default:
                         this.DisplayErrorMessage("Error: Wrong type selected.");
                         break;
                 }
                 
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+            }
+        }
+
+        private void CreateAdditionalAction(Action a){
+            CreateAdditionalActionDialog d = new CreateAdditionalActionDialog(a);
+            d.ShowDialog();
+            if (d.DialogResult == DialogResult.OK) {
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel();
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+            }
+        }
+
+        private void CreateTSC(TSC tsc) {
+            CreateTSCDialog d = new CreateTSCDialog(tsc,AbstractAction.AbstractActionTypeEnum.TSC);
+            d.ShowDialog();
+            if (d.DialogResult == DialogResult.OK) {
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel();
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+            }
+        }
+
+        private void CreateTP(TP tp) {
+            CreateTSCDialog d = new CreateTSCDialog(tp, AbstractAction.AbstractActionTypeEnum.TP);
+            d.ShowDialog();
+            if (d.DialogResult == DialogResult.OK) {
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel();
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
@@ -238,8 +261,15 @@ namespace AST.Presentation{
 
                 DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
-
+                
                 ASTManager.GetInstance().DeleteAbstractAction(name, type);
+
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel();
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+
             }
         }
 
@@ -249,11 +279,9 @@ namespace AST.Presentation{
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e) {
-            this.astPanel.Dispose();
-            this.astPanel = new AST.Presentation.OptionsPanel();
-            this.SuspendLayout();
-            this.Controls.Add(this.astPanel);
-            this.ResumeLayout(false);
+            OptionsDialog d = new OptionsDialog();
+            d.ShowDialog();
+            
         }
 
         /// <summary>
@@ -262,18 +290,11 @@ namespace AST.Presentation{
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ExecuteStripMenuItem_Click(object sender, EventArgs e) {
-            ExecutionDialog ed = new ExecutionDialog();
-            if (ed.ShowDialog() == DialogResult.OK) {
-                ProgressDialog pd = new ProgressDialog(ed.GetReportName());
-
-                AbstractAction a = ed.GetAbstractAction();
-                AbstractAction.AbstractActionTypeEnum type = ed.GetAbstractActionType();
-                String reportName = ed.GetReportName();
-
-                ASTManager.GetInstance().Execute(a, type, reportName);
-
-                pd.ShowDialog();
-            }
+            this.astPanel.Dispose();
+            this.astPanel = new AST.Presentation.ExecutionPanel();
+            this.SuspendLayout();
+            this.Controls.Add(this.astPanel);
+            this.ResumeLayout(false);
         }
 
         /// <summary>
@@ -281,7 +302,7 @@ namespace AST.Presentation{
         /// </summary>
         public void DisplayUserManuel() {
             if (!File.Exists(USER_MANUAL_FILE)) {
-                this.DisplayErrorMessage("File: " + USER_MANUAL_FILE + " doesn't found.");
+                this.DisplayErrorMessage("The file " + USER_MANUAL_FILE + " isn't found.");
                 return;
             }
             System.Diagnostics.ProcessStartInfo procFormsBuilderStartInfo = new System.Diagnostics.ProcessStartInfo();
