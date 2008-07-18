@@ -105,6 +105,7 @@ namespace AST.Domain
         /// <returns></returns>
         public String GetValidityString(EndStation.OSTypeEnum osType)
         {
+            if (m_validtyString[osType] == null) return "";
             return (String)m_validtyString[osType];
         }
         /// <summary>

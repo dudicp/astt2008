@@ -20,9 +20,11 @@ namespace AST.Management
         private int m_currentActionNo;
         private String m_reportFilename;
         private Color m_defaultColor;
+        private List<Result> m_allResults;
 
         // This delegate enables asynchronous calls for setting
         // the text property on a TextBox control.
+
         delegate void SetTextCallback(String text, Label label);
         delegate void SetValueCallback(int value, ProgressBar label, Queue resultsQueue);
         delegate void SetExecutionFinishCallback();
@@ -35,6 +37,7 @@ namespace AST.Management
         {
             InitializeComponent();
             m_endStations = new List<EndStation>();
+            m_allResults = new List<Result>();
             m_currentActionNo = 0;
             m_reportFilename = reportFilename;
             ViewReportLabel.Text = "";
@@ -212,11 +215,13 @@ namespace AST.Management
 
             foreach (Result res in resultsQueue)
             {
+                this.m_allResults.Add(res);
                 int rowNumber = this.ResultsGridView.Rows.Add();
                 this.ResultsGridView.Rows[rowNumber].Cells[0].Value = res.GetAction().Name;
                 this.ResultsGridView.Rows[rowNumber].Cells[1].Value = res.GetEndStation().Name + "(" + res.GetEndStation().ID + ")";
                 if (res.Status) this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Success";
                 else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Failed";
+                this.ResultsGridView.Rows[rowNumber].Cells[3].Value = res.GetAction().GetValidityString(AST.Domain.EndStation.OSTypeEnum.WINDOWS);
             }
 
         }
@@ -246,6 +251,10 @@ namespace AST.Management
         private void ViewReport_MouseLeave(object sender, EventArgs e)
         {
             this.ViewReportLabel.ForeColor = m_defaultColor;
+        }
+
+        private void ResultsGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            this.MessageText.Text = this.m_allResults[this.ResultsGridView.SelectedCells[0].RowIndex].Message;
         }
     }
 }

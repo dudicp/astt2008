@@ -170,6 +170,9 @@ namespace AST.Presentation {
         /// <param name="e"></param>
         private void ActionsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem == null) return;
+            this.DescriptionText.Text = (String)this.m_actionsInfo[this.ActionsListBox.SelectedItem];
+            this.TPsListBox.ClearSelected();
+            this.TSCsListBox.ClearSelected();
             m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
             m_activeAction = m_rootAction;
 

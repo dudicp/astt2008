@@ -30,8 +30,10 @@ namespace AST.Domain{
             if (m_endStations.Contains(es)) m_endStations.Remove(es);
             m_endStations.Add(es);
 
-            foreach (Action a in m_actions)
+            foreach (Action a in m_actions) {
+                System.Diagnostics.Debug.WriteLine("Action name = " + a.Name);
                 a.AddEndStation(es);
+            }
         }
         /// <summary>
         /// 

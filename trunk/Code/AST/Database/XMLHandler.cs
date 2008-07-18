@@ -76,6 +76,11 @@ namespace AST.Database{
                 // Write ErrorCode element
                 this.AppendChild("ErrorCode", ""+res.ErrorCode, resultNode, xmlDoc);
 
+                // Write ValidityString element
+                string vs = res.GetAction().GetValidityString(EndStation.OSTypeEnum.WINDOWS);
+                if (vs == null || vs.Length==0) this.AppendChild("ValidityString", "-", resultNode, xmlDoc);
+                else this.AppendChild("ValidityString", res.GetAction().GetValidityString(EndStation.OSTypeEnum.WINDOWS), resultNode, xmlDoc);
+
                 // Write Status element
                 if (res.Status)
                     this.AppendChild("Status", "Success", resultNode, xmlDoc);

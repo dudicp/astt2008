@@ -14,11 +14,12 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 			</i>
 			<table border="1px" bordercolor="LightSkyBlue" width="100%">
 				<tr bgcolor="LightSkyBlue">
-			      <th width="14%" align="center"><i>Action Name</i></th>
-			      <th width="14%" align="center"><i>End-Station</i></th>
-				  <th width="18%" align="center"><i>Start Time</i></th>
-				  <th width="18%" align="center"><i>End Time</i></th>
-				  <th width="10%" align="center"><i>Status</i></th>
+			      <th width="11%" align="center"><i>Action Name</i></th>
+			      <th width="11%" align="center"><i>End-Station</i></th>
+				  <th width="15%" align="center"><i>Start Time</i></th>
+				  <th width="15%" align="center"><i>End Time</i></th>
+				  <th width="8%" align="center"><i>Status</i></th>
+				  <th width="15%" align="center"><i>Validity String</i></th>
 				  <th align="center"><i>Message</i></th>
 			    </tr>
 			    <xsl:for-each select="Report/Result">
@@ -42,6 +43,7 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 								</font>
 							</xsl:if>
 						</td>
+						<td align="center"><xsl:value-of select="ValidityString"/></td>
 						<td>
 							<div class='collapsable'>
 								<p>
