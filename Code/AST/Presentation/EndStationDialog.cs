@@ -29,6 +29,7 @@ namespace AST.Presentation {
             if (es != null) {
                 this.SetEndStationDetails();
             }else{
+                this.Title.Text = "New End-Station";
                 int id = ASTManager.GetInstance().GetUnusedEndStationIndex();
                 this.IDTextBox.Text = ""+id;
                 this.m_es = new EndStation(id,"",new IPAddress(0x00000000) ,EndStation.OSTypeEnum.WINDOWS,"","",false);

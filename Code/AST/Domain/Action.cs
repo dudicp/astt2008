@@ -10,7 +10,7 @@ namespace AST.Domain
     public class Action : AbstractAction
     {
 
-        public enum ActionTypeEnum { COMMAND_LINE, SCRIPT, TEST_SCRIPT };
+        public enum ActionTypeEnum { BATCH_FILE, COMMAND_LINE, SCRIPT, TEST_SCRIPT };
         private int m_timeout;
         private Hashtable m_content;
         private ActionTypeEnum m_type;
@@ -18,6 +18,10 @@ namespace AST.Domain
         private int m_delay;
         private Hashtable m_validtyString;
         private List<Parameter> m_parameters;
+        private bool m_stopIfFails;
+
+       
+
         /// <summary>
         /// 
         /// </summary>
@@ -36,6 +40,7 @@ namespace AST.Domain
             m_type = type;
             m_delay = delay;
             m_duration = duration;
+            m_stopIfFails = false;
 
             m_content = new Hashtable();
             m_validtyString = new Hashtable();
@@ -73,6 +78,15 @@ namespace AST.Domain
             get { return m_delay; }
             set { m_delay = value; }
         }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool StopIfFails {
+            get { return m_stopIfFails; }
+            set { m_stopIfFails = value; }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -211,6 +225,11 @@ namespace AST.Domain
                         String res = (String)m_content[osType];
                         foreach (Parameter p in m_parameters)
                             res = res + " " + p.GetValue(osType) + " " + p.Input;
+                        return res;
+                    }
+                case ActionTypeEnum.BATCH_FILE:
+                    {
+                        String res = (String)m_content[osType];
                         return res;
                     }
                 // for SCRIPT and TEST_SCRIPT

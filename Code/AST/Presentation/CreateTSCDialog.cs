@@ -336,7 +336,7 @@ namespace AST.Presentation {
             }
 
             // Checks the constrain that each TSC should have at least one test action
-            if (this.m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+            /*if (this.m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
                 bool hasTest = false;
                 foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes) {
                     Action a = ((Action)(((ASTNode)(node)).Value));
@@ -349,10 +349,15 @@ namespace AST.Presentation {
                     message += "TSC missing test action\n";
                     res = false;
                 }
-            }
+            }*/
 
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return res;
+        }
+
+        public AbstractAction AbstractAction {
+            get { return m_abstractAction; }
+            set { m_abstractAction = value; }
         }
 
     }

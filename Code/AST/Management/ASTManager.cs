@@ -91,7 +91,17 @@ namespace AST.Management
         /// <param name="type">the action type (Action\TSC\TP)</param>
         public void DeleteAbstractAction(String name, AbstractAction.AbstractActionTypeEnum type)
         {
-            this.m_databaseManager.DeleteAbstractAction(name, type);
+            try {
+                this.m_databaseManager.DeleteAbstractAction(name, type);
+            }
+            catch (ConnectionFailedException e) { 
+            }
+            catch (QueryFailedException e) {
+                foreach (ASTOutputListener o in this.m_outputListeners)
+                    o.DisplayErrorMessage(e.Message);
+                return;
+            }
+
             // notify the ASTOutputListener
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayInfoMessage(name + " Deleted Successfully.");

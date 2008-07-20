@@ -63,6 +63,11 @@ namespace AST.Management
                         endTime = DateTime.Now;
                         res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
                         break;
+                    case Action.ActionTypeEnum.BATCH_FILE:
+                        msg = provider.ExecuteBatch(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration, out errorCode);
+                        endTime = DateTime.Now;
+                        res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
+                        break;
                     case Action.ActionTypeEnum.SCRIPT:
                         String filename = m_action.GetContent(endstation.OSType);
                         // 1. Transfer the script to the remote end-station

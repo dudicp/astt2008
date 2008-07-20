@@ -30,6 +30,7 @@ namespace AST.Presentation {
             m_changedParameters = new List<Parameter>();
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
+
             if (a != null)
             {
                 this.m_action.CreationTime = DateTime.Now;
@@ -44,6 +45,7 @@ namespace AST.Presentation {
                 this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
                 Title.Text = "Create Additional Action";
             }
+            OScomboBox.SelectedIndex = 0;
         }
 /// <summary>
 /// 
@@ -63,12 +65,22 @@ namespace AST.Presentation {
             ActionNameText.Text = m_action.Name;
             ActionNameText.Enabled = false;
             CreatorNameText.Text = m_action.CreatorName;
+
+            if (m_action.StopIfFails) StopIfFailsCheckBox.Checked = true;
+            else StopIfFailsCheckBox.Checked = false;
+
             switch (m_action.ActionType)
             {
                 case Action.ActionTypeEnum.COMMAND_LINE:
                     {
                         CommandLineRadio.Checked = true;
                         ContentLabel.Text = "Command Line:";
+                        break;
+                    }
+                case Action.ActionTypeEnum.BATCH_FILE: 
+                    {
+                        BatchFileRadio.Checked = true;
+                        ContentLabel.Text = "Batch Filename:";
                         break;
                     }
                 case Action.ActionTypeEnum.SCRIPT:
@@ -221,7 +233,17 @@ namespace AST.Presentation {
         {
             ContentLabel.Text = "Command Line:";
             BrowseButton.Enabled = false;
+            TimeoutLabel.Enabled = true;
+            TimeoutText.Enabled = true;
         }
+
+        private void BatchFileRadio_CheckedChanged(object sender, EventArgs e) {
+            ContentLabel.Text = "Batch Filename:";
+            BrowseButton.Enabled = true;
+            TimeoutLabel.Enabled = true;
+            TimeoutText.Enabled = true;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -231,6 +253,8 @@ namespace AST.Presentation {
         {
             ContentLabel.Text = "Script Filename:";
             BrowseButton.Enabled = true;
+            TimeoutLabel.Enabled = true;
+            TimeoutText.Enabled = true;
         }
         /// <summary>
         /// 
@@ -241,6 +265,8 @@ namespace AST.Presentation {
         {
             ContentLabel.Text = "Script Filename:";
             BrowseButton.Enabled = true;
+            TimeoutLabel.Enabled = false;
+            TimeoutText.Enabled = false;
         }
         /// <summary>
         /// 
@@ -255,10 +281,15 @@ namespace AST.Presentation {
             this.m_action.CreatorName = this.CreatorNameText.Text;
 
             if (this.CommandLineRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.COMMAND_LINE;
+            else if (this.BatchFileRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.BATCH_FILE;
             else if (this.ScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.SCRIPT;
             else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
 
             this.m_action.Description = this.DescriptionText.Text;
+
+            if (this.StopIfFailsCheckBox.Checked) m_action.StopIfFails = true;
+            else m_action.StopIfFails = false;
+
             ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION, m_isNew);//Save Action Created/Modified
 
             foreach (Parameter p in this.m_newParameters)
@@ -355,6 +386,9 @@ namespace AST.Presentation {
             }
         }
 
-        
+        public Action Action {
+            get { return m_action; }
+            set { m_action = value; }
+        }
     }
 }

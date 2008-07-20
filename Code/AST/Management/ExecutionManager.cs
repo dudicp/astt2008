@@ -137,8 +137,9 @@ namespace AST.Management
         /// method for executing an Action
         /// </summary>
         /// <param name="action">the Action to execute</param>
-        private void Execute(Action action)
+        private bool Execute(Action action)
         {
+            bool resMethod = true;
             // notify the output listeners on the current action thats being executed 
             foreach (ExecutionManagerOutputListener o in m_outputListeners)
                 o.UpdateCurrrentAction(action.Name, m_action.GetActions().Count);
@@ -172,6 +173,7 @@ namespace AST.Management
 
                 //Update the report file
                 ASTManager.GetInstance().Save(res, this.m_reportName);
+                if (!res.Status) resMethod = false;
             }
 
             //Update the screen
@@ -179,17 +181,22 @@ namespace AST.Management
             double progress = ((double)m_progress) / ((double)(m_action.GetActions().Count));
             foreach (ExecutionManagerOutputListener o in m_outputListeners)
                 o.UpdateProgress((int)(progress * 100), resultsQueue);
+
+            return resMethod;
         }
 
         /// <summary>
         /// method for executing a TSC
         /// </summary>
         /// <param name="tsc">the TSC to execute</param>
-        private void Execute(TSC tsc)
+        private bool Execute(TSC tsc)
         {
             List<Action> actions = tsc.GetActions();
-            foreach (Action a in actions)
-                Execute(a);
+            foreach (Action a in actions) {
+                bool res = Execute(a);
+                if (a.StopIfFails && !res) return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -200,7 +207,7 @@ namespace AST.Management
         {
             List<TSC> TSCs = tp.GetTSCs();
             foreach (TSC tsc in TSCs)
-                Execute(tsc);
+                if (!Execute(tsc)) break;
         }
 
         /// <summary>

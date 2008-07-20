@@ -53,6 +53,12 @@ namespace AST.Database
         /// <param name="type">the action type(Action\TSC\TP)</param>
         public void DeleteAbstractAction(String name, AbstractAction.AbstractActionTypeEnum type)
         {
+            try {
+                this.m_DBHandler.Delete(name, type);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (QueryFailedException e) { throw e; }
+
             switch (type)
             {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
@@ -71,7 +77,6 @@ namespace AST.Database
                         break;
                     }
             }
-            this.m_DBHandler.Delete(name, type);
         }
 
         /// <summary>
