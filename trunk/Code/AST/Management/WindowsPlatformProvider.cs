@@ -88,6 +88,8 @@ namespace AST.Management{
             String res = "";
             errorCode = 0;
 
+            if (!File.Exists(filename)) throw new FileNotExistException("The batch file " + filename + " isn't found.");
+
             String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
             if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file " + PSToolsCommand + " isn't found.");
 

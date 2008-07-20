@@ -22,4 +22,5 @@ obj\Debug\AST.pdb
 obj\Debug\AST.Presentation.CreateAdditionalActionDialog.resources
 obj\Debug\AST.Presentation.CreateTSCDialog.resources
 obj\Debug\AST.Presentation.OptionsDialog.resources
+bin\Debug\Microsoft.ApplicationBlocks.Data.pdb
 bin\Debug\AST.XML

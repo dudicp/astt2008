@@ -190,8 +190,11 @@ namespace AST.Presentation {
         private void BrowseButton_Click(object sender, EventArgs e)
         {
             OpenFileDialog browse = new OpenFileDialog();
-            if (browse.ShowDialog() == DialogResult.OK)
+            EndStation.OSTypeEnum OSType = ConvertSelectionToOSType(this.OScomboBox.SelectedIndex);
+            if (browse.ShowDialog() == DialogResult.OK) {
                 ContentText.Text = browse.FileName;
+                m_action.AddContent(OSType, ContentText.Text);
+            }
         }
         /// <summary>
         /// 
