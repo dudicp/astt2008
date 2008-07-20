@@ -218,6 +218,7 @@ namespace AST.Presentation {
             if (EndStationsListBox.Items.Count == 0) {
                 this.SelectEndStationButton.Enabled = false;
                 this.EditButton.Enabled = false;
+                this.DeleteButton.Enabled = false;
             }
         }
 
@@ -271,6 +272,7 @@ namespace AST.Presentation {
             if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) return;
             this.SelectEndStationButton.Enabled = true;
             this.EditButton.Enabled = true;
+            this.DeleteButton.Enabled = true;
         }
 
         private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -299,7 +301,20 @@ namespace AST.Presentation {
                 EndStation es = esd.GetEndStation();
                 ASTManager.GetInstance().AddEndStation(es, false);
                 InitEditEndStationTab();
+                this.EditButton.Enabled = false;
+                this.DeleteButton.Enabled = false;
             }
+        }
+
+        private void DeleteButton_Click(object sender, EventArgs e) {
+            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (res == DialogResult.No) return;
+            EndStation es = m_endStations[this.EndStationsListBox.SelectedIndex];
+            ASTManager.GetInstance().RemoveEndStation(es);
+            this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+            InitEditEndStationTab();
+            this.EditButton.Enabled = false;
+            this.DeleteButton.Enabled = false;
         }
 
         private void okButton_Click(object sender, EventArgs e) {
@@ -331,9 +346,6 @@ namespace AST.Presentation {
         }
 
         private void MyCancelButton_Click(object sender, EventArgs e) {
-            //Return to the previuos screen
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
 
             this.DialogResult = DialogResult.Cancel;
         }
