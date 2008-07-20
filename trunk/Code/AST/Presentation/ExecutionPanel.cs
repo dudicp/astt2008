@@ -183,6 +183,18 @@ namespace AST.Presentation {
             this.TPsListBox.ClearSelected();
             this.TSCsListBox.ClearSelected();
 
+            //Disable end-stations groupbox and duration if the selected action is test action.
+            if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
+                this.EndStationsGroupBox.Enabled = false;
+                this.DurationCheckBox.Enabled = false;
+                this.DurationNumericUpDown.Enabled = false;
+            }
+            else {
+                this.EndStationsGroupBox.Enabled = true;
+                this.DurationCheckBox.Enabled = true;
+                this.DurationNumericUpDown.Enabled = true;
+            }
+
         }
         /// <summary>
         /// 
@@ -703,6 +715,9 @@ namespace AST.Presentation {
                 this.ValidityStringTextBox.Enabled = true;
                 this.ValidityStringTextBox.Text = a.GetValidityString(EndStation.OSTypeEnum.WINDOWS);
             }
+
+            if (a.StopIfFails) this.StopIfFailsCheckBox.Checked = true;
+            else this.StopIfFailsCheckBox.Checked = false;
         }
         /// <summary>
         /// 
@@ -1013,6 +1028,7 @@ namespace AST.Presentation {
             CreateAdditionalActionDialog cad = new CreateAdditionalActionDialog(a);
             if (cad.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
+                if (a == null) ActionsListBox.Items.Add(cad.Action.Name);
             }
         }
 
@@ -1020,6 +1036,7 @@ namespace AST.Presentation {
             CreateTSCDialog ctd = new CreateTSCDialog(tsc, AbstractAction.AbstractActionTypeEnum.TSC);
             if (ctd.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
+                if (tsc == null) TSCsListBox.Items.Add(ctd.AbstractAction.Name);
             }
         }
 
@@ -1027,6 +1044,7 @@ namespace AST.Presentation {
             CreateTSCDialog ctd = new CreateTSCDialog(tp, AbstractAction.AbstractActionTypeEnum.TP);
             if (ctd.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
+                if (tp == null) TPsListBox.Items.Add(ctd.AbstractAction.Name);
             }
         }
 
@@ -1053,6 +1071,7 @@ namespace AST.Presentation {
                 this.m_endStations.Add(es);
                 ASTManager.GetInstance().AddEndStation(es, true);
                 this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+
             }
         }
 
@@ -1123,6 +1142,11 @@ namespace AST.Presentation {
             else {
                 ((Action)this.m_activeAction).AddValidityString(EndStation.OSTypeEnum.WINDOWS, this.ValidityStringTextBox.Text);
             }
+        }
+
+        private void StopIfFailsCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if (this.StopIfFailsCheckBox.Checked) ((Action)m_activeAction).StopIfFails = true;
+            else ((Action)m_activeAction).StopIfFails = false;
         }
     }
 }

@@ -321,6 +321,5 @@ namespace AST.Presentation{
         private void HelpMenuItem_Click(object sender, EventArgs e) {
             this.DisplayUserManuel();
         }
-
     }
 }

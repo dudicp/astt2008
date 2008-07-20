@@ -82,6 +82,51 @@ namespace AST.Management{
            }
            return res;
         }
+
+
+        public String ExecuteBatch(IPAddress ip, String username, String password, String filename, int timeout, int duration, out int errorCode) {
+            String res = "";
+            errorCode = 0;
+
+            String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
+            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file " + PSToolsCommand + " isn't found.");
+
+            String timeoutStr = "";
+            if (username.Length != 0) username = " -u " + username;
+            if (password.Length != 0) password = " -p " + password;
+            if (timeout != 0) timeoutStr = " -n " + timeout;
+
+            String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " -c " + filename;
+            Debug.WriteLine(PSToolsCommand + args);
+
+            Process p = new Process();
+            ProcessStartInfo psi = new ProcessStartInfo(PSToolsCommand, args);
+            psi.CreateNoWindow = false;
+            psi.UseShellExecute = false;
+            psi.RedirectStandardOutput = true;
+            p.StartInfo = psi;
+
+            try {
+                p.Start();
+                if (duration == 0) {
+                    p.WaitForExit();
+                    res = p.StandardOutput.ReadToEnd();
+                    errorCode = p.ExitCode;
+                    Debug.WriteLine("output:\n" + res);
+                    p.Close();
+                }
+                else {
+                    if (!p.WaitForExit(duration * 1000)) p.Kill();
+                }
+            }
+            catch (ExecutionFailedException e) { throw e; }
+            catch (FileNotExistException e) { throw e; }
+            catch (Exception e) {
+                throw new ExecutionFailedException("Could not start process.", e);
+            }
+            return res;
+        }
+
         /// <summary>
         /// 
         /// </summary>

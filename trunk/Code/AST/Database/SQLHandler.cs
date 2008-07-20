@@ -108,7 +108,10 @@ namespace AST.Database{
             //Getting the creation time
             DateTime creationTime = (DateTime)dr.GetValue(5);
 
+            bool stopIfFails = (bool)dr.GetValue(6);
+
             Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, 0);
+            a.StopIfFails = stopIfFails;
 
             ////////////////////
             //2. Set Contents //
@@ -414,7 +417,7 @@ namespace AST.Database{
                 else storedProcedureName = "sp_InsertAction";
 
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails);
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
@@ -591,7 +594,11 @@ namespace AST.Database{
         {
             switch (type) {
                 case AbstractAction.AbstractActionTypeEnum.ACTION:
-                    DeleteAction(name);
+                    try {
+                        DeleteAction(name);
+                    }
+                    catch (ConnectionFailedException e) { throw e; }
+                    catch (QueryFailedException e) { throw e; }
                     break;
                 case AbstractAction.AbstractActionTypeEnum.TSC:
                     DeleteTSC(name);
@@ -630,8 +637,8 @@ namespace AST.Database{
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::DeleteAction:: Deleting action: " + name + " failed.");
-                throw new QueryFailedException("Deleting action: " + name + " failed.", e);
+                Debug.WriteLine("SQLHandler::DeleteAction:: Deleting action " + name + " failed.\nThere exists a test scenario that contains "+name+".");
+                throw new QueryFailedException("Deleting action " + name + " failed.\nThere exists a test scenario that contains " + name + ".", e);
             }
         }
         /// <summary>
@@ -647,7 +654,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::DeleteTSC:: Deleting TSC: " + name + " failed.");
-                throw new QueryFailedException("Deleting TSC: " + name + " failed.", e);
+                throw new QueryFailedException("Deleting test scenario " + name + " failed.\nThere exists a test plan that contains " + name + ".", e);
             }
         }
         /// <summary>
@@ -1049,6 +1056,7 @@ namespace AST.Database{
         private Action.ActionTypeEnum GetActionType(String str){
             switch (str){
                 case "COMMAND_LINE": return Action.ActionTypeEnum.COMMAND_LINE;
+                case "BATCH_FILE": return Action.ActionTypeEnum.BATCH_FILE;
                 case "SCRIPT": return Action.ActionTypeEnum.SCRIPT;
                 case "TEST_SCRIPT": return Action.ActionTypeEnum.TEST_SCRIPT;
                 default:

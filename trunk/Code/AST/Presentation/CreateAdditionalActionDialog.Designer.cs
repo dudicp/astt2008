@@ -50,9 +50,11 @@ namespace AST.Presentation {
             this.OScomboBox = new System.Windows.Forms.ComboBox();
             this.okButton = new System.Windows.Forms.Button();
             this.actionDetailsBox = new System.Windows.Forms.GroupBox();
+            this.BatchFileRadio = new System.Windows.Forms.RadioButton();
             this.creatorNameLabel = new System.Windows.Forms.Label();
             this.actionNameLabel = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
+            this.StopIfFailsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.TimeoutText)).BeginInit();
             this.ParametersBox.SuspendLayout();
             this.actionContentBox.SuspendLayout();
@@ -144,7 +146,7 @@ namespace AST.Presentation {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(215, 458);
+            this.MyCancelButton.Location = new System.Drawing.Point(215, 503);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 25;
@@ -160,7 +162,7 @@ namespace AST.Presentation {
             this.ParametersBox.Controls.Add(this.parameterNameLabel);
             this.ParametersBox.Controls.Add(this.ParametersComboBox);
             this.ParametersBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ParametersBox.Location = new System.Drawing.Point(12, 384);
+            this.ParametersBox.Location = new System.Drawing.Point(12, 429);
             this.ParametersBox.Name = "ParametersBox";
             this.ParametersBox.Size = new System.Drawing.Size(405, 59);
             this.ParametersBox.TabIndex = 23;
@@ -211,7 +213,7 @@ namespace AST.Presentation {
             // DescriptionText
             // 
             this.DescriptionText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.DescriptionText.Location = new System.Drawing.Point(9, 140);
+            this.DescriptionText.Location = new System.Drawing.Point(9, 157);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(390, 45);
             this.DescriptionText.TabIndex = 5;
@@ -221,7 +223,7 @@ namespace AST.Presentation {
             // 
             this.TestScriptRadio.AutoSize = true;
             this.TestScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestScriptRadio.Location = new System.Drawing.Point(292, 90);
+            this.TestScriptRadio.Location = new System.Drawing.Point(225, 114);
             this.TestScriptRadio.Name = "TestScriptRadio";
             this.TestScriptRadio.Size = new System.Drawing.Size(76, 18);
             this.TestScriptRadio.TabIndex = 4;
@@ -234,7 +236,7 @@ namespace AST.Presentation {
             // 
             this.ScriptRadio.AutoSize = true;
             this.ScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ScriptRadio.Location = new System.Drawing.Point(223, 90);
+            this.ScriptRadio.Location = new System.Drawing.Point(113, 114);
             this.ScriptRadio.Name = "ScriptRadio";
             this.ScriptRadio.Size = new System.Drawing.Size(53, 18);
             this.ScriptRadio.TabIndex = 3;
@@ -276,7 +278,7 @@ namespace AST.Presentation {
             // 
             this.descriptionLabel.AutoSize = true;
             this.descriptionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.descriptionLabel.Location = new System.Drawing.Point(6, 122);
+            this.descriptionLabel.Location = new System.Drawing.Point(6, 139);
             this.descriptionLabel.Name = "descriptionLabel";
             this.descriptionLabel.Size = new System.Drawing.Size(72, 15);
             this.descriptionLabel.TabIndex = 3;
@@ -304,7 +306,7 @@ namespace AST.Presentation {
             this.actionContentBox.Controls.Add(this.OSTypeLabel);
             this.actionContentBox.Controls.Add(this.OScomboBox);
             this.actionContentBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.actionContentBox.Location = new System.Drawing.Point(12, 252);
+            this.actionContentBox.Location = new System.Drawing.Point(12, 297);
             this.actionContentBox.Name = "actionContentBox";
             this.actionContentBox.Size = new System.Drawing.Size(405, 126);
             this.actionContentBox.TabIndex = 22;
@@ -340,7 +342,7 @@ namespace AST.Presentation {
             // okButton
             // 
             this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(134, 458);
+            this.okButton.Location = new System.Drawing.Point(134, 503);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 24;
@@ -350,6 +352,8 @@ namespace AST.Presentation {
             // 
             // actionDetailsBox
             // 
+            this.actionDetailsBox.Controls.Add(this.StopIfFailsCheckBox);
+            this.actionDetailsBox.Controls.Add(this.BatchFileRadio);
             this.actionDetailsBox.Controls.Add(this.DescriptionText);
             this.actionDetailsBox.Controls.Add(this.TestScriptRadio);
             this.actionDetailsBox.Controls.Add(this.ScriptRadio);
@@ -363,10 +367,23 @@ namespace AST.Presentation {
             this.actionDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.actionDetailsBox.Location = new System.Drawing.Point(12, 52);
             this.actionDetailsBox.Name = "actionDetailsBox";
-            this.actionDetailsBox.Size = new System.Drawing.Size(405, 194);
+            this.actionDetailsBox.Size = new System.Drawing.Size(405, 239);
             this.actionDetailsBox.TabIndex = 20;
             this.actionDetailsBox.TabStop = false;
             this.actionDetailsBox.Text = "Action Details";
+            // 
+            // BatchFileRadio
+            // 
+            this.BatchFileRadio.AutoSize = true;
+            this.BatchFileRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BatchFileRadio.Location = new System.Drawing.Point(225, 90);
+            this.BatchFileRadio.Name = "BatchFileRadio";
+            this.BatchFileRadio.Size = new System.Drawing.Size(69, 18);
+            this.BatchFileRadio.TabIndex = 6;
+            this.BatchFileRadio.TabStop = true;
+            this.BatchFileRadio.Text = "Batch File";
+            this.BatchFileRadio.UseVisualStyleBackColor = true;
+            this.BatchFileRadio.CheckedChanged += new System.EventHandler(this.BatchFileRadio_CheckedChanged);
             // 
             // creatorNameLabel
             // 
@@ -399,11 +416,22 @@ namespace AST.Presentation {
             this.Title.TabIndex = 21;
             this.Title.Text = "Create Additional Action";
             // 
+            // StopIfFailsCheckBox
+            // 
+            this.StopIfFailsCheckBox.AutoSize = true;
+            this.StopIfFailsCheckBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StopIfFailsCheckBox.Location = new System.Drawing.Point(6, 212);
+            this.StopIfFailsCheckBox.Name = "StopIfFailsCheckBox";
+            this.StopIfFailsCheckBox.Size = new System.Drawing.Size(200, 19);
+            this.StopIfFailsCheckBox.TabIndex = 10;
+            this.StopIfFailsCheckBox.Text = "Stop execution if the action fails.";
+            this.StopIfFailsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // CreateAdditionalActionDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 490);
+            this.ClientSize = new System.Drawing.Size(426, 537);
             this.Controls.Add(this.MyCancelButton);
             this.Controls.Add(this.ParametersBox);
             this.Controls.Add(this.actionContentBox);
@@ -456,5 +484,7 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label creatorNameLabel;
         private System.Windows.Forms.Label actionNameLabel;
         private System.Windows.Forms.Label Title;
+        private System.Windows.Forms.RadioButton BatchFileRadio;
+        private System.Windows.Forms.CheckBox StopIfFailsCheckBox;
     }
 }

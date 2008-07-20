@@ -26,6 +26,10 @@ namespace AST.Management {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ResultsGridView = new System.Windows.Forms.DataGridView();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EndStationComboBox = new System.Windows.Forms.ComboBox();
             this.EndStationLabel = new System.Windows.Forms.Label();
             this.EndStationDetailsBox = new System.Windows.Forms.GroupBox();
@@ -46,29 +50,25 @@ namespace AST.Management {
             this.CurrentActionText = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
-            this.MessageText = new System.Windows.Forms.Label();
             this.MessageLabel = new System.Windows.Forms.Label();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ViewReportLabel = new System.Windows.Forms.Label();
+            this.MessageText = new System.Windows.Forms.RichTextBox();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(13, 243);
+            this.ProgressBar.Location = new System.Drawing.Point(13, 288);
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(625, 23);
+            this.ProgressBar.Size = new System.Drawing.Size(613, 23);
             this.ProgressBar.TabIndex = 0;
             this.ProgressBar.Value = 70;
             // 
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(313, 277);
+            this.MyCancelButton.Location = new System.Drawing.Point(313, 322);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 20;
@@ -99,10 +99,39 @@ namespace AST.Management {
             this.ResultsGridView.TabIndex = 21;
             this.ResultsGridView.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultsGridView_CellContentClick);
             // 
+            // Action
+            // 
+            this.Action.Frozen = true;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            // 
+            // EndStation
+            // 
+            this.EndStation.Frozen = true;
+            this.EndStation.HeaderText = "End-Station";
+            this.EndStation.Name = "EndStation";
+            this.EndStation.ReadOnly = true;
+            // 
+            // Status
+            // 
+            this.Status.Frozen = true;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.Width = 70;
+            // 
+            // ValidityString
+            // 
+            this.ValidityString.Frozen = true;
+            this.ValidityString.HeaderText = "Validity String";
+            this.ValidityString.Name = "ValidityString";
+            this.ValidityString.ReadOnly = true;
+            // 
             // EndStationComboBox
             // 
             this.EndStationComboBox.FormattingEnabled = true;
-            this.EndStationComboBox.Location = new System.Drawing.Point(533, 12);
+            this.EndStationComboBox.Location = new System.Drawing.Point(521, 46);
             this.EndStationComboBox.Name = "EndStationComboBox";
             this.EndStationComboBox.Size = new System.Drawing.Size(105, 21);
             this.EndStationComboBox.TabIndex = 22;
@@ -112,7 +141,7 @@ namespace AST.Management {
             // 
             this.EndStationLabel.AutoSize = true;
             this.EndStationLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationLabel.Location = new System.Drawing.Point(448, 14);
+            this.EndStationLabel.Location = new System.Drawing.Point(436, 48);
             this.EndStationLabel.Name = "EndStationLabel";
             this.EndStationLabel.Size = new System.Drawing.Size(79, 15);
             this.EndStationLabel.TabIndex = 23;
@@ -132,7 +161,7 @@ namespace AST.Management {
             this.EndStationDetailsBox.Controls.Add(this.UsernameLabel);
             this.EndStationDetailsBox.Controls.Add(this.IPLabel);
             this.EndStationDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationDetailsBox.Location = new System.Drawing.Point(451, 39);
+            this.EndStationDetailsBox.Location = new System.Drawing.Point(439, 73);
             this.EndStationDetailsBox.Name = "EndStationDetailsBox";
             this.EndStationDetailsBox.Size = new System.Drawing.Size(187, 127);
             this.EndStationDetailsBox.TabIndex = 24;
@@ -253,7 +282,7 @@ namespace AST.Management {
             // 
             this.CurrentActionLabel.AutoSize = true;
             this.CurrentActionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionLabel.Location = new System.Drawing.Point(10, 213);
+            this.CurrentActionLabel.Location = new System.Drawing.Point(10, 258);
             this.CurrentActionLabel.Name = "CurrentActionLabel";
             this.CurrentActionLabel.Size = new System.Drawing.Size(105, 15);
             this.CurrentActionLabel.TabIndex = 39;
@@ -263,7 +292,7 @@ namespace AST.Management {
             // 
             this.ActionNoLabel.AutoSize = true;
             this.ActionNoLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoLabel.Location = new System.Drawing.Point(337, 213);
+            this.ActionNoLabel.Location = new System.Drawing.Point(307, 258);
             this.ActionNoLabel.Name = "ActionNoLabel";
             this.ActionNoLabel.Size = new System.Drawing.Size(77, 15);
             this.ActionNoLabel.TabIndex = 40;
@@ -273,7 +302,7 @@ namespace AST.Management {
             // 
             this.ActionNoText.AutoSize = true;
             this.ActionNoText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoText.Location = new System.Drawing.Point(417, 213);
+            this.ActionNoText.Location = new System.Drawing.Point(387, 258);
             this.ActionNoText.Name = "ActionNoText";
             this.ActionNoText.Size = new System.Drawing.Size(34, 15);
             this.ActionNoText.TabIndex = 41;
@@ -283,7 +312,7 @@ namespace AST.Management {
             // 
             this.CurrentActionText.AutoSize = true;
             this.CurrentActionText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionText.Location = new System.Drawing.Point(121, 213);
+            this.CurrentActionText.Location = new System.Drawing.Point(121, 258);
             this.CurrentActionText.Name = "CurrentActionText";
             this.CurrentActionText.Size = new System.Drawing.Size(37, 15);
             this.CurrentActionText.TabIndex = 42;
@@ -303,23 +332,13 @@ namespace AST.Management {
             // 
             this.OkButton.Enabled = false;
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(236, 277);
+            this.OkButton.Location = new System.Drawing.Point(236, 322);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(71, 23);
             this.OkButton.TabIndex = 44;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
-            // 
-            // MessageText
-            // 
-            this.MessageText.AutoSize = true;
-            this.MessageText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MessageText.Location = new System.Drawing.Point(83, 173);
-            this.MessageText.Name = "MessageText";
-            this.MessageText.Size = new System.Drawing.Size(37, 15);
-            this.MessageText.TabIndex = 47;
-            this.MessageText.Text = "          ";
             // 
             // MessageLabel
             // 
@@ -331,53 +350,33 @@ namespace AST.Management {
             this.MessageLabel.TabIndex = 46;
             this.MessageLabel.Text = "Message:";
             // 
-            // Action
-            // 
-            this.Action.Frozen = true;
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            // 
-            // EndStation
-            // 
-            this.EndStation.Frozen = true;
-            this.EndStation.HeaderText = "End-Station";
-            this.EndStation.Name = "EndStation";
-            this.EndStation.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.Frozen = true;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 70;
-            // 
-            // ValidityString
-            // 
-            this.ValidityString.Frozen = true;
-            this.ValidityString.HeaderText = "Validity String";
-            this.ValidityString.Name = "ValidityString";
-            this.ValidityString.ReadOnly = true;
-            // 
             // ViewReportLabel
             // 
             this.ViewReportLabel.AutoSize = true;
             this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.ViewReportLabel.Location = new System.Drawing.Point(405, 282);
+            this.ViewReportLabel.Location = new System.Drawing.Point(405, 327);
             this.ViewReportLabel.Name = "ViewReportLabel";
             this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
             this.ViewReportLabel.TabIndex = 48;
             this.ViewReportLabel.Text = "View Report";
+            this.ViewReportLabel.Click += new System.EventHandler(this.ViewReportLabel_Click);
+            // 
+            // MessageText
+            // 
+            this.MessageText.Location = new System.Drawing.Point(91, 173);
+            this.MessageText.Name = "MessageText";
+            this.MessageText.Size = new System.Drawing.Size(334, 66);
+            this.MessageText.TabIndex = 49;
+            this.MessageText.Text = "";
             // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 312);
-            this.Controls.Add(this.ViewReportLabel);
+            this.ClientSize = new System.Drawing.Size(651, 358);
             this.Controls.Add(this.MessageText);
+            this.Controls.Add(this.ViewReportLabel);
             this.Controls.Add(this.MessageLabel);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.Title);
@@ -426,12 +425,12 @@ namespace AST.Management {
         private System.Windows.Forms.Label EndStationNameText;
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.Label MessageText;
         private System.Windows.Forms.Label MessageLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn Action;
         private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn ValidityString;
         private System.Windows.Forms.Label ViewReportLabel;
+        private System.Windows.Forms.RichTextBox MessageText;
     }
 }
