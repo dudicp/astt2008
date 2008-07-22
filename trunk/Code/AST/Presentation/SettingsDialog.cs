@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using AST.Domain;
 using AST.Management;
 using System.Collections;
+using AST.Database;
 
 namespace AST.Presentation {
     
@@ -34,10 +35,12 @@ namespace AST.Presentation {
             this.m_type = type;
             InitializeComponent();
 
-            if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION) {
+            if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION || (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)a).ActionType == Action.ActionTypeEnum.BATCH_FILE)) {
                 this.tabControl.Controls.Remove(this.EditParametersTab);
-                this.tabControl.Controls.Remove(this.MiscTab);
             }
+            if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION)
+                this.tabControl.Controls.Remove(this.MiscTab);
+            
             else {
                 InitEditParametersTab();
                 InitMiscTab();
@@ -63,8 +66,14 @@ namespace AST.Presentation {
                 this.m_selectedParameters.Add(p);
                 this.SelectedParametersListBox.Items.Add(p.Name);
             }
-            
-            List<Parameter> allParameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
+
+            List<Parameter> allParameters = null;
+
+            try {
+                allParameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
+            }
+            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
             //Filling the unselected parameters:
             foreach (Parameter p in allParameters) {
@@ -324,8 +333,8 @@ namespace AST.Presentation {
             for (int i = 0; i < this.m_selectedEndStations.Count; i++)
                 this.m_action.AddEndStation(new EndStationSchedule(this.m_selectedEndStations[i]));
 
-            
-            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION) {
+
+            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)this.m_action).ActionType != Action.ActionTypeEnum.BATCH_FILE) {
 
                 //2. Updating action's parameters
                 ((Action)this.m_action).ClearParameters();
@@ -333,13 +342,17 @@ namespace AST.Presentation {
                 for (int i = 0; i < this.m_selectedParameters.Count; i++)
                     ((Action)this.m_action).AddParameter(this.m_selectedParameters[i]);
 
+            }
 
+            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION){
                 //3. Update Misc
                 if (this.DelayCheckBox.Checked)
                     ((Action)this.m_action).Delay = (int)this.DelayNumericUpDown.Value;
+                else ((Action)this.m_action).Delay = 0;
 
                 if (this.DurationCheckBox.Checked)
                     ((Action)this.m_action).Duration = (int)this.DurationNumericUpDown.Value;
+                else ((Action)this.m_action).Duration = 0;
             }
 
             this.DialogResult = DialogResult.OK;
@@ -366,6 +379,22 @@ namespace AST.Presentation {
             if (((Action)(this.m_action)).Duration != 0) {
                 this.DurationCheckBox.Checked = true;
                 this.DurationNumericUpDown.Value = ((Action)(this.m_action)).Duration;
+            }
+        }
+
+        private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if (this.DelayCheckBox.Checked) this.DelayNumericUpDown.Enabled = true;
+            else {
+                this.DelayNumericUpDown.Enabled = false;
+                //((Action)m_action).Delay = 0;
+            }
+        }
+
+        private void DurationCheckBox_CheckedChanged(object sender, EventArgs e) {
+            if (this.DurationCheckBox.Checked) this.DurationNumericUpDown.Enabled = true;
+            else {
+                this.DurationNumericUpDown.Enabled = false;
+                //((Action)m_action).Duration = 0;
             }
         }
     }

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Collections;
 using AST.Domain;
 using AST.Management;
+using AST.Database;
 
 namespace AST.Presentation {
     public partial class ExecutionPanel : AST.Presentation.ASTPanel {
@@ -135,66 +136,20 @@ namespace AST.Presentation {
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
                 return;
             }
-            m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
-            m_activeAction = m_rootAction;
-            //Add this action the Default End-Stations
-            ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
-            foreach (EndStation es in endStations) {
-                if (es.IsDefault) m_activeAction.AddEndStation(new EndStationSchedule(es));
-            }
-
-            //Set TreeView GroupBox
-            this.SetTreeView();
-
-            //Disable The TreeView GroupBox
-            this.TreeViewGroupBox.Enabled = true;
-
-            //Set End-Station List Boxes
-            this.SetEndStations(m_activeAction);
-
-            //Clears the input text box
-            this.InputTextBox.Clear();
-
-            //Add this action the Default Parameters
-            List<Parameter> parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
-            foreach (Parameter p in parameters) {
-                if (p.IsDefault) ((Action)m_activeAction).AddParameter(p);
-            }
-
-            //Set Parameters List Boxes
-            this.SetParameters((Action)m_activeAction);
-
-            //Enable The End-Station GroupBox
-            this.EndStationsGroupBox.Enabled = true;
-
-            //Enable The Parameters GroupBox
-            this.ParametersGroupBox.Enabled = true;
-
-            m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
-
-            //Enable the execute button
-            this.ExecuteButton.Enabled = true;
-
-            //Set the menu strip content
-            this.EditAbstractActionToolStripMenuItem.Enabled = true;
-            this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
 
             this.DescriptionText.Text = (String)this.m_actionsInfo[this.ActionsListBox.SelectedItem];
             this.TPsListBox.ClearSelected();
             this.TSCsListBox.ClearSelected();
 
-            //Disable end-stations groupbox and duration if the selected action is test action.
-            if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
-                this.EndStationsGroupBox.Enabled = false;
-                this.DurationCheckBox.Enabled = false;
-                this.DurationNumericUpDown.Enabled = false;
+            //Set the menu strip content
+            /*if (m_rootAction.CreatorName == "System") {
+                this.EditAbstractActionToolStripMenuItem.Enabled = false;
+                this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
             }
-            else {
-                this.EndStationsGroupBox.Enabled = true;
-                this.DurationCheckBox.Enabled = true;
-                this.DurationNumericUpDown.Enabled = true;
-            }
-
+            else {*/
+            this.EditAbstractActionToolStripMenuItem.Enabled = true;
+            this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
+            //}
         }
         /// <summary>
         /// 
@@ -209,35 +164,13 @@ namespace AST.Presentation {
                 return;
             }
 
-            m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
-
-            //Enable The End-Station GroupBox
-            this.EndStationsGroupBox.Enabled = false;
-
-            //Enable The Parameters GroupBox
-            this.ParametersGroupBox.Enabled = false;
-
-            //Clears the input text box
-            this.InputTextBox.Clear();
-
-            m_type = AbstractAction.AbstractActionTypeEnum.TSC;
-
-            //Set TreeView GroupBox
-            this.SetTreeView();
-
-            //Disable The TreeView GroupBox
-            this.TreeViewGroupBox.Enabled = true;
-
-            //Enable the execute button
-            this.ExecuteButton.Enabled = true;
+            this.DescriptionText.Text = (String)this.m_TSCsInfo[this.TSCsListBox.SelectedItem];
+            this.ActionsListBox.ClearSelected();
+            this.TPsListBox.ClearSelected();
 
             //Set the menu strip content
             this.EditAbstractActionToolStripMenuItem.Enabled = true;
             this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
-
-            this.DescriptionText.Text = (String)this.m_TSCsInfo[this.TSCsListBox.SelectedItem];
-            this.ActionsListBox.ClearSelected();
-            this.TPsListBox.ClearSelected();
         }
         /// <summary>
         /// 
@@ -253,35 +186,13 @@ namespace AST.Presentation {
                 return;
             }
 
-            m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
-
-            //Enable The End-Station GroupBox
-            this.EndStationsGroupBox.Enabled = false;
-
-            //Enable The Parameters GroupBox
-            this.ParametersGroupBox.Enabled = false;
-
-            //Clears the input text box
-            this.InputTextBox.Clear();
-
-            m_type = AbstractAction.AbstractActionTypeEnum.TP;
-
-            //Set TreeView GroupBox
-            this.SetTreeView();
-
-            //Disable The TreeView GroupBox
-            this.TreeViewGroupBox.Enabled = true;
-
-            //Enable the execute button
-            this.ExecuteButton.Enabled = true;
-
-            //Set the menu strip content
-            this.EditAbstractActionToolStripMenuItem.Enabled = true;
-            this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
-
             this.DescriptionText.Text = (String)this.m_TPsInfo[this.TPsListBox.SelectedItem];
             this.ActionsListBox.ClearSelected();
             this.TSCsListBox.ClearSelected();
+
+            //Set the menu strip content
+            this.EditAbstractActionToolStripMenuItem.Enabled = true;
+            this.DeleteAbstractActionToolStripMenuItem.Enabled = true;            
         }
 
     #endregion
@@ -332,6 +243,15 @@ namespace AST.Presentation {
             }
             else this.ParametersGroupBox.Enabled = false;
 
+            if (selectedType == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
+                this.EndStationsGroupBox.Enabled = false;
+                this.DurationCheckBox.Enabled = false;
+            }
+            else {
+                this.EndStationsGroupBox.Enabled = true;
+                this.DurationCheckBox.Enabled = true;
+            }
+
             this.DescriptionText.Text = ((ASTNode)(this.TreeView.SelectedNode)).Value.Description;
 
             if (TreeView.SelectedNode.Level != 1) {
@@ -340,7 +260,6 @@ namespace AST.Presentation {
                 return;
             }
 
-            if (this.TreeView.SelectedNode == null) return;
             if (TreeView.SelectedNode.Index > 0) this.MoveUpActionButton.Enabled = true;
             else this.MoveUpActionButton.Enabled = false;
             if ((TreeView.SelectedNode.Level == 1) && (TreeView.SelectedNode.Index < this.TreeView.SelectedNode.Parent.GetNodeCount(false) - 1)) this.MoveDownActionButton.Enabled = true;
@@ -677,7 +596,15 @@ namespace AST.Presentation {
                 this.SelectedParametersListBox.Items.Add(p.Name);
             }
 
-            List<Parameter> allParameters = ASTManager.GetInstance().GetParameters(a.Name);
+            List<Parameter> allParameters = null;
+            try {
+                allParameters = ASTManager.GetInstance().GetParameters(a.Name);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             //Filling the unselected parameters:
             foreach (Parameter p in allParameters) {
@@ -689,19 +616,23 @@ namespace AST.Presentation {
 
             if (a.Delay == 0) {
                 this.DelayNumericUpDown.Value = 10;
+                this.DelayNumericUpDown.Enabled = false;
                 this.DelayCheckBox.Checked = false;
             }
             else {
                 this.DelayNumericUpDown.Value = Decimal.Parse(a.Delay.ToString());
+                this.DelayNumericUpDown.Enabled = true;
                 this.DelayCheckBox.Checked = true;
             }
 
             if (a.Duration == 0) {
                 this.DurationNumericUpDown.Value = 10;
+                this.DurationNumericUpDown.Enabled = false;
                 this.DurationCheckBox.Checked = false;
             }
             else {
                 this.DurationNumericUpDown.Value = Decimal.Parse(a.Duration.ToString());
+                this.DurationNumericUpDown.Enabled = true;
                 this.DurationCheckBox.Checked = true;
             }
 
@@ -1002,25 +933,36 @@ namespace AST.Presentation {
         }
 
         private void EditAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
-            String name = this.m_rootAction.Name;
+            String name = "";
+            if(this.ActionsListBox.SelectedItem != null) name = (String)this.ActionsListBox.SelectedItem;
+            else if (this.TSCsListBox.SelectedItem != null) name = (String)this.TSCsListBox.SelectedItem;
+            else if (this.TPsListBox.SelectedItem != null) name = (String)this.TPsListBox.SelectedItem;
             if ((name == null) || (name.Length == 0)) {
                 MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            AbstractAction aa = ASTManager.GetInstance().Load(name, m_type);
 
-            switch (m_type) {
-                case AbstractAction.AbstractActionTypeEnum.ACTION:
-                    this.OpenAdditionalActionDialog((Action)aa);
-                    break;
-                case AbstractAction.AbstractActionTypeEnum.TSC:
-                    this.OpenTSC((TSC)aa);
-                    break;
-                case AbstractAction.AbstractActionTypeEnum.TP:
-                    this.OpenTP((TP)aa);
-                    break;
-                default:
-                    break;
+            try {
+                AbstractAction aa = ASTManager.GetInstance().Load(name, m_type);
+
+                switch (m_type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION:
+                        this.OpenAdditionalActionDialog((Action)aa);
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TSC:
+                        this.OpenTSC((TSC)aa);
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TP:
+                        this.OpenTP((TP)aa);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
         }
 
@@ -1147,6 +1089,156 @@ namespace AST.Presentation {
         private void StopIfFailsCheckBox_CheckedChanged(object sender, EventArgs e) {
             if (this.StopIfFailsCheckBox.Checked) ((Action)m_activeAction).StopIfFails = true;
             else ((Action)m_activeAction).StopIfFails = false;
+        }
+
+        private void ActionsListBoxOnDoubleClick(object sender, EventArgs e) {
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+                m_activeAction = m_rootAction;
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            //Add this action the Default End-Stations
+            ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
+            foreach (EndStation es in endStations) {
+                if (es.IsDefault) m_activeAction.AddEndStation(new EndStationSchedule(es));
+            }
+
+            //Set TreeView GroupBox
+            this.SetTreeView();
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = true;
+
+            //Set End-Station List Boxes
+            this.SetEndStations(m_activeAction);
+
+            //Clears the input text box
+            this.InputTextBox.Clear();
+
+            //Add this action the Default Parameters
+            List<Parameter> parameters = null;
+            try {
+                parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            foreach (Parameter p in parameters) {
+                if (p.IsDefault) ((Action)m_activeAction).AddParameter(p);
+            }
+
+            //Set Parameters List Boxes
+            this.SetParameters((Action)m_activeAction);
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = true;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = true;
+
+            m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
+
+            //Disable end-stations groupbox and duration if the selected action is test action.
+            if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
+                this.EndStationsGroupBox.Enabled = false;
+                this.DurationCheckBox.Enabled = false;
+
+            }
+            else {
+                this.EndStationsGroupBox.Enabled = true;
+                this.DurationCheckBox.Enabled = true;
+
+            }
+
+            if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.BATCH_FILE) {
+                this.ParametersListBox.Enabled = false;
+                this.SelectedParametersListBox.Enabled = false;
+                this.UnselectParameterButton.Enabled = false;
+                this.MoveUpParameterButton.Enabled = false;
+                this.MoveDownParameterButton.Enabled = false;
+            }
+            else {
+                this.ParametersListBox.Enabled = true;
+                this.SelectedParametersListBox.Enabled = true;
+                this.UnselectParameterButton.Enabled = true;
+                this.MoveUpParameterButton.Enabled = true;
+                this.MoveDownParameterButton.Enabled = true;
+
+            }
+
+        }
+
+        private void TSCsListBoxOnDoubleClick(object sender, EventArgs e) {
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = false;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = false;
+
+            //Clears the input text box
+            this.InputTextBox.Clear();
+
+            m_type = AbstractAction.AbstractActionTypeEnum.TSC;
+
+            //Set TreeView GroupBox
+            this.SetTreeView();
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = true;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
+        }
+
+        private void TPsListBoxOnDoubleClick(object sender, EventArgs e) {
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            //Enable The End-Station GroupBox
+            this.EndStationsGroupBox.Enabled = false;
+
+            //Enable The Parameters GroupBox
+            this.ParametersGroupBox.Enabled = false;
+
+            //Clears the input text box
+            this.InputTextBox.Clear();
+
+            m_type = AbstractAction.AbstractActionTypeEnum.TP;
+
+            //Set TreeView GroupBox
+            this.SetTreeView();
+
+            //Disable The TreeView GroupBox
+            this.TreeViewGroupBox.Enabled = true;
+
+            //Enable the execute button
+            this.ExecuteButton.Enabled = true;
         }
     }
 }

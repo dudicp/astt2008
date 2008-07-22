@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using AST.Domain;
 using AST.Management;
+using AST.Database;
 
 namespace AST.Presentation {
     public partial class CreateAdditionalActionDialog : Form {
@@ -31,21 +32,23 @@ namespace AST.Presentation {
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
 
-            if (a != null)
-            {
-                this.m_action.CreationTime = DateTime.Now;
-                this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
-                Title.Text = "Edit Additional Action";
-                SetActionAttributes();
+            try {
+                if (a != null) {
+                    this.m_action.CreationTime = DateTime.Now;
+                    this.m_parameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
+                    Title.Text = "Edit Additional Action";
+                    SetActionAttributes();
+                }
+                else {
+                    m_isNew = true;
+                    this.m_parameters = new List<Parameter>();
+                    this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
+                    Title.Text = "Create Additional Action";
+                }
+                OScomboBox.SelectedIndex = 0;
             }
-            else
-            {
-                m_isNew = true;
-                this.m_parameters = new List<Parameter>();
-                this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
-                Title.Text = "Create Additional Action";
-            }
-            OScomboBox.SelectedIndex = 0;
+            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 /// <summary>
 /// 
@@ -238,6 +241,7 @@ namespace AST.Presentation {
             BrowseButton.Enabled = false;
             TimeoutLabel.Enabled = true;
             TimeoutText.Enabled = true;
+            this.ParametersBox.Enabled = true;
         }
 
         private void BatchFileRadio_CheckedChanged(object sender, EventArgs e) {
@@ -245,6 +249,7 @@ namespace AST.Presentation {
             BrowseButton.Enabled = true;
             TimeoutLabel.Enabled = true;
             TimeoutText.Enabled = true;
+            this.ParametersBox.Enabled = false;
         }
 
         /// <summary>
@@ -258,6 +263,7 @@ namespace AST.Presentation {
             BrowseButton.Enabled = true;
             TimeoutLabel.Enabled = true;
             TimeoutText.Enabled = true;
+            this.ParametersBox.Enabled = true;
         }
         /// <summary>
         /// 
@@ -270,6 +276,7 @@ namespace AST.Presentation {
             BrowseButton.Enabled = true;
             TimeoutLabel.Enabled = false;
             TimeoutText.Enabled = false;
+            this.ParametersBox.Enabled = true;
         }
         /// <summary>
         /// 
