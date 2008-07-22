@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Collections;
 using AST.Domain;
 using AST.Management;
+using AST.Database;
 
 namespace AST.Presentation {
     public partial class CreateTSCDialog : Form {
@@ -156,20 +157,23 @@ namespace AST.Presentation {
                 return;
             }
 
-            //T.D. loads fail??
-            AbstractAction a;
-            ASTNode node;
-            if(m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                a = (Action)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
-                node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION); // TSC contains only actions.
-            }
-            else {
-                a = (TSC)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
-                node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.TSC); // TP contains only TSC's.
-            }
+            try {
+                AbstractAction a;
+                ASTNode node;
+                if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+                    a = (Action)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+                    node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION); // TSC contains only actions.
+                }
+                else {
+                    a = (TSC)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+                    node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.TSC); // TP contains only TSC's.
+                }
 
-            this.SelectedTreeView.Nodes[0].Nodes.Add(node);
-            this.SettingsButton.Enabled = true;
+                this.SelectedTreeView.Nodes[0].Nodes.Add(node);
+                this.SettingsButton.Enabled = true;
+            }
+            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { MessageBox.Show(ex.Message , "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
         }
 
         /// <summary>

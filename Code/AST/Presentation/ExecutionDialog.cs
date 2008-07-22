@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using System.Collections;
 using AST.Domain;
 using AST.Management;
+using AST.Database;
 
 namespace AST.Presentation {
     /// <summary>
@@ -173,28 +174,35 @@ namespace AST.Presentation {
             this.DescriptionText.Text = (String)this.m_actionsInfo[this.ActionsListBox.SelectedItem];
             this.TPsListBox.ClearSelected();
             this.TSCsListBox.ClearSelected();
-            m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
-            m_activeAction = m_rootAction;
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
+                m_activeAction = m_rootAction;
 
-            //Add this action the Default End-Stations
-            ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
-            foreach (EndStation es in endStations) {
-                if (es.IsDefault) m_activeAction.AddEndStation(new EndStationSchedule(es));
+                //Add this action the Default End-Stations
+                ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
+                foreach (EndStation es in endStations) {
+                    if (es.IsDefault) m_activeAction.AddEndStation(new EndStationSchedule(es));
+                }
+
+                //Clears the TreeView
+                this.TreeView.Nodes.Clear();
+
+                //Set End-Station List Boxes
+                this.SetEndStations(m_activeAction);
+
+                //Clears the input text box
+                this.InputTextBox.Clear();
+
+                //Add this action the Default Parameters
+                List<Parameter> parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
+                foreach (Parameter p in parameters) {
+                    if (p.IsDefault) ((Action)m_activeAction).AddParameter(p);
+                }
             }
-
-            //Clears the TreeView
-            this.TreeView.Nodes.Clear();
-
-            //Set End-Station List Boxes
-            this.SetEndStations(m_activeAction);
-
-            //Clears the input text box
-            this.InputTextBox.Clear();
-
-            //Add this action the Default Parameters
-            List<Parameter> parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
-            foreach (Parameter p in parameters) {
-                if (p.IsDefault) ((Action)m_activeAction).AddParameter(p);
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) { 
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
             }
 
             //Set Parameters List Boxes
@@ -221,7 +229,14 @@ namespace AST.Presentation {
         /// <param name="e"></param>
         private void TSCsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TSCsListBox.SelectedItem == null) return;
-            m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) { 
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             //Enable The End-Station GroupBox
             this.EndStationsGroupBox.Enabled = false;
@@ -250,7 +265,14 @@ namespace AST.Presentation {
         /// <param name="e"></param>
         private void TPsListBox_OnDoubleClick(object sender, EventArgs e) {
             if (this.TPsListBox.SelectedItem == null) return;
-            m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
+            try {
+                m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
+            }
+            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (Exception ex) {
+                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             //Enable The End-Station GroupBox
             this.EndStationsGroupBox.Enabled = false;

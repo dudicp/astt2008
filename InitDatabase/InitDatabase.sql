@@ -4,6 +4,39 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TPs]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[TPs](
+	[Name] [varchar](20) NOT NULL,
+	[Description] [text] NULL,
+	[CreatorName] [varchar](20) NULL,
+	[CreationTime] [datetime] NULL,
+ CONSTRAINT [PK_TPs] PRIMARY KEY CLUSTERED 
+(
+	[Name] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParameterContents]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--6. Getting parameter values
+CREATE PROCEDURE [dbo].[sp_GetParameterContents]
+@ActionName varchar(20),
+@ParameterName varchar(20)
+AS
+SELECT * FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[EndStations]') AND type in (N'U'))
 BEGIN
 CREATE TABLE [dbo].[EndStations](
@@ -37,6 +70,7 @@ CREATE TABLE [dbo].[Actions](
 	[CreatorName] [varchar](20) NOT NULL,
 	[CreationTime] [datetime] NOT NULL,
 	[StopIfFails] [bit] NULL,
+	[Duration] [int] NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[Name] ASC
@@ -66,16 +100,39 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TPs]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TSCsInTP]') AND type in (N'U'))
 BEGIN
-CREATE TABLE [dbo].[TPs](
-	[Name] [varchar](20) NOT NULL,
-	[Description] [text] NULL,
-	[CreatorName] [varchar](20) NULL,
-	[CreationTime] [datetime] NULL,
- CONSTRAINT [PK_TPs] PRIMARY KEY CLUSTERED 
+CREATE TABLE [dbo].[TSCsInTP](
+	[TPName] [varchar](20) NOT NULL,
+	[TSCName] [varchar](20) NOT NULL,
+	[ExecutionOrder] [int] NOT NULL,
+ CONSTRAINT [PK_TSCsInTP] PRIMARY KEY CLUSTERED 
 (
-	[Name] ASC
+	[TPName] ASC,
+	[TSCName] ASC,
+	[ExecutionOrder] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]') AND type in (N'U'))
+BEGIN
+CREATE TABLE [dbo].[ParametersInTSC](
+	[TSCName] [varchar](20) NOT NULL,
+	[ActionName] [varchar](20) NOT NULL,
+	[ExecutionOrder] [int] NOT NULL,
+	[ParameterName] [varchar](20) NOT NULL,
+	[Input] [text] NULL,
+ CONSTRAINT [PK_ParametersInTSC] PRIMARY KEY CLUSTERED 
+(
+	[TSCName] ASC,
+	[ActionName] ASC,
+	[ExecutionOrder] ASC,
+	[ParameterName] ASC
 )WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 END
@@ -84,15 +141,20 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParameterContents]') AND type in (N'P', N'PC'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ParameterValues]') AND type in (N'U'))
 BEGIN
-EXEC dbo.sp_executesql @statement = N'--6. Getting parameter values
-CREATE PROCEDURE [dbo].[sp_GetParameterContents]
-@ActionName varchar(20),
-@ParameterName varchar(20)
-AS
-SELECT * FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
-' 
+CREATE TABLE [dbo].[ParameterValues](
+	[ActionName] [varchar](20) NOT NULL,
+	[ParameterName] [varchar](20) NOT NULL,
+	[OSType] [varchar](20) NOT NULL,
+	[Value] [varchar](20) NULL,
+ CONSTRAINT [PK_ParameterValues] PRIMARY KEY CLUSTERED 
+(
+	[ActionName] ASC,
+	[ParameterName] ASC,
+	[OSType] ASC
+)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
 END
 GO
 SET ANSI_NULLS ON
@@ -181,61 +243,508 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTPsInfo]') AND type in (N'P', N'PC'))
 BEGIN
-CREATE TABLE [dbo].[ParametersInTSC](
-	[TSCName] [varchar](20) NOT NULL,
-	[ActionName] [varchar](20) NOT NULL,
-	[ExecutionOrder] [int] NOT NULL,
-	[ParameterName] [varchar](20) NOT NULL,
-	[Input] [text] NULL,
- CONSTRAINT [PK_ParametersInTSC] PRIMARY KEY CLUSTERED 
-(
-	[TSCName] ASC,
-	[ActionName] ASC,
-	[ExecutionOrder] ASC,
-	[ParameterName] ASC
-)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+EXEC dbo.sp_executesql @statement = N'--2. Getting actions information
+CREATE PROCEDURE [dbo].[sp_GetTPsInfo]
+AS
+SELECT Name,Description FROM TPs
+' 
 END
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ParameterValues]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertTP]') AND type in (N'P', N'PC'))
 BEGIN
-CREATE TABLE [dbo].[ParameterValues](
-	[ActionName] [varchar](20) NOT NULL,
-	[ParameterName] [varchar](20) NOT NULL,
-	[OSType] [varchar](20) NOT NULL,
-	[Value] [varchar](20) NULL,
- CONSTRAINT [PK_ParameterValues] PRIMARY KEY CLUSTERED 
-(
-	[ActionName] ASC,
-	[ParameterName] ASC,
-	[OSType] ASC
-)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+EXEC dbo.sp_executesql @statement = N'--2. Insert Action
+CREATE PROCEDURE [dbo].[sp_InsertTP]
+@Name varchar(20),
+@Description text,
+@CreatorName varchar(20),
+@CreationTime datetime
+
+AS
+
+INSERT INTO TPs
+(Name, Description, CreatorName, CreationTime)
+values
+(@Name, @Description, @CreatorName, @CreationTime)
+' 
 END
 GO
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[TSCsInTP]') AND type in (N'U'))
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_UpdateTP]') AND type in (N'P', N'PC'))
 BEGIN
-CREATE TABLE [dbo].[TSCsInTP](
-	[TPName] [varchar](20) NOT NULL,
-	[TSCName] [varchar](20) NOT NULL,
-	[ExecutionOrder] [int] NOT NULL,
- CONSTRAINT [PK_TSCsInTP] PRIMARY KEY CLUSTERED 
-(
-	[TPName] ASC,
-	[TSCName] ASC,
-	[ExecutionOrder] ASC
-)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
+EXEC dbo.sp_executesql @statement = N'--2. Insert Action
+CREATE PROCEDURE [dbo].[sp_UpdateTP]
+@Name varchar(20),
+@Description text,
+@CreatorName varchar(20),
+@CreationTime datetime
+
+AS
+
+UPDATE TPs
+SET Description = @Description,
+	CreatorName = @CreatorName,
+	CreationTime = @CreationTime
+WHERE Name=@Name;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetRecentTPs]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Getting action
+CREATE PROCEDURE [dbo].[sp_GetRecentTPs]
+AS
+SELECT Name, Description, CreationTime
+FROM TPs
+ORDER BY CreationTime DESC;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTP]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Getting action
+CREATE PROCEDURE [dbo].[sp_GetTP]
+@Name varchar(20) 
+AS
+SELECT * FROM TPs WHERE Name=@Name;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTP]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTP]
+@TPName varchar(20)
+AS
+DELETE FROM TSCsInTP WHERE TPName=@TPName;
+DELETE FROM TPs WHERE Name=@TPName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertEndStationToTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
+CREATE PROCEDURE [dbo].[sp_InsertEndStationToTSC]
+@TSCName varchar(20),
+@ActionName varchar(20),
+@ExecutionOrder int,
+@ID int
+
+
+AS
+
+
+
+INSERT INTO EndStationsInTSC
+(ID,TSCName,ActionName,ExecutionOrder)
+values
+(@ID,@TSCName,@ActionName,@ExecutionOrder)
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetEndStationsInTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Getting action content
+CREATE PROCEDURE [dbo].[sp_GetEndStationsInTSC]
+@TSCName varchar(20),
+@ActionName varchar(20),
+@ExecutionOrder int
+
+AS
+SELECT * FROM EndStationsInTSC WHERE TSCName=@TSCName AND ActionName=@ActionName AND ExecutionOrder=@ExecutionOrder;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTSCContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTSCContent]
+@TSCName varchar(20)
+AS
+DELETE FROM ParametersInTSC WHERE TSCName=@TSCName;
+DELETE FROM ActionsInTSC WHERE TSCName=@TSCName;
+DELETE FROM EndStationsInTSC WHERE TSCName=@TSCName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTSC]
+@TSCName varchar(20)
+AS
+DELETE FROM ParametersInTSC WHERE TSCName=@TSCName;
+DELETE FROM ActionsInTSC WHERE TSCName=@TSCName;
+DELETE FROM EndStationsInTSC WHERE TSCName=@TSCName;
+DELETE FROM TSCs WHERE Name=@TSCName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertActionToTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
+CREATE PROCEDURE [dbo].[sp_InsertActionToTSC]
+@TSCName varchar(20),
+@ActionName varchar(20),
+@ExecutionOrder int,
+@Delay int
+
+
+AS
+
+
+
+INSERT INTO ActionsInTSC
+(TSCName,ActionName,ExecutionOrder,Delay)
+values
+(@TSCName,@ActionName,@ExecutionOrder,@Delay)
+
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionsInTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Getting action content
+CREATE PROCEDURE [dbo].[sp_GetActionsInTSC]
+@Name varchar(20) 
+AS
+SELECT * FROM ActionsInTSC WHERE TSCName=@Name ORDER BY ExecutionOrder ASC;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteAction]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteAction]
+@ActionName varchar(20)
+AS
+DELETE FROM ParameterValues WHERE ActionName=@ActionName;
+DELETE FROM Parameters WHERE ActionName=@ActionName;
+DELETE FROM ActionContents WHERE ActionName=@ActionName;
+DELETE FROM Actions WHERE Name=@ActionName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteParameter]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--1. Delete Parameter
+CREATE PROCEDURE [dbo].[sp_DeleteParameter]
+@ActionName varchar(20),
+@ParameterName varchar(20)
+AS
+DELETE FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+DELETE FROM Parameters WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionParameters]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--5. Getting all parameters of actions
+CREATE PROCEDURE [dbo].[sp_GetActionParameters]
+@Name varchar(20) 
+AS
+SELECT * FROM Parameters WHERE ActionName=@Name;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameter]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Insert Parameter
+CREATE PROCEDURE [dbo].[sp_InsertParameter]
+@ActionName varchar(20),
+@ParameterName varchar(20),
+@Description text,
+@Type varchar(20),
+@Input text,
+@ValidityExp text,
+@IsDefault bit
+
+AS
+
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp,IsDefault)
+values
+(@ActionName,@ParameterName,@Description,@Type,@Input,@ValidityExp,@IsDefault)
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParameter]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--5. Getting all parameters of actions
+CREATE PROCEDURE [dbo].[sp_GetParameter]
+@ActionName varchar(20),
+@ParameterName varchar(20)
+AS
+SELECT * FROM Parameters WHERE ActionName=@ActionName AND ParameterName=@ParameterName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_UpdateParameter]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Insert Parameter
+CREATE PROCEDURE [dbo].[sp_UpdateParameter]
+@ActionName varchar(20),
+@ParameterName varchar(20),
+@Description text,
+@Type varchar(20),
+@Input text,
+@ValidityExp text,
+@IsDefault bit
+
+AS
+
+UPDATE Parameters
+SET Description=@Description,
+	Type=@Type,
+	Input=@Input,
+	ValidityExp=@ValidityExp,
+	IsDefault=@IsDefault
+WHERE (ActionName=@ActionName AND ParameterName=@ParameterName)
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertActionContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
+CREATE PROCEDURE [dbo].[sp_InsertActionContent]
+@ActionName varchar(20),
+@OSType varchar(20),
+@ActionContent text,
+@ValidityString text
+
+AS
+
+IF (0 < (SELECT COUNT(*) FROM ActionContents WHERE ActionName=@ActionName AND OSType=@OSType))
+	BEGIN
+	UPDATE ActionContents
+	SET ActionContent=@ActionContent,
+		ValidityString=@ValidityString
+	WHERE ActionName=@ActionName AND OSType=@OSType
+	END
+ELSE
+	BEGIN
+	INSERT INTO ActionContents
+	(ActionName, OSType, ActionContent, ValidityString)
+	values
+	(@ActionName, @OSType, @ActionContent, @ValidityString)
+	END
+
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionContents]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Getting action content
+CREATE PROCEDURE [dbo].[sp_GetActionContents]
+@Name varchar(20) 
+AS
+SELECT * FROM ActionContents WHERE ActionName=@Name;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParametersInTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Getting action content
+CREATE PROCEDURE [dbo].[sp_GetParametersInTSC]
+@TSCName varchar(20),
+@ActionName varchar(20),
+@ExecutionOrder int
+
+AS
+SELECT * FROM ParametersInTSC WHERE TSCName=@TSCName AND ActionName=@ActionName AND ExecutionOrder=@ExecutionOrder;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameterToTSC]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
+CREATE PROCEDURE [dbo].[sp_InsertParameterToTSC]
+@TSCName varchar(20),
+@ActionName varchar(20),
+@ExecutionOrder int,
+@ParameterName varchar(20),
+@Input text
+
+
+AS
+
+
+
+INSERT INTO ParametersInTSC
+(TSCName,ActionName,ExecutionOrder,ParameterName,Input)
+values
+(@TSCName,@ActionName,@ExecutionOrder,@ParameterName,@Input)
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameterContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--5. Insert Parameter Value
+CREATE PROCEDURE [dbo].[sp_InsertParameterContent]
+@ActionName varchar(20),
+@ParameterName varchar(20),
+@OSType varchar(20),
+@Value varchar(20)
+
+AS
+
+
+IF (0 < (SELECT COUNT(*) FROM ParameterValues WHERE (ActionName=@ActionName AND OSType=@OSType AND ParameterName=@ParameterName)))
+	BEGIN
+	UPDATE ParameterValues
+	SET Value=@Value
+	WHERE (ActionName=@ActionName AND OSType=@OSType AND ParameterName=@ParameterName)
+	END
+ELSE
+	BEGIN
+	INSERT INTO ParameterValues
+	(ActionName,ParameterName,OSType,Value)
+	values
+	(@ActionName,@ParameterName,@OSType,@Value)
+	END
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTPContent]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--2. Delete Action
+CREATE PROCEDURE [dbo].[sp_DeleteTPContent]
+@TPName varchar(20)
+AS
+DELETE FROM TSCsInTP WHERE TPName=@TPName;
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertTSCToTP]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
+CREATE PROCEDURE [dbo].[sp_InsertTSCToTP]
+@TPName varchar(20),
+@TSCName varchar(20),
+@ExecutionOrder int
+
+
+AS
+
+
+
+INSERT INTO TSCsInTP
+(TPName,TSCName,ExecutionOrder)
+values
+(@TPName,@TSCName,@ExecutionOrder)
+' 
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTSCsInTP]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'--4. Getting action content
+CREATE PROCEDURE [dbo].[sp_GetTSCsInTP]
+@TPName varchar(20) 
+AS
+SELECT * FROM TSCsInTP WHERE TPName=@TPName ORDER BY ExecutionOrder ASC;
+' 
 END
 GO
 SET ANSI_NULLS ON
@@ -380,14 +889,16 @@ CREATE PROCEDURE [dbo].[sp_InsertAction]
 @Timeout int,
 @CreatorName varchar(20),
 @CreationTime datetime,
-@StopIfFails bit
+@StopIfFails bit,
+@Duration int
 
 AS
 
 INSERT INTO Actions
-(Name, Description, Type, Timeout, CreatorName, CreationTime, StopIfFails)
+(Name, Description, Type, Timeout, CreatorName, CreationTime, StopIfFails, Duration)
 values
-(@Name, @Description, @Type, @Timeout, @CreatorName, @CreationTime, @StopIfFails)
+(@Name, @Description, @Type, @Timeout, @CreatorName, @CreationTime, @StopIfFails, @Duration)
+
 
 ' 
 END
@@ -406,7 +917,8 @@ CREATE PROCEDURE [dbo].[sp_UpdateAction]
 @Timeout int,
 @CreatorName varchar(20),
 @CreationTime datetime,
-@StopIfFails bit
+@StopIfFails bit,
+@Duration int
 
 AS
 
@@ -416,9 +928,11 @@ SET Description=@Description,
 	Timeout=@Timeout,
 	CreatorName=@CreatorName,
 	CreationTime=@CreationTime,
-	StopIfFails=@StopIfFails
+	StopIfFails=@StopIfFails,
+	Duration=@Duration
 WHERE
 Name=@Name;
+
 
 ' 
 END
@@ -435,425 +949,6 @@ AS
 SELECT Name, Description, CreationTime
 FROM Actions
 ORDER BY CreationTime DESC;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteAction]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Delete Action
-CREATE PROCEDURE [dbo].[sp_DeleteAction]
-@ActionName varchar(20)
-AS
-DELETE FROM ParameterValues WHERE ActionName=@ActionName;
-DELETE FROM Parameters WHERE ActionName=@ActionName;
-DELETE FROM ActionContents WHERE ActionName=@ActionName;
-DELETE FROM Actions WHERE Name=@ActionName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Delete Action
-CREATE PROCEDURE [dbo].[sp_DeleteTSC]
-@TSCName varchar(20)
-AS
-DELETE FROM ParametersInTSC WHERE TSCName=@TSCName;
-DELETE FROM ActionsInTSC WHERE TSCName=@TSCName;
-DELETE FROM EndStationsInTSC WHERE TSCName=@TSCName;
-DELETE FROM TSCs WHERE Name=@TSCName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertEndStationToTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
-CREATE PROCEDURE [dbo].[sp_InsertEndStationToTSC]
-@TSCName varchar(20),
-@ActionName varchar(20),
-@ExecutionOrder int,
-@ID int
-
-
-AS
-
-
-
-INSERT INTO EndStationsInTSC
-(ID,TSCName,ActionName,ExecutionOrder)
-values
-(@ID,@TSCName,@ActionName,@ExecutionOrder)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetEndStationsInTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Getting action content
-CREATE PROCEDURE [dbo].[sp_GetEndStationsInTSC]
-@TSCName varchar(20),
-@ActionName varchar(20),
-@ExecutionOrder int
-
-AS
-SELECT * FROM EndStationsInTSC WHERE TSCName=@TSCName AND ActionName=@ActionName AND ExecutionOrder=@ExecutionOrder;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTSCContent]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Delete Action
-CREATE PROCEDURE [dbo].[sp_DeleteTSCContent]
-@TSCName varchar(20)
-AS
-DELETE FROM ParametersInTSC WHERE TSCName=@TSCName;
-DELETE FROM ActionsInTSC WHERE TSCName=@TSCName;
-DELETE FROM EndStationsInTSC WHERE TSCName=@TSCName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertActionToTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
-CREATE PROCEDURE [dbo].[sp_InsertActionToTSC]
-@TSCName varchar(20),
-@ActionName varchar(20),
-@ExecutionOrder int,
-@Delay int
-
-
-AS
-
-
-
-INSERT INTO ActionsInTSC
-(TSCName,ActionName,ExecutionOrder,Delay)
-values
-(@TSCName,@ActionName,@ExecutionOrder,@Delay)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionsInTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Getting action content
-CREATE PROCEDURE [dbo].[sp_GetActionsInTSC]
-@Name varchar(20) 
-AS
-SELECT * FROM ActionsInTSC WHERE TSCName=@Name ORDER BY ExecutionOrder ASC;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Delete Action
-CREATE PROCEDURE [dbo].[sp_DeleteTP]
-@TPName varchar(20)
-AS
-DELETE FROM TSCsInTP WHERE TPName=@TPName;
-DELETE FROM TPs WHERE Name=@TPName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteTPContent]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Delete Action
-CREATE PROCEDURE [dbo].[sp_DeleteTPContent]
-@TPName varchar(20)
-AS
-DELETE FROM TSCsInTP WHERE TPName=@TPName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertTSCToTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
-CREATE PROCEDURE [dbo].[sp_InsertTSCToTP]
-@TPName varchar(20),
-@TSCName varchar(20),
-@ExecutionOrder int
-
-
-AS
-
-
-
-INSERT INTO TSCsInTP
-(TPName,TSCName,ExecutionOrder)
-values
-(@TPName,@TSCName,@ExecutionOrder)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTSCsInTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Getting action content
-CREATE PROCEDURE [dbo].[sp_GetTSCsInTP]
-@TPName varchar(20) 
-AS
-SELECT * FROM TSCsInTP WHERE TPName=@TPName ORDER BY ExecutionOrder ASC;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParametersInTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Getting action content
-CREATE PROCEDURE [dbo].[sp_GetParametersInTSC]
-@TSCName varchar(20),
-@ActionName varchar(20),
-@ExecutionOrder int
-
-AS
-SELECT * FROM ParametersInTSC WHERE TSCName=@TSCName AND ActionName=@ActionName AND ExecutionOrder=@ExecutionOrder;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameterToTSC]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
-CREATE PROCEDURE [dbo].[sp_InsertParameterToTSC]
-@TSCName varchar(20),
-@ActionName varchar(20),
-@ExecutionOrder int,
-@ParameterName varchar(20),
-@Input text
-
-
-AS
-
-
-
-INSERT INTO ParametersInTSC
-(TSCName,ActionName,ExecutionOrder,ParameterName,Input)
-values
-(@TSCName,@ActionName,@ExecutionOrder,@ParameterName,@Input)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_DeleteParameter]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--1. Delete Parameter
-CREATE PROCEDURE [dbo].[sp_DeleteParameter]
-@ActionName varchar(20),
-@ParameterName varchar(20)
-AS
-DELETE FROM ParameterValues WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
-DELETE FROM Parameters WHERE (ActionName=@ActionName AND ParameterName=@ParameterName);
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameterContent]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--5. Insert Parameter Value
-CREATE PROCEDURE [dbo].[sp_InsertParameterContent]
-@ActionName varchar(20),
-@ParameterName varchar(20),
-@OSType varchar(20),
-@Value varchar(20)
-
-AS
-
-
-IF (0 < (SELECT COUNT(*) FROM ParameterValues WHERE (ActionName=@ActionName AND OSType=@OSType AND ParameterName=@ParameterName)))
-	BEGIN
-	UPDATE ParameterValues
-	SET Value=@Value
-	WHERE (ActionName=@ActionName AND OSType=@OSType AND ParameterName=@ParameterName)
-	END
-ELSE
-	BEGIN
-	INSERT INTO ParameterValues
-	(ActionName,ParameterName,OSType,Value)
-	values
-	(@ActionName,@ParameterName,@OSType,@Value)
-	END
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionParameters]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--5. Getting all parameters of actions
-CREATE PROCEDURE [dbo].[sp_GetActionParameters]
-@Name varchar(20) 
-AS
-SELECT * FROM Parameters WHERE ActionName=@Name;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertParameter]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Insert Parameter
-CREATE PROCEDURE [dbo].[sp_InsertParameter]
-@ActionName varchar(20),
-@ParameterName varchar(20),
-@Description text,
-@Type varchar(20),
-@Input text,
-@ValidityExp text,
-@IsDefault bit
-
-AS
-
-
-INSERT INTO Parameters
-(ActionName,ParameterName,Description,Type,Input,ValidityExp,IsDefault)
-values
-(@ActionName,@ParameterName,@Description,@Type,@Input,@ValidityExp,@IsDefault)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetParameter]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--5. Getting all parameters of actions
-CREATE PROCEDURE [dbo].[sp_GetParameter]
-@ActionName varchar(20),
-@ParameterName varchar(20)
-AS
-SELECT * FROM Parameters WHERE ActionName=@ActionName AND ParameterName=@ParameterName;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_UpdateParameter]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Insert Parameter
-CREATE PROCEDURE [dbo].[sp_UpdateParameter]
-@ActionName varchar(20),
-@ParameterName varchar(20),
-@Description text,
-@Type varchar(20),
-@Input text,
-@ValidityExp text,
-@IsDefault bit
-
-AS
-
-UPDATE Parameters
-SET Description=@Description,
-	Type=@Type,
-	Input=@Input,
-	ValidityExp=@ValidityExp,
-	IsDefault=@IsDefault
-WHERE (ActionName=@ActionName AND ParameterName=@ParameterName)
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertActionContent]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Insert Action Content
-CREATE PROCEDURE [dbo].[sp_InsertActionContent]
-@ActionName varchar(20),
-@OSType varchar(20),
-@ActionContent text,
-@ValidityString text
-
-AS
-
-IF (0 < (SELECT COUNT(*) FROM ActionContents WHERE ActionName=@ActionName AND OSType=@OSType))
-	BEGIN
-	UPDATE ActionContents
-	SET ActionContent=@ActionContent,
-		ValidityString=@ValidityString
-	WHERE ActionName=@ActionName AND OSType=@OSType
-	END
-ELSE
-	BEGIN
-	INSERT INTO ActionContents
-	(ActionName, OSType, ActionContent, ValidityString)
-	values
-	(@ActionName, @OSType, @ActionContent, @ValidityString)
-	END
-
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetActionContents]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--4. Getting action content
-CREATE PROCEDURE [dbo].[sp_GetActionContents]
-@Name varchar(20) 
-AS
-SELECT * FROM ActionContents WHERE ActionName=@Name;
 ' 
 END
 GO
@@ -945,92 +1040,35 @@ values
 ' 
 END
 GO
-SET ANSI_NULLS ON
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TSCsInTP_TPs]') AND parent_object_id = OBJECT_ID(N'[dbo].[TSCsInTP]'))
+ALTER TABLE [dbo].[TSCsInTP]  WITH CHECK ADD  CONSTRAINT [FK_TSCsInTP_TPs] FOREIGN KEY([TPName])
+REFERENCES [dbo].[TPs] ([Name])
 GO
-SET QUOTED_IDENTIFIER ON
+ALTER TABLE [dbo].[TSCsInTP] CHECK CONSTRAINT [FK_TSCsInTP_TPs]
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTPsInfo]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Getting actions information
-CREATE PROCEDURE [dbo].[sp_GetTPsInfo]
-AS
-SELECT Name,Description FROM TPs
-' 
-END
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TSCsInTP_TSCs]') AND parent_object_id = OBJECT_ID(N'[dbo].[TSCsInTP]'))
+ALTER TABLE [dbo].[TSCsInTP]  WITH CHECK ADD  CONSTRAINT [FK_TSCsInTP_TSCs] FOREIGN KEY([TSCName])
+REFERENCES [dbo].[TSCs] ([Name])
 GO
-SET ANSI_NULLS ON
+ALTER TABLE [dbo].[TSCsInTP] CHECK CONSTRAINT [FK_TSCsInTP_TSCs]
 GO
-SET QUOTED_IDENTIFIER ON
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParametersInTSC_Parameters]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]'))
+ALTER TABLE [dbo].[ParametersInTSC]  WITH CHECK ADD  CONSTRAINT [FK_ParametersInTSC_Parameters] FOREIGN KEY([ActionName], [ParameterName])
+REFERENCES [dbo].[Parameters] ([ActionName], [ParameterName])
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_InsertTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Insert Action
-CREATE PROCEDURE [dbo].[sp_InsertTP]
-@Name varchar(20),
-@Description text,
-@CreatorName varchar(20),
-@CreationTime datetime
-
-AS
-
-INSERT INTO TPs
-(Name, Description, CreatorName, CreationTime)
-values
-(@Name, @Description, @CreatorName, @CreationTime)
-' 
-END
+ALTER TABLE [dbo].[ParametersInTSC] CHECK CONSTRAINT [FK_ParametersInTSC_Parameters]
 GO
-SET ANSI_NULLS ON
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParametersInTSC_TSCs]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]'))
+ALTER TABLE [dbo].[ParametersInTSC]  WITH CHECK ADD  CONSTRAINT [FK_ParametersInTSC_TSCs] FOREIGN KEY([TSCName])
+REFERENCES [dbo].[TSCs] ([Name])
 GO
-SET QUOTED_IDENTIFIER ON
+ALTER TABLE [dbo].[ParametersInTSC] CHECK CONSTRAINT [FK_ParametersInTSC_TSCs]
 GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_UpdateTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--2. Insert Action
-CREATE PROCEDURE [dbo].[sp_UpdateTP]
-@Name varchar(20),
-@Description text,
-@CreatorName varchar(20),
-@CreationTime datetime
-
-AS
-
-UPDATE TPs
-SET Description = @Description,
-	CreatorName = @CreatorName,
-	CreationTime = @CreationTime
-WHERE Name=@Name;
-' 
-END
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParameterValues_Parameters]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParameterValues]'))
+ALTER TABLE [dbo].[ParameterValues]  WITH CHECK ADD  CONSTRAINT [FK_ParameterValues_Parameters] FOREIGN KEY([ActionName], [ParameterName])
+REFERENCES [dbo].[Parameters] ([ActionName], [ParameterName])
 GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetRecentTPs]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Getting action
-CREATE PROCEDURE [dbo].[sp_GetRecentTPs]
-AS
-SELECT Name, Description, CreationTime
-FROM TPs
-ORDER BY CreationTime DESC;
-' 
-END
-GO
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[sp_GetTP]') AND type in (N'P', N'PC'))
-BEGIN
-EXEC dbo.sp_executesql @statement = N'--3. Getting action
-CREATE PROCEDURE [dbo].[sp_GetTP]
-@Name varchar(20) 
-AS
-SELECT * FROM TPs WHERE Name=@Name;
-' 
-END
+ALTER TABLE [dbo].[ParameterValues] CHECK CONSTRAINT [FK_ParameterValues_Parameters]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_EndStationsInTSC_Actions]') AND parent_object_id = OBJECT_ID(N'[dbo].[EndStationsInTSC]'))
 ALTER TABLE [dbo].[EndStationsInTSC]  WITH CHECK ADD  CONSTRAINT [FK_EndStationsInTSC_Actions] FOREIGN KEY([ActionName])
@@ -1073,36 +1111,7 @@ ALTER TABLE [dbo].[ActionContents]  WITH CHECK ADD  CONSTRAINT [ContentOfAction]
 REFERENCES [dbo].[Actions] ([Name])
 GO
 ALTER TABLE [dbo].[ActionContents] CHECK CONSTRAINT [ContentOfAction]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParametersInTSC_Parameters]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]'))
-ALTER TABLE [dbo].[ParametersInTSC]  WITH CHECK ADD  CONSTRAINT [FK_ParametersInTSC_Parameters] FOREIGN KEY([ActionName], [ParameterName])
-REFERENCES [dbo].[Parameters] ([ActionName], [ParameterName])
-GO
-ALTER TABLE [dbo].[ParametersInTSC] CHECK CONSTRAINT [FK_ParametersInTSC_Parameters]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParametersInTSC_TSCs]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParametersInTSC]'))
-ALTER TABLE [dbo].[ParametersInTSC]  WITH CHECK ADD  CONSTRAINT [FK_ParametersInTSC_TSCs] FOREIGN KEY([TSCName])
-REFERENCES [dbo].[TSCs] ([Name])
-GO
-ALTER TABLE [dbo].[ParametersInTSC] CHECK CONSTRAINT [FK_ParametersInTSC_TSCs]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_ParameterValues_Parameters]') AND parent_object_id = OBJECT_ID(N'[dbo].[ParameterValues]'))
-ALTER TABLE [dbo].[ParameterValues]  WITH CHECK ADD  CONSTRAINT [FK_ParameterValues_Parameters] FOREIGN KEY([ActionName], [ParameterName])
-REFERENCES [dbo].[Parameters] ([ActionName], [ParameterName])
-GO
-ALTER TABLE [dbo].[ParameterValues] CHECK CONSTRAINT [FK_ParameterValues_Parameters]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TSCsInTP_TPs]') AND parent_object_id = OBJECT_ID(N'[dbo].[TSCsInTP]'))
-ALTER TABLE [dbo].[TSCsInTP]  WITH CHECK ADD  CONSTRAINT [FK_TSCsInTP_TPs] FOREIGN KEY([TPName])
-REFERENCES [dbo].[TPs] ([Name])
-GO
-ALTER TABLE [dbo].[TSCsInTP] CHECK CONSTRAINT [FK_TSCsInTP_TPs]
-GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_TSCsInTP_TSCs]') AND parent_object_id = OBJECT_ID(N'[dbo].[TSCsInTP]'))
-ALTER TABLE [dbo].[TSCsInTP]  WITH CHECK ADD  CONSTRAINT [FK_TSCsInTP_TSCs] FOREIGN KEY([TSCName])
-REFERENCES [dbo].[TSCs] ([Name])
-GO
-ALTER TABLE [dbo].[TSCsInTP] CHECK CONSTRAINT [FK_TSCsInTP_TSCs]
+
 
 --/////////////////////////////////////////
 --// Basic Actions

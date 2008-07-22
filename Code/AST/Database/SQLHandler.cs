@@ -61,11 +61,18 @@ namespace AST.Database{
         /// <param name="type">Action Type(Action\TSC\TP)</param>
         /// <returns>AbstractAction object</returns>
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type) {
-            switch (type){
-                case AbstractAction.AbstractActionTypeEnum.ACTION: return LoadAction(name);
-                case AbstractAction.AbstractActionTypeEnum.TSC: return LoadTSC(name);
-                default : return LoadTP(name);
+            try {
+                switch (type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION: return LoadAction(name);
+                    case AbstractAction.AbstractActionTypeEnum.TSC: return LoadTSC(name);
+                    default: return LoadTP(name);
+                }
             }
+            catch (QueryFailedException e) { throw e; }
+            catch (EmptyQueryResultException e) { throw e; }
+            catch (InvalidTypeException e) { throw e; }
+            catch (ConnectionFailedException e) { throw e; }
+
         }
         /// <summary>
         /// method for loading an action from a SQL database.
@@ -85,9 +92,9 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadAction:: Loading action: " + name + " failed.");
-                throw new QueryFailedException("Loading action: " + name + " failed.", e);
+                throw new QueryFailedException("Loading action " + name + " failed.", e);
             }
-            if (!dr.Read()) throw new EmptyQueryResultException("Action: " + name + " doesn't exist.");
+            if (!dr.Read()) throw new EmptyQueryResultException("Action " + name + " doesn't exist.");
 
             //Getting the description
             String description = (String)dr.GetValue(1);
@@ -110,7 +117,9 @@ namespace AST.Database{
 
             bool stopIfFails = (bool)dr.GetValue(6);
 
-            Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, 0);
+            int duration = (int)dr.GetValue(7);
+
+            Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, duration);
             a.StopIfFails = stopIfFails;
 
             ////////////////////
@@ -191,8 +200,8 @@ namespace AST.Database{
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::LoadParameter:: Loading parameter " + parameterName + " of action: " + actionName + " failed.");
-                throw new QueryFailedException("Loading parameter " + parameterName + " of action: " + actionName + " failed.", e);
+                Debug.WriteLine("SQLHandler::LoadParameter:: Loading parameter " + parameterName + " of action " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameter " + parameterName + " of action " + actionName + " failed.", e);
             }
 
             while (contentDR.Read()) {
@@ -274,7 +283,6 @@ namespace AST.Database{
                         a.AddParameter(p);
                     }
 
-
                     SqlDataReader endStationsDR = null;
                     connection = this.Connect();
                     endStationsDR = SqlHelper.ExecuteReader(connection, "sp_GetEndStationsInTSC", name, actionName, executionOrder);
@@ -297,8 +305,8 @@ namespace AST.Database{
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC: " + name + " failed.");
-                throw new QueryFailedException("Loading TSC: " + name + " failed.", e);
+                Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC " + name + " failed.");
+                throw new QueryFailedException("Loading TSC " + name + " failed.", e);
             }
         }
 
@@ -417,7 +425,7 @@ namespace AST.Database{
                 else storedProcedureName = "sp_InsertAction";
 
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails);
+                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails, action.Duration);
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
@@ -926,19 +934,19 @@ namespace AST.Database{
             try {
                 connection = this.Connect(); //Creating Connection
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetActionParameters", actionName);
+
+                while (dr.Read()) {
+                    //Loading each paramter
+                    Parameter p = this.LoadParameter(actionName, (String)dr.GetValue(1));
+                    res.Add(p);
+                }
+                return res;
             }
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
-                throw new QueryFailedException("Loading parameters of action: " + actionName + " failed.", e);
+                throw new QueryFailedException("Loading parameters of action " + actionName + " failed.", e);
             }
-
-            while (dr.Read()) {
-                //Loading each paramter
-                Parameter p = this.LoadParameter(actionName, (String)dr.GetValue(1));
-                res.Add(p);
-            }
-            return res;
         }
 
     #endregion

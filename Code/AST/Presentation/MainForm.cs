@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using AST.Domain;
 using AST.Management;
 using System.IO;
+using AST.Database;
 
 namespace AST.Presentation{
     /// <summary>
@@ -159,22 +160,28 @@ namespace AST.Presentation{
                     MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                AbstractAction a = ASTManager.GetInstance().Load(name, type);
-                switch (type) {
-                    case AbstractAction.AbstractActionTypeEnum.ACTION:
-                        CreateAdditionalAction((Action)a);
-                        break;
-                    case AbstractAction.AbstractActionTypeEnum.TSC:
-                        CreateTSC((TSC)a);
-                        break;
-                    case AbstractAction.AbstractActionTypeEnum.TP:
-                        CreateTP((TP)a);
-                        break;
-                    default:
-                        this.DisplayErrorMessage("Error: Wrong type selected.");
-                        break;
+                try {
+                    AbstractAction a = ASTManager.GetInstance().Load(name, type);
+                    switch (type) {
+                        case AbstractAction.AbstractActionTypeEnum.ACTION:
+                            CreateAdditionalAction((Action)a);
+                            break;
+                        case AbstractAction.AbstractActionTypeEnum.TSC:
+                            CreateTSC((TSC)a);
+                            break;
+                        case AbstractAction.AbstractActionTypeEnum.TP:
+                            CreateTP((TP)a);
+                            break;
+                        default:
+                            this.DisplayErrorMessage("Error: Wrong type selected.");
+                            break;
+                    }
                 }
-                
+                catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+                catch (Exception ex) {
+                    this.DisplayErrorMessage(ex.Message);
+                    return;
+                }
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);

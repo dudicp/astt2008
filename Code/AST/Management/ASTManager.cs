@@ -145,7 +145,14 @@ namespace AST.Management
         /// <returns>List of params for the action</returns>
         public List<Parameter> GetParameters(String actionName)
         {
-            return this.m_databaseManager.GetParameters(actionName);
+            try {
+                return this.m_databaseManager.GetParameters(actionName);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameters of action " + actionName + " failed.", e);
+            }
         }
 
         /// <summary>
@@ -182,7 +189,11 @@ namespace AST.Management
         /// <returns>AbstarctAction object</returns>
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type)
         {
-            return this.m_databaseManager.Load(name, type);
+            try {
+                return this.m_databaseManager.Load(name, type);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) { throw e; }
         }
 
         /// <summary>

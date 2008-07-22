@@ -122,7 +122,14 @@ namespace AST.Database
         /// <returns>List of params for the action</returns>
         public List<Parameter> GetParameters(String actionName)
         {
-            return this.m_DBHandler.GetParameters(actionName);
+            try {
+                return this.m_DBHandler.GetParameters(actionName);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e) {
+                System.Diagnostics.Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
+                throw new QueryFailedException("Loading parameters of action " + actionName + " failed.", e);
+            }
         }
 
         /// <summary>
@@ -142,7 +149,13 @@ namespace AST.Database
         /// <returns>AbstarctAction object</returns>
         public AbstractAction Load(String name, AbstractAction.AbstractActionTypeEnum type)
         {
-            return this.m_DBHandler.Load(name, type);
+            try {
+                return this.m_DBHandler.Load(name, type);
+            }
+            catch (QueryFailedException e) { throw e; }
+            catch (EmptyQueryResultException e) { throw e; }
+            catch (InvalidTypeException e) { throw e; }
+            catch (ConnectionFailedException e) { throw e; }
         }
 
         /// <summary>
@@ -154,7 +167,7 @@ namespace AST.Database
         public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew)
         {
             //if we create new action that its name already exist
-            if ((isNew) && (this.m_DBHandler.IsExist(a, type))) throw new InvalidNameException("The name: " + a.Name + " already exists.");
+            if ((isNew) && (this.m_DBHandler.IsExist(a, type))) throw new InvalidNameException("The name " + a.Name + " already exists.");
 
             this.m_DBHandler.Save(a, type);
 
