@@ -13,17 +13,17 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 				<font size="6px" face="JasmineUPC Bold Italic" color="#00CCFF">Report</font></h1><br/>
 			</i>
 			<table border="1px" bordercolor="LightSkyBlue" width="100%">
-				<tr bgcolor="LightSkyBlue">
-			      <th width="12%" align="center"><i>Action Name</i></th>
+				<tr style="background-color: LightSkyBlue; font-family: sans-serif; font-size: 12pt;">
+			      <th width="13%" align="center"><i>Action Name</i></th>
 			      <th width="12%" align="center"><i>End-Station</i></th>
-				  <th width="16%" align="center"><i>Start Time</i></th>
-				  <th width="16%" align="center"><i>End Time</i></th>
-				  <th width="16%" align="center"><i>Validity String</i></th>
+				  <th width="15%" align="center"><i>Start Time</i></th>
+				  <th width="15%" align="center"><i>End Time</i></th>
+				  <th width="14%" align="center"><i>Validity String</i></th>
 				  <th width="8%" align="center"><i>Status</i></th>
 				  <th align="center"><i>Message</i></th>
 			    </tr>
 			    <xsl:for-each select="Report/Result">
-				    <tr>
+				    <tr style="background-color: #FFFFFF; font-family: sans-serif; font-size: 10pt;">
 						<td align="center"><xsl:value-of select="ActionName"/></td>
 						<td align="center">
 							<xsl:value-of select="EndStationName"/>
