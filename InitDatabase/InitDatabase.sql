@@ -1118,9 +1118,9 @@ ALTER TABLE [dbo].[ActionContents] CHECK CONSTRAINT [ContentOfAction]
 --/////////////////////////////////////////
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Notepad','Opens notepad on the remote end-station.','COMMAND_LINE',10,'System','01/01/08',0);
+('Notepad','Opens notepad on the remote end-station.','COMMAND_LINE',10,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1128,9 +1128,9 @@ values
 ('Notepad','WINDOWS','-i notepad.exe','');
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Test','This is a test command.','COMMAND_LINE',10,'System','01/01/08',0);
+('Test','This is a test command.','COMMAND_LINE',10,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1175,9 +1175,9 @@ values
 -- 1. Shutdown CLI
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Shutdown','This action turn off the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0);
+('Shutdown','This action turn off the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1227,9 +1227,9 @@ values
 -- 2. Restart CLI
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Restart','This action restart the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0);
+('Restart','This action restart the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1269,9 +1269,9 @@ values
 -- 3. Hibernate CLI
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Hibernate','This action hibernate the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0);
+('Hibernate','This action hibernate the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1311,9 +1311,9 @@ values
 -- 4 Logoff CLI
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('Logoff','This action logoff the current user on the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0);
+('Logoff','This action logoff the current user on the remote end-station.','COMMAND_LINE',20,'System','01/01/08',0, 0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1343,9 +1343,9 @@ values
 -- 5 Change IP Address
 
 INSERT INTO Actions
-(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails)
+(Name,Description,Type,Timeout,CreatorName,CreationTime,StopIfFails, Duration)
 values
-('ChangeIPAddress','This action change the IP address of the remote end-station.','SCRIPT',20,'System','01/01/08',0);
+('ChangeIPAddress','This action change the IP address of the remote end-station.','SCRIPT',20,'System','01/01/08',0,0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
