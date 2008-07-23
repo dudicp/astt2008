@@ -911,7 +911,13 @@ namespace AST.Presentation {
 
         private void DeleteAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
             //Delete Action
-            String name = this.m_rootAction.Name;
+            String name = "";
+            if(this.ActionsListBox.SelectedItem != null) name = (String)this.ActionsListBox.SelectedItem;
+            else if (this.TSCsListBox.SelectedItem != null) name = (String)this.TSCsListBox.SelectedItem;
+            else if (this.TPsListBox.SelectedItem != null) name = (String)this.TPsListBox.SelectedItem;
+            
+            
+            //String name = this.m_rootAction.Name;
             if ((name == null) || (name.Length == 0)) {
                 MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
