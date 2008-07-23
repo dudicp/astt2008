@@ -15,6 +15,7 @@ namespace AST.Management{
         private const String EXECUTE_COMMAND = "\\psexec.exe";
         private const String KILL_COMMAND = "\\pskill.exe";
         private const String SCRIPT_FILENAME = "ASTScript.vbs";
+        private const int CONNECTION_TIMEOUT = 1460;
         private static WindowsPlatformProvider m_instance = null;
         /// <summary>
         /// 
@@ -68,6 +69,8 @@ namespace AST.Management{
                    p.WaitForExit();
                    res = p.StandardOutput.ReadToEnd();
                    errorCode = p.ExitCode;
+                   if (errorCode == CONNECTION_TIMEOUT)
+                       throw new ExecutionFailedException("Timeout accessing "+ip.ToString());
                    Debug.WriteLine("output:\n" + res);
                    p.Close();
                }
