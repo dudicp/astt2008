@@ -47,8 +47,12 @@ namespace AST.Presentation {
                 }
                 OScomboBox.SelectedIndex = 0;
             }
-            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (ConnectionFailedException ex) {
+                DialogResult = DialogResult.Cancel;
+            }
+            catch (Exception ex) {
+                DialogResult = DialogResult.Cancel;
+            }
         }
 /// <summary>
 /// 
@@ -285,33 +289,38 @@ namespace AST.Presentation {
         /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e)
         {
-            //Save the action
-            if (!this.CheckForm()) return;
-            this.m_action.Name = this.ActionNameText.Text;
-            this.m_action.CreatorName = this.CreatorNameText.Text;
+            try {
+                //Save the action
+                if (!this.CheckForm()) return;
+                this.m_action.Name = this.ActionNameText.Text;
+                this.m_action.CreatorName = this.CreatorNameText.Text;
 
-            if (this.CommandLineRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.COMMAND_LINE;
-            else if (this.BatchFileRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.BATCH_FILE;
-            else if (this.ScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.SCRIPT;
-            else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
+                if (this.CommandLineRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.COMMAND_LINE;
+                else if (this.BatchFileRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.BATCH_FILE;
+                else if (this.ScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.SCRIPT;
+                else if (this.TestScriptRadio.Checked) this.m_action.ActionType = Action.ActionTypeEnum.TEST_SCRIPT;
 
-            this.m_action.Description = this.DescriptionText.Text;
+                this.m_action.Description = this.DescriptionText.Text;
 
-            if (this.StopIfFailsCheckBox.Checked) m_action.StopIfFails = true;
-            else m_action.StopIfFails = false;
+                if (this.StopIfFailsCheckBox.Checked) m_action.StopIfFails = true;
+                else m_action.StopIfFails = false;
 
-            ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION, m_isNew);//Save Action Created/Modified
+                ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION, m_isNew);//Save Action Created/Modified
 
-            foreach (Parameter p in this.m_newParameters)
-                ASTManager.GetInstance().Save(p, this.m_action, true);//Save New Parameters Created
+                foreach (Parameter p in this.m_newParameters)
+                    ASTManager.GetInstance().Save(p, this.m_action, true);//Save New Parameters Created
 
-            foreach (Parameter p in this.m_changedParameters)
-                ASTManager.GetInstance().Save(p, this.m_action, false);//Save Parameters Modified
+                foreach (Parameter p in this.m_changedParameters)
+                    ASTManager.GetInstance().Save(p, this.m_action, false);//Save Parameters Modified
 
-            foreach (Parameter p in this.m_removedParameters)
-                ASTManager.GetInstance().Delete(p, this.m_action);//Delete Parameters Removed
+                foreach (Parameter p in this.m_removedParameters)
+                    ASTManager.GetInstance().Delete(p, this.m_action);//Delete Parameters Removed
 
-            this.DialogResult = DialogResult.OK;
+                this.DialogResult = DialogResult.OK;
+            }
+            catch (Exception ex) {
+                this.DialogResult = DialogResult.Cancel;
+            }
         }
         /// <summary>
         /// 

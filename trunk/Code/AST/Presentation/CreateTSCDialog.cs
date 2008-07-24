@@ -45,6 +45,7 @@ namespace AST.Presentation {
                 TSCNameLabel.Text = "Plan Name:";
                 ActionNameLabel.Text = "TSCs List:";
                 SelectedActionsLabel.Text = "Selected TSC's:";
+                SettingsButton.Visible = false;
             }
             else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
                 TSCDetailsBox.Text = "TSC Details";
@@ -88,23 +89,27 @@ namespace AST.Presentation {
         /// 
         /// </summary>
         private void Init() {
+            try {
+                this.ActionsListBox.Items.Clear();
+                this.SelectedTreeView.Nodes.Clear();
+                this.SelectedTreeView.HideSelection = false;
 
-            this.ActionsListBox.Items.Clear();
-            this.SelectedTreeView.Nodes.Clear();
-            this.SelectedTreeView.HideSelection = false;
+                if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
+                else m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
 
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
-            else m_actions = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
+                //Filling the unselected abstract actions:
+                ICollection names = this.m_actions.Keys;
+                foreach (String name in names)
+                    this.ActionsListBox.Items.Add(name);
 
-            //Filling the unselected abstract actions:
-            ICollection names = this.m_actions.Keys;
-            foreach (String name in names)
-                this.ActionsListBox.Items.Add(name);
-
-            //Filling the selected tree view:
-            ASTNode node = new ASTNode(m_abstractAction, m_type);
-            this.SelectedTreeView.Nodes.Add(node);
-            this.SelectedTreeView.Nodes[0].Expand();
+                //Filling the selected tree view:
+                ASTNode node = new ASTNode(m_abstractAction, m_type);
+                this.SelectedTreeView.Nodes.Add(node);
+                this.SelectedTreeView.Nodes[0].Expand();
+            }
+            catch(Exception e){
+                DialogResult = DialogResult.Cancel;
+            }
         }
         /// <summary>
         /// 
@@ -156,13 +161,13 @@ namespace AST.Presentation {
                 this.SelectActionButton.Enabled = false;
                 return;
             }
-
             try {
                 AbstractAction a;
                 ASTNode node;
                 if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
                     a = (Action)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
                     node = new ASTNode(a, AbstractAction.AbstractActionTypeEnum.ACTION); // TSC contains only actions.
+                    ((TSC)m_abstractAction).AddAction((Action)a);
                 }
                 else {
                     a = (TSC)ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
@@ -170,10 +175,10 @@ namespace AST.Presentation {
                 }
 
                 this.SelectedTreeView.Nodes[0].Nodes.Add(node);
+                this.SelectedTreeView.Nodes[0].Expand();
                 this.SettingsButton.Enabled = true;
             }
-            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            catch (Exception ex) { MessageBox.Show(ex.Message , "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (Exception ex) { DialogResult = DialogResult.Cancel; }
         }
 
         /// <summary>
@@ -188,6 +193,9 @@ namespace AST.Presentation {
                 return;
             }
 
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC)
+                ((TSC)m_abstractAction).RemoveAction((Action)((ASTNode)this.SelectedTreeView.SelectedNode).Value);
+            
             this.SelectedTreeView.Nodes[0].Nodes.Remove(this.SelectedTreeView.SelectedNode);
 
             if (SelectedTreeView.Nodes[0].Nodes.Count == 0) {

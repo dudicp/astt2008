@@ -78,12 +78,6 @@
     <Compile Include="Presentation\CreateTSCDialog.Designer.cs">
       <DependentUpon>CreateTSCDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\ExecutionDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentation\ExecutionDialog.Designer.cs">
-      <DependentUpon>ExecutionDialog.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\ExecutionPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -121,18 +115,6 @@
     </Compile>
     <Compile Include="Domain\TP.cs" />
     <Compile Include="Presentation\ASTNode.cs" />
-    <Compile Include="Presentation\CreateAdditionalActionPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Presentation\CreateAdditionalActionPanel.Designer.cs">
-      <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\CreateTSCPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Presentation\CreateTSCPanel.Designer.cs">
-      <DependentUpon>CreateTSCPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\EditParametersDialog.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,23 +139,11 @@
     <Compile Include="Presentation\MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentation\OptionsPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Presentation\OptionsPanel.Designer.cs">
-      <DependentUpon>OptionsPanel.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentation\SettingsDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentation\SettingsDialog.Designer.cs">
       <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Presentation\WelcomePanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Presentation\WelcomePanel.Designer.cs">
-      <DependentUpon>WelcomePanel.cs</DependentUpon>
     </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -198,10 +168,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>CreateTSCDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\ExecutionDialog.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>ExecutionDialog.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\ExecutionPanel.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ExecutionPanel.cs</DependentUpon>
@@ -222,14 +188,6 @@
       <SubType>Designer</SubType>
       <DependentUpon>ASTPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\CreateAdditionalActionPanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>CreateAdditionalActionPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\CreateTSCPanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>CreateTSCPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\EditParametersDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>EditParametersDialog.cs</DependentUpon>
@@ -246,17 +204,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\OptionsPanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>OptionsPanel.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Presentation\SettingsDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SettingsDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Presentation\WelcomePanel.resx">
-      <SubType>Designer</SubType>
-      <DependentUpon>WelcomePanel.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <SubType>Designer</SubType>

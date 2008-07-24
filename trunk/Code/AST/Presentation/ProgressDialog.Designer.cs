@@ -53,6 +53,7 @@ namespace AST.Management {
             this.ViewReportLabel = new System.Windows.Forms.Label();
             this.MessageText = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.MessageLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -60,7 +61,7 @@ namespace AST.Management {
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(13, 370);
+            this.ProgressBar.Location = new System.Drawing.Point(13, 396);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(613, 23);
             this.ProgressBar.TabIndex = 0;
@@ -69,7 +70,7 @@ namespace AST.Management {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(313, 404);
+            this.MyCancelButton.Location = new System.Drawing.Point(313, 430);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 20;
@@ -283,7 +284,7 @@ namespace AST.Management {
             // 
             this.CurrentActionLabel.AutoSize = true;
             this.CurrentActionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionLabel.Location = new System.Drawing.Point(10, 340);
+            this.CurrentActionLabel.Location = new System.Drawing.Point(10, 366);
             this.CurrentActionLabel.Name = "CurrentActionLabel";
             this.CurrentActionLabel.Size = new System.Drawing.Size(105, 15);
             this.CurrentActionLabel.TabIndex = 39;
@@ -293,7 +294,7 @@ namespace AST.Management {
             // 
             this.ActionNoLabel.AutoSize = true;
             this.ActionNoLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoLabel.Location = new System.Drawing.Point(510, 340);
+            this.ActionNoLabel.Location = new System.Drawing.Point(510, 366);
             this.ActionNoLabel.Name = "ActionNoLabel";
             this.ActionNoLabel.Size = new System.Drawing.Size(77, 15);
             this.ActionNoLabel.TabIndex = 40;
@@ -303,7 +304,7 @@ namespace AST.Management {
             // 
             this.ActionNoText.AutoSize = true;
             this.ActionNoText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoText.Location = new System.Drawing.Point(590, 340);
+            this.ActionNoText.Location = new System.Drawing.Point(590, 366);
             this.ActionNoText.Name = "ActionNoText";
             this.ActionNoText.Size = new System.Drawing.Size(34, 15);
             this.ActionNoText.TabIndex = 41;
@@ -313,7 +314,7 @@ namespace AST.Management {
             // 
             this.CurrentActionText.AutoSize = true;
             this.CurrentActionText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionText.Location = new System.Drawing.Point(121, 340);
+            this.CurrentActionText.Location = new System.Drawing.Point(121, 366);
             this.CurrentActionText.Name = "CurrentActionText";
             this.CurrentActionText.Size = new System.Drawing.Size(37, 15);
             this.CurrentActionText.TabIndex = 42;
@@ -333,7 +334,7 @@ namespace AST.Management {
             // 
             this.OkButton.Enabled = false;
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(236, 404);
+            this.OkButton.Location = new System.Drawing.Point(236, 430);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(71, 23);
             this.OkButton.TabIndex = 44;
@@ -346,7 +347,7 @@ namespace AST.Management {
             this.ViewReportLabel.AutoSize = true;
             this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.ViewReportLabel.Location = new System.Drawing.Point(405, 409);
+            this.ViewReportLabel.Location = new System.Drawing.Point(405, 435);
             this.ViewReportLabel.Name = "ViewReportLabel";
             this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
             this.ViewReportLabel.TabIndex = 48;
@@ -358,7 +359,7 @@ namespace AST.Management {
             this.MessageText.BackColor = System.Drawing.SystemColors.Control;
             this.MessageText.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.MessageText.Cursor = System.Windows.Forms.Cursors.IBeam;
-            this.MessageText.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MessageText.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.MessageText.Location = new System.Drawing.Point(16, 19);
             this.MessageText.Name = "MessageText";
             this.MessageText.ReadOnly = true;
@@ -377,11 +378,23 @@ namespace AST.Management {
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Message";
             // 
+            // MessageLabel
+            // 
+            this.MessageLabel.AutoSize = true;
+            this.MessageLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
+            this.MessageLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
+            this.MessageLabel.Location = new System.Drawing.Point(10, 340);
+            this.MessageLabel.Name = "MessageLabel";
+            this.MessageLabel.Size = new System.Drawing.Size(73, 16);
+            this.MessageLabel.TabIndex = 52;
+            this.MessageLabel.Text = "             ";
+            // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 436);
+            this.ClientSize = new System.Drawing.Size(651, 458);
+            this.Controls.Add(this.MessageLabel);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.ViewReportLabel);
             this.Controls.Add(this.OkButton);
@@ -439,5 +452,6 @@ namespace AST.Management {
         private System.Windows.Forms.Label ViewReportLabel;
         private System.Windows.Forms.RichTextBox MessageText;
         private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label MessageLabel;
     }
 }

@@ -46,8 +46,6 @@ namespace AST.Presentation
             this.descriptionLabel = new System.Windows.Forms.Label();
             this.ParameterTypeLabel = new System.Windows.Forms.Label();
             this.ParameterNameLabel = new System.Windows.Forms.Label();
-            this.ValidityCheckBox = new System.Windows.Forms.CheckBox();
-            this.ValidityText = new System.Windows.Forms.TextBox();
             this.InputTextBox = new System.Windows.Forms.TextBox();
             this.InputLabel = new System.Windows.Forms.Label();
             this.InputBox = new System.Windows.Forms.GroupBox();
@@ -142,7 +140,7 @@ namespace AST.Presentation
             // OkButton
             // 
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(66, 463);
+            this.OkButton.Location = new System.Drawing.Point(66, 438);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 12;
@@ -257,25 +255,6 @@ namespace AST.Presentation
             this.ParameterNameLabel.TabIndex = 0;
             this.ParameterNameLabel.Text = "Parameter Name:";
             // 
-            // ValidityCheckBox
-            // 
-            this.ValidityCheckBox.AutoSize = true;
-            this.ValidityCheckBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ValidityCheckBox.Location = new System.Drawing.Point(9, 52);
-            this.ValidityCheckBox.Name = "ValidityCheckBox";
-            this.ValidityCheckBox.Size = new System.Drawing.Size(91, 19);
-            this.ValidityCheckBox.TabIndex = 10;
-            this.ValidityCheckBox.Text = "Validity Exp:";
-            this.ValidityCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // ValidityText
-            // 
-            this.ValidityText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ValidityText.Location = new System.Drawing.Point(117, 50);
-            this.ValidityText.Name = "ValidityText";
-            this.ValidityText.Size = new System.Drawing.Size(136, 24);
-            this.ValidityText.TabIndex = 11;
-            // 
             // InputTextBox
             // 
             this.InputTextBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -298,12 +277,10 @@ namespace AST.Presentation
             // 
             this.InputBox.Controls.Add(this.InputLabel);
             this.InputBox.Controls.Add(this.InputTextBox);
-            this.InputBox.Controls.Add(this.ValidityCheckBox);
-            this.InputBox.Controls.Add(this.ValidityText);
             this.InputBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.InputBox.Location = new System.Drawing.Point(15, 369);
             this.InputBox.Name = "InputBox";
-            this.InputBox.Size = new System.Drawing.Size(260, 85);
+            this.InputBox.Size = new System.Drawing.Size(260, 57);
             this.InputBox.TabIndex = 22;
             this.InputBox.TabStop = false;
             this.InputBox.Text = "Input";
@@ -311,7 +288,7 @@ namespace AST.Presentation
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(147, 463);
+            this.MyCancelButton.Location = new System.Drawing.Point(147, 438);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 13;
@@ -323,7 +300,7 @@ namespace AST.Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(291, 507);
+            this.ClientSize = new System.Drawing.Size(291, 467);
             this.Controls.Add(this.MyCancelButton);
             this.Controls.Add(this.ParameterContentBox);
             this.Controls.Add(this.OkButton);
@@ -359,8 +336,6 @@ namespace AST.Presentation
         private System.Windows.Forms.GroupBox ParameterDetailsBox;
         private System.Windows.Forms.Label descriptionLabel;
         private System.Windows.Forms.Label ParameterNameLabel;
-        private System.Windows.Forms.CheckBox ValidityCheckBox;
-        private System.Windows.Forms.TextBox ValidityText;
         private System.Windows.Forms.CheckBox InputCheckBox;
         private System.Windows.Forms.CheckBox OptionCheckBox;
         private System.Windows.Forms.Label ParameterTypeLabel;

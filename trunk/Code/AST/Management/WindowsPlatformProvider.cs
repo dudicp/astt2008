@@ -15,7 +15,9 @@ namespace AST.Management{
         private const String EXECUTE_COMMAND = "\\psexec.exe";
         private const String KILL_COMMAND = "\\pskill.exe";
         private const String SCRIPT_FILENAME = "ASTScript.vbs";
-        private const int CONNECTION_TIMEOUT = 1460;
+        private const int CONNECTION_TIMEOUT1 = 1460;
+        private const int CONNECTION_TIMEOUT2 = 1722;
+        private const int NOT_REACHABLE = 1006;
         private static WindowsPlatformProvider m_instance = null;
         /// <summary>
         /// 
@@ -69,8 +71,10 @@ namespace AST.Management{
                    p.WaitForExit();
                    res = p.StandardOutput.ReadToEnd();
                    errorCode = p.ExitCode;
-                   if (errorCode == CONNECTION_TIMEOUT)
+                   if ((errorCode == CONNECTION_TIMEOUT1) || (errorCode == CONNECTION_TIMEOUT2))
                        throw new ExecutionFailedException("Timeout accessing "+ip.ToString());
+                   if (errorCode == NOT_REACHABLE)
+                       throw new ExecutionFailedException("Couldn't access: " + ip.ToString() + "\nThe network path was not found.");
                    Debug.WriteLine("output:\n" + res);
                    p.Close();
                }
@@ -81,55 +85,24 @@ namespace AST.Management{
            catch (ExecutionFailedException e) { throw e; }
            catch (FileNotExistException e) { throw e; }
            catch (Exception e) {
-               throw new ExecutionFailedException("Could not start process.", e);
+               throw new ExecutionFailedException("Unknown error occured during the execution.", e);
            }
            return res;
         }
 
 
         public String ExecuteBatch(IPAddress ip, String username, String password, String filename, int timeout, int duration, out int errorCode) {
-            String res = "";
-            errorCode = 0;
-
             if (!File.Exists(filename)) throw new FileNotExistException("The batch file " + filename + " isn't found.");
 
-            String PSToolsCommand = ConfigurationManager.GetPSToolsFullPath() + EXECUTE_COMMAND;
-            if (!File.Exists(PSToolsCommand)) throw new FileNotExistException("The file " + PSToolsCommand + " isn't found.");
-
-            String timeoutStr = "";
-            if (username.Length != 0) username = " -u " + username;
-            if (password.Length != 0) password = " -p " + password;
-            if (timeout != 0) timeoutStr = " -n " + timeout;
-
-            String args = " \\\\" + ip.ToString() + username + password + timeoutStr + " -c " + filename;
-            Debug.WriteLine(PSToolsCommand + args);
-
-            Process p = new Process();
-            ProcessStartInfo psi = new ProcessStartInfo(PSToolsCommand, args);
-            psi.CreateNoWindow = false;
-            psi.UseShellExecute = false;
-            psi.RedirectStandardOutput = true;
-            p.StartInfo = psi;
-
+            String res = "";
             try {
-                p.Start();
-                if (duration == 0) {
-                    p.WaitForExit();
-                    res = p.StandardOutput.ReadToEnd();
-                    errorCode = p.ExitCode;
-                    Debug.WriteLine("output:\n" + res);
-                    p.Close();
-                }
-                else {
-                    if (!p.WaitForExit(duration * 1000)) p.Kill();
-                }
+                String command = " -c "+filename;
+                res = this.ExecuteCmd(ip, username, password, command, timeout, duration, out errorCode);
+                return res;
             }
-            catch (ExecutionFailedException e) { throw e; }
-            catch (FileNotExistException e) { throw e; }
-            catch (Exception e) {
-                throw new ExecutionFailedException("Could not start process.", e);
+            catch (ManagementException e) {
+                throw e;
             }
-            return res;
         }
 
         /// <summary>
@@ -236,16 +209,18 @@ namespace AST.Management{
         /// <param name="filename"></param>
         public void CopyScript(IPAddress ip, String filename, String username, String password) {
             //copy <filename> \\X.X.X.X\C$\<filename>
-            //String resolvedFilename = this.ResolveFilename(filename);
+            if (!File.Exists(filename)) throw new FileNotExistException("The script file " + filename + " isn't found.");
             try {
                 this.GetAccess(ip, username, password);
                 File.Copy(filename, "\\\\" + ip.ToString() + "\\C$\\" + SCRIPT_FILENAME, true);
                 this.EndAccess(ip);
             }
-            catch (ManagementException e) {
+            catch (FileNotExistException e) {
+                throw e; 
+            }catch (ManagementException e) {
                 throw e;
             }catch(Exception e){
-                throw new ExecutionFailedException("Copy script failed.", e);
+                throw new ExecutionFailedException("Unknown error occured during copying the script file "+ filename +".", e);
             }
         }
         /// <summary>

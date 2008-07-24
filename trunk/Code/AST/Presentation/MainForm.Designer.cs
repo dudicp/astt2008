@@ -43,13 +43,11 @@ namespace AST.Presentation
             this.DeleteTestScenarioMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteTestPlanMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolsStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.ExecuteStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.SettingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.astPanel = new AST.Presentation.ASTPanel();
+            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -57,7 +55,6 @@ namespace AST.Presentation
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileStripMenuItem,
-            this.ToolsStripMenuItem,
             this.HelpStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -71,6 +68,7 @@ namespace AST.Presentation
             this.FileNewStripMenuItem,
             this.FileOpenStripMenuItem,
             this.FileDeleteStripMenuItem,
+            this.settingsToolStripMenuItem1,
             this.ExitMenuItem});
             this.FileStripMenuItem.Name = "FileStripMenuItem";
             this.FileStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -83,7 +81,7 @@ namespace AST.Presentation
             this.NewTestScenarioMenuItem,
             this.NewTestPlanMenuItem});
             this.FileNewStripMenuItem.Name = "FileNewStripMenuItem";
-            this.FileNewStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.FileNewStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileNewStripMenuItem.Text = "New";
             // 
             // NewAdditionalActionMenuItem
@@ -114,7 +112,7 @@ namespace AST.Presentation
             this.OpenTestScenarioMenuItem,
             this.OpenTestPlanMenuItem});
             this.FileOpenStripMenuItem.Name = "FileOpenStripMenuItem";
-            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileOpenStripMenuItem.Text = "Open";
             // 
             // OPenAdditionalActionMenuItem
@@ -145,7 +143,7 @@ namespace AST.Presentation
             this.DeleteTestScenarioMenuItem,
             this.DeleteTestPlanMenuItem});
             this.FileDeleteStripMenuItem.Name = "FileDeleteStripMenuItem";
-            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.FileDeleteStripMenuItem.Text = "Delete";
             // 
             // DeleteAdditionalActionMenuItem
@@ -172,32 +170,9 @@ namespace AST.Presentation
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.ExitMenuItem.Size = new System.Drawing.Size(152, 22);
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
-            // 
-            // ToolsStripMenuItem
-            // 
-            this.ToolsStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ExecuteStripMenuItem,
-            this.SettingsToolStripMenuItem});
-            this.ToolsStripMenuItem.Name = "ToolsStripMenuItem";
-            this.ToolsStripMenuItem.Size = new System.Drawing.Size(48, 20);
-            this.ToolsStripMenuItem.Text = "Tools";
-            // 
-            // ExecuteStripMenuItem
-            // 
-            this.ExecuteStripMenuItem.Name = "ExecuteStripMenuItem";
-            this.ExecuteStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.ExecuteStripMenuItem.Text = "Execute";
-            this.ExecuteStripMenuItem.Click += new System.EventHandler(this.ExecuteStripMenuItem_Click);
-            // 
-            // SettingsToolStripMenuItem
-            // 
-            this.SettingsToolStripMenuItem.Name = "SettingsToolStripMenuItem";
-            this.SettingsToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.SettingsToolStripMenuItem.Text = "Settings";
-            this.SettingsToolStripMenuItem.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
             // 
             // HelpStripMenuItem
             // 
@@ -229,6 +204,13 @@ namespace AST.Presentation
             this.astPanel.Size = new System.Drawing.Size(433, 336);
             this.astPanel.TabIndex = 0;
             // 
+            // settingsToolStripMenuItem1
+            // 
+            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.settingsToolStripMenuItem1.Text = "Settings";
+            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -252,7 +234,6 @@ namespace AST.Presentation
         private ASTPanel astPanel;
         private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem FileStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ToolsStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem HelpStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem AboutMenuItem;
         private System.Windows.Forms.ToolStripMenuItem HelpMenuItem;
@@ -269,7 +250,6 @@ namespace AST.Presentation
         private System.Windows.Forms.ToolStripMenuItem DeleteTestScenarioMenuItem;
         private System.Windows.Forms.ToolStripMenuItem DeleteTestPlanMenuItem;
         private System.Windows.Forms.ToolStripMenuItem ExitMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem ExecuteStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem SettingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem1;
     }
 }

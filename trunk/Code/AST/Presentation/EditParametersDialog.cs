@@ -101,16 +101,13 @@ namespace AST.Presentation
 
         private void SetParameterContent(int OSTypeSelection)
         {
-            EndStation.OSTypeEnum OSType = CreateAdditionalActionPanel.ConvertSelectionToOSType(OSTypeSelection);
+            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OSTypeSelection);
             ContentText.Text = m_param.GetValue(OSType);
         }
 
         private void SetInputContetnt()
         {
             InputTextBox.Text = m_param.Input;
-            ValidityText.Text = m_param.ValidityExp;
-            if (ValidityText.Text.Length > 0) ValidityCheckBox.Checked = true;
-            else ValidityCheckBox.Checked = false;
         }
 
         private void InputCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -129,13 +126,13 @@ namespace AST.Presentation
 
         private void SaveOSButton_Click(object sender, EventArgs e)
         {
-            EndStation.OSTypeEnum OSType = CreateAdditionalActionPanel.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
+            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
             m_param.AddValue(OSType, ContentText.Text);
         }
 
         private void RemoveOSButton_Click(object sender, EventArgs e)
         {
-            EndStation.OSTypeEnum OSType = CreateAdditionalActionPanel.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
+            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
             m_param.RemoveValue(OSType);
             SetParameterContent(OScomboBox.SelectedIndex);
         }
@@ -156,7 +153,7 @@ namespace AST.Presentation
             {
                 m_param.Type = Parameter.ParameterTypeEnum.Input;
                 m_param.Input = InputTextBox.Text;
-                m_param.ValidityExp = ValidityText.Text;
+                m_param.ValidityExp = "";
             }else if(OptionCheckBox.Checked == true)
                 m_param.Type = Parameter.ParameterTypeEnum.Option;
             else m_param.Type = Parameter.ParameterTypeEnum.None;

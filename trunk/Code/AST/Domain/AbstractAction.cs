@@ -75,6 +75,10 @@ namespace AST.Domain
         {
             return m_endStations;
         }
+
+        public void SetEndStations(List<EndStationSchedule> endStations) {
+            this.m_endStations = endStations;
+        }
         /// <summary>
         /// Abstract method for adding an End-station 
         /// to be implemented in the derived classes

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Net;
+using AST.Database;
 
 namespace AST.Management
 {
@@ -20,6 +21,7 @@ namespace AST.Management
 
         private Thread m_executionThread;
         private bool m_isRunning;
+        private bool m_stopExecution;
         private AbstractAction m_action;
         private AbstractAction.AbstractActionTypeEnum m_type;
         private int m_progress;
@@ -38,6 +40,8 @@ namespace AST.Management
             m_executionThread.Start();
             m_action = null;
             m_progress = 0;
+            ThreadPool.SetMaxThreads(poolSize, poolSize);
+            m_stopExecution = false;
         }
 
         /// <summary>
@@ -67,41 +71,13 @@ namespace AST.Management
             // YC
 //           m_isRunning = false;
 //           System.Threading.Thread.Sleep(100);
-//            m_executionThread.Resume();
+//           m_executionThread.Resume();
         }
 
-        /*       private void ExecuterThreadFunc(){
-                   List<Action> actions;
-                   while (m_isRunning)
-                   {
-                       m_executionThread.Suspend();
-                       actions = m_action.GetActions();
+        public void StopExecution() {
+            m_stopExecution = true;
+        }
 
-                       foreach (Action action in actions)
-                       {
-                           int length = action.GetEndStations().ToArray().Length;
-                           ManualResetEvent[] doneEvents = new ManualResetEvent[length];
-                           for (int i = 0; i < length; i++)
-                           {
-                               doneEvents[i] = new ManualResetEvent(false);
-                               Executer executer = new Executer(action, i, doneEvents[i], m_results);
-                               ThreadPool.QueueUserWorkItem(executer.ExecuterCallback, null);
-                           }
-
-                           WaitHandle.WaitAll(doneEvents);
-                           Debug.WriteLine("Sleeping for " + action.Delay + " sec");
-                           System.Threading.Thread.Sleep(action.Delay * 1000);
-                       }
-
-                       foreach (Object res in m_results)
-                       {
-                           Debug.WriteLine(((Result)res).ToString());
-                       }
-
-                       m_results.Clear();
-                
-                   }
-               }*/
         /// <summary>
         /// the Execution manager thread
         /// created at the start of the application and get suspended at the start
@@ -131,6 +107,9 @@ namespace AST.Management
                 // notifying each ExecutionManagerOutputListener that execution is finished by invoking the ExecutionFinish method
                 foreach (ExecutionManagerOutputListener o in m_outputListeners)
                     o.ExecutionFinish();
+
+                //return the stop execution to false again.
+                m_stopExecution = false;
             }
         }
         /// <summary>
@@ -139,6 +118,9 @@ namespace AST.Management
         /// <param name="action">the Action to execute</param>
         private bool Execute(Action action)
         {
+            //if we want to stop the execution we shall return true.
+            if (m_stopExecution) return false;
+
             bool resMethod = true;
             // notify the output listeners on the current action thats being executed 
             foreach (ExecutionManagerOutputListener o in m_outputListeners)
@@ -172,7 +154,13 @@ namespace AST.Management
                 Debug.WriteLine(((Result)res).ToString());
 
                 //Update the report file
-                ASTManager.GetInstance().Save(res, this.m_reportName);
+                try {
+                    ASTManager.GetInstance().Save(res, this.m_reportName);
+                }
+                catch (SaveReportException e) {
+                    foreach (ExecutionManagerOutputListener o in m_outputListeners)
+                        o.DisplayMessage(e.Message);
+                }
                 if (!res.Status) resMethod = false;
             }
 
@@ -194,7 +182,22 @@ namespace AST.Management
             List<Action> actions = tsc.GetActions();
             foreach (Action a in actions) {
                 bool res = Execute(a);
-                if (a.StopIfFails && !res) return false;
+                if (a.StopIfFails && !res) {
+                    foreach (ExecutionManagerOutputListener o in m_outputListeners){
+                        o.DisplayMessage("Execution stopped after action "+a.Name+ " failed.");
+                        o.UpdateProgress(100, new Queue());
+                        o.ExecutionFinish();
+                    }
+                    return false;
+                }
+                if (m_stopExecution) {
+                    foreach (ExecutionManagerOutputListener o in m_outputListeners) {
+                        o.DisplayMessage("Execution aborted by the user.");
+                        o.UpdateProgress(100, new Queue());
+                        o.ExecutionFinish();
+                    }
+                    return false;
+                }
             }
             return true;
         }
@@ -206,8 +209,10 @@ namespace AST.Management
         private void Execute(TP tp)
         {
             List<TSC> TSCs = tp.GetTSCs();
-            foreach (TSC tsc in TSCs)
+            foreach (TSC tsc in TSCs) {
                 if (!Execute(tsc)) break;
+                if (m_stopExecution) break;
+            }
         }
 
         /// <summary>

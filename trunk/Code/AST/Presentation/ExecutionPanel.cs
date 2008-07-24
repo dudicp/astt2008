@@ -78,28 +78,31 @@ namespace AST.Presentation {
         /// 
         /// </summary>
         private void SetAbstractActionsInfo() {
-            this.ActionsListBox.Items.Clear();
-            this.TSCsListBox.Items.Clear();
-            this.TPsListBox.Items.Clear();
+            try {
+                this.ActionsListBox.Items.Clear();
+                this.TSCsListBox.Items.Clear();
+                this.TPsListBox.Items.Clear();
 
-            this.m_actionsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
-            this.m_TSCsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
-            this.m_TPsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
+                this.m_actionsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
+                this.m_TSCsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
+                this.m_TPsInfo = ASTManager.GetInstance().GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
 
-            //Setting Action List Box
-            ICollection names = this.m_actionsInfo.Keys;
-            foreach (String name in names)
-                this.ActionsListBox.Items.Add(name);
+                //Setting Action List Box
+                ICollection names = this.m_actionsInfo.Keys;
+                foreach (String name in names)
+                    this.ActionsListBox.Items.Add(name);
 
-            //Setting TSC List Box
-            names = this.m_TSCsInfo.Keys;
-            foreach (String name in names)
-                this.TSCsListBox.Items.Add(name);
+                //Setting TSC List Box
+                names = this.m_TSCsInfo.Keys;
+                foreach (String name in names)
+                    this.TSCsListBox.Items.Add(name);
 
-            //Setting TP List Box
-            names = this.m_TPsInfo.Keys;
-            foreach (String name in names)
-                this.TPsListBox.Items.Add(name);
+                //Setting TP List Box
+                names = this.m_TPsInfo.Keys;
+                foreach (String name in names)
+                    this.TPsListBox.Items.Add(name);
+            }
+            catch (Exception e) { /* We will stay in this screen if an error occured. */ }
         }
         /// <summary>
         /// 
@@ -386,13 +389,16 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void NewEndStationButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(null);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                this.m_endStations.Add(es);
-                ASTManager.GetInstance().AddEndStation(es, true);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            try {
+                EndStationDialog esd = new EndStationDialog(null);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    this.m_endStations.Add(es);
+                    ASTManager.GetInstance().AddEndStation(es, true);
+                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
         /// <summary>
         /// 
@@ -400,32 +406,34 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void EditButton_Click(object sender, EventArgs e) {
+            try {
+                //In case we are in the upper list box.
+                if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
+                    EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                    if (esd.ShowDialog() == DialogResult.OK) {
+                        this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                        this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                        EndStation es = esd.GetEndStation();
+                        ASTManager.GetInstance().AddEndStation(es, false);
+                        this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.m_endStations.Add(es);
+                    }
+                }
 
-            //In case we are in the upper list box.
-            if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
-                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                if (esd.ShowDialog() == DialogResult.OK) {
-                    this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                    this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                    EndStation es = esd.GetEndStation();
-                    ASTManager.GetInstance().AddEndStation(es, false);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                    this.m_endStations.Add(es);
+                // In case we are in the lower list box.
+                if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
+                    EndStationDialog esd = new EndStationDialog(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation);
+                    if (esd.ShowDialog() == DialogResult.OK) {
+                        this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
+                        this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
+                        EndStation es = esd.GetEndStation();
+                        ASTManager.GetInstance().AddEndStation(es, false);
+                        this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
+                    }
                 }
             }
-
-            // In case we are in the lower list box.
-            if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
-                EndStationDialog esd = new EndStationDialog(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation);
-                if (esd.ShowDialog() == DialogResult.OK) {
-                    this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
-                    this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
-                    EndStation es = esd.GetEndStation();
-                    ASTManager.GetInstance().AddEndStation(es, false);
-                    this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                    this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
-                }
-            }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
         /// <summary>
         /// 
@@ -600,11 +608,8 @@ namespace AST.Presentation {
             try {
                 allParameters = ASTManager.GetInstance().GetParameters(a.Name);
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
-            catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+            catch (ConnectionFailedException ex) { return; }
+            catch (Exception ex) { return; }
 
             //Filling the unselected parameters:
             foreach (Parameter p in allParameters) {
@@ -965,9 +970,7 @@ namespace AST.Presentation {
                         break;
                 }
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
         }
@@ -1013,66 +1016,74 @@ namespace AST.Presentation {
         }
 
         private void NewEndStationToolStripMenuItem_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(null);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                this.m_endStations.Add(es);
-                ASTManager.GetInstance().AddEndStation(es, true);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-
+            try {
+                EndStationDialog esd = new EndStationDialog(null);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, true);
+                    this.m_endStations.Add(es);
+                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void EditEndStationToolStripMenuItem_Click(object sender, EventArgs e) {
 
-            //In case we are in the upper list box.
-            if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
-                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                if (esd.ShowDialog() == DialogResult.OK) {
-                    this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                    this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                    EndStation es = esd.GetEndStation();
-                    ASTManager.GetInstance().AddEndStation(es, false);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                    this.m_endStations.Add(es);
+            try {
+                //In case we are in the upper list box.
+                if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
+                    EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                    if (esd.ShowDialog() == DialogResult.OK) {
+                        this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                        this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                        EndStation es = esd.GetEndStation();
+                        ASTManager.GetInstance().AddEndStation(es, false);
+                        this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.m_endStations.Add(es);
+                    }
                 }
-            }
 
-            // In case we are in the lower list box.
-            if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
-                EndStationDialog esd = new EndStationDialog(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation);
-                if (esd.ShowDialog() == DialogResult.OK) {
-                    this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
-                    this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
-                    EndStation es = esd.GetEndStation();
-                    ASTManager.GetInstance().AddEndStation(es, false);
-                    this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                    this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
+                // In case we are in the lower list box.
+                if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
+                    EndStationDialog esd = new EndStationDialog(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation);
+                    if (esd.ShowDialog() == DialogResult.OK) {
+                        this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
+                        this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
+                        EndStation es = esd.GetEndStation();
+                        ASTManager.GetInstance().AddEndStation(es, false);
+                        this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
+                    }
                 }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void DeleteEndStationToolStripMenuItem_Click(object sender, EventArgs e) {
-            String name = this.m_rootAction.Name;
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
+            try {
+                String name = this.m_rootAction.Name;
+                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return;
 
 
-            //In case we are in the upper list box.
-            if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
-                EndStation es = this.m_endStations[this.EndStationsListBox.SelectedIndex];
-                this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                ASTManager.GetInstance().RemoveEndStation(es);
+                //In case we are in the upper list box.
+                if ((this.EndStationsListBox.SelectedIndex >= 0) && (this.EndStationsListBox.SelectedIndex < this.m_endStations.Count)) {
+                    EndStation es = this.m_endStations[this.EndStationsListBox.SelectedIndex];
+                    ASTManager.GetInstance().RemoveEndStation(es);
+                    this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                    this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                }
+
+                // In case we are in the lower list box.
+                if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
+                    EndStation es = this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation;
+                    ASTManager.GetInstance().RemoveEndStation(es);
+                    this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
+                    this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
+                }
             }
-
-            // In case we are in the lower list box.
-            if ((this.SelectedEndStationsListBox.SelectedIndex >= 0) && (this.SelectedEndStationsListBox.SelectedIndex < this.m_activeAction.GetEndStations().Count)) {
-                EndStation es = this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex].EndStation;
-                this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
-                this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
-                ASTManager.GetInstance().RemoveEndStation(es);
-            }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void ValidityStringCheckBox_CheckedChanged(object sender, EventArgs e) {
@@ -1098,13 +1109,12 @@ namespace AST.Presentation {
         }
 
         private void ActionsListBoxOnDoubleClick(object sender, EventArgs e) {
+            if (this.ActionsListBox.SelectedItem == null) return;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
                 m_activeAction = m_rootAction;
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1131,9 +1141,8 @@ namespace AST.Presentation {
             try {
                 parameters = ASTManager.GetInstance().GetParameters(m_activeAction.Name);
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
+            catch (ConnectionFailedException ex) { return;  }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1186,12 +1195,11 @@ namespace AST.Presentation {
         }
 
         private void TSCsListBoxOnDoubleClick(object sender, EventArgs e) {
+            if (this.TSCsListBox.SelectedItem == null) return;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -1217,12 +1225,11 @@ namespace AST.Presentation {
         }
 
         private void TPsListBoxOnDoubleClick(object sender, EventArgs e) {
+            if (this.TPsListBox.SelectedItem == null) return;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
             }
-            catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
             catch (Exception ex) {
-                MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

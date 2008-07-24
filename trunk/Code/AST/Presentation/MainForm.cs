@@ -177,9 +177,7 @@ namespace AST.Presentation{
                             break;
                     }
                 }
-                catch (ConnectionFailedException ex) { throw new Exception(ex.Message); }
                 catch (Exception ex) {
-                    this.DisplayErrorMessage(ex.Message);
                     return;
                 }
                 this.SuspendLayout();
@@ -288,7 +286,8 @@ namespace AST.Presentation{
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e) {
             OptionsDialog d = new OptionsDialog();
             d.ShowDialog();
-            
+            if(d.DialogResult == DialogResult.OK)
+                ASTManager.GetInstance().Init();
         }
 
         /// <summary>

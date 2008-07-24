@@ -31,7 +31,6 @@ namespace AST.Management
         private ASTManager()
         {
             this.m_outputListeners = new List<ASTOutputListener>();
-            this.m_executionManager = new ExecutionManager(10);
         }
 
         /// <summary>
@@ -58,7 +57,16 @@ namespace AST.Management
                     if (ConfigurationManager.GetReportOption().Equals(ConfigurationManager.TXT_REPORT))
                         m_databaseManager = new DatabaseManager(sql, new TXTHandler());
                     else m_databaseManager = new DatabaseManager(sql, new XMLHandler());
-                    m_databaseManager.Init();
+                    
+                    //if the connection has lost, we will display a message and exit.
+                    try {
+                        m_databaseManager.Init();
+                        this.m_executionManager = new ExecutionManager(ConfigurationManager.GetMaxThreadPoolSize());
+                    }
+                    catch (DatabaseException e) {
+                        this.DisplayErrorMessage(e.Message);
+                        this.Exit();
+                    }
                     break;
                 case ConfigurationManager.ERROR_READING:
                     this.DisplayErrorMessage("Can't access " + ConfigurationManager.Configuration_Filename + " or invliad XML format.");
@@ -94,9 +102,7 @@ namespace AST.Management
             try {
                 this.m_databaseManager.DeleteAbstractAction(name, type);
             }
-            catch (ConnectionFailedException e) { 
-            }
-            catch (QueryFailedException e) {
+            catch (DatabaseException e) {
                 foreach (ASTOutputListener o in this.m_outputListeners)
                     o.DisplayErrorMessage(e.Message);
                 return;
@@ -114,7 +120,17 @@ namespace AST.Management
         /// <returns>Abstract action Hashtable</returns>
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type)
         {
-            return this.m_databaseManager.GetInfo(type);
+            try {
+                return this.m_databaseManager.GetInfo(type);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unknown error occured during getting info.");
+                throw e;
+            }
         }
 
         /// <summary>
@@ -124,7 +140,17 @@ namespace AST.Management
         /// <returns>List of recent AbstractActions</returns>
         public List<RecentEntry> GetRecent(int recent)
         {
-            return this.m_databaseManager.GetRecent(recent);
+            try {
+                return this.m_databaseManager.GetRecent(recent);
+            }
+            catch (DatabaseException e) { 
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unknown error occured during getting recent actions.");
+                throw e; 
+            }
         }
 
         /// <summary>
@@ -135,7 +161,17 @@ namespace AST.Management
         /// <returns>List of recent AbstractActions by Type</returns>
         public List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type)
         {
-            return this.m_databaseManager.GetRecent(recent, type);
+            try {
+                return this.m_databaseManager.GetRecent(recent, type);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unknown error occured during getting recent actions.");
+                throw e;
+            }
         }
 
         /// <summary>
@@ -148,9 +184,13 @@ namespace AST.Management
             try {
                 return this.m_databaseManager.GetParameters(actionName);
             }
-            catch (ConnectionFailedException e) { throw e; }
+            catch (ConnectionFailedException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
             catch (Exception e) {
-                Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
+                Debug.WriteLine("ASTManager::GetParameters:: Loading parameters of action: " + actionName + " failed.");
+                this.DisplayErrorMessage("Loading parameters of action " + actionName + " failed.");
                 throw new QueryFailedException("Loading parameters of action " + actionName + " failed.", e);
             }
         }
@@ -192,8 +232,14 @@ namespace AST.Management
             try {
                 return this.m_databaseManager.Load(name, type);
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) { throw e; }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unknown error occured during load " + name + ".");
+                throw e;
+            }
         }
 
         /// <summary>
@@ -204,7 +250,18 @@ namespace AST.Management
         /// <param name="isNew">Signals if the Action already exist</param>
         public void Save(AbstractAction a, AbstractAction.AbstractActionTypeEnum type, bool isNew)
         {
-            this.m_databaseManager.Save(a, type, isNew);
+            try {
+                this.m_databaseManager.Save(a, type, isNew);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
+            catch (Exception e) {
+                this.DisplayErrorMessage("Unknown error occured during saving " +a.Name+ ".");
+                throw e; 
+            }
+            
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayInfoMessage(a.Name + " Saved Successfully.");
         }
@@ -223,6 +280,7 @@ namespace AST.Management
             }
             catch (SaveReportException e) {
                 Debug.WriteLine(e.Message);
+                throw e;
             }
         }
 
@@ -251,7 +309,17 @@ namespace AST.Management
         /// <param name="isNew">Signals if the End-station already exist</param>
         public void AddEndStation(EndStation es, bool isNew)
         {
-            this.m_databaseManager.AddEndStation(es, isNew);
+            try {
+                this.m_databaseManager.AddEndStation(es, isNew);
+            }
+            catch (InvalidNameException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
         }
 
         /// <summary>
@@ -260,12 +328,18 @@ namespace AST.Management
         /// <param name="es">an End-station object</param>
         public void RemoveEndStation(EndStation es)
         {
-            this.m_databaseManager.Delete(es);
+            try {
+                this.m_databaseManager.Delete(es);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
         }
 
         /// <summary>
         /// method for starting the process of execution of an AbstractAction
-        /// the method resumes the suspended thread and the thread performes another itteration in the loop
+        /// the method resumes the suspended thread and the thread performes another iteration in the loop
         /// </summary>
         /// <param name="action">the AbstractAction to execute</param>
         /// <param name="type">the action type (Action\TSC\TP)</param>
@@ -275,6 +349,13 @@ namespace AST.Management
             //Console.WriteLine("Executing " + a.Name + ", Report Name: " + executionName);
             String reportFilename = ConfigurationManager.GetReportFullPath() + "\\" + executionName;
             m_executionManager.Execute(a, type, reportFilename);
+        }
+
+        /// <summary>
+        /// method for stoping the process of execution of an AbstractAction
+        /// </summary>
+        public void StopExecution() {
+            m_executionManager.StopExecution();
         }
 
         /// <summary>
@@ -372,8 +453,13 @@ namespace AST.Management
         /// <param name="isNew"></param>
         public void Save(Parameter p, Action a, bool isNew)
         {
-            // YC
-            this.m_databaseManager.Save(p, a.Name, isNew);
+            try {
+                this.m_databaseManager.Save(p, a.Name, isNew);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
         }
 
         /// <summary>
@@ -383,7 +469,13 @@ namespace AST.Management
         /// <param name="a">the action containig the parameter</param>
         public void Delete(Parameter p, Action a)
         {
-            this.m_databaseManager.Delete(p, a.Name);
+            try {
+                this.m_databaseManager.Delete(p, a.Name);
+            }
+            catch (DatabaseException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e; 
+            }
         }
 
     }

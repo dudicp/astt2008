@@ -40,10 +40,15 @@ namespace AST.Database
         /// </summary>
         public void Init()
         {
-            this.m_endStations = this.m_DBHandler.GetAllEndStations();
-            this.m_actionInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
-            this.m_TSCInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
-            this.m_TPInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
+            try {
+                this.m_endStations = this.m_DBHandler.GetAllEndStations();
+                this.m_actionInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
+                this.m_TSCInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
+                this.m_TPInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
+            }
+            catch (DatabaseException e) {
+                throw e;
+            }
         }
 
         /// <summary>
@@ -86,13 +91,15 @@ namespace AST.Database
         /// <returns>Abstract action Hashtable</returns>
         public Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type)
         {
-            switch (type)
-            {
-                case AbstractAction.AbstractActionTypeEnum.ACTION: return this.m_actionInfo;
-                case AbstractAction.AbstractActionTypeEnum.TSC: return this.m_TSCInfo;
-                case AbstractAction.AbstractActionTypeEnum.TP: return this.m_TPInfo;
-                default: throw new InvalidCastException("Unknown type: " + type.ToString());
+            try {
+                switch (type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION: return this.m_actionInfo;
+                    case AbstractAction.AbstractActionTypeEnum.TSC: return this.m_TSCInfo;
+                    case AbstractAction.AbstractActionTypeEnum.TP: return this.m_TPInfo;
+                    default: throw new InvalidCastException("Unknown type: " + type.ToString());
+                }
             }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>
@@ -102,7 +109,10 @@ namespace AST.Database
         /// <returns>List of recent AbstractActions</returns>
         public List<RecentEntry> GetRecent(int recent)
         {
-            return this.m_DBHandler.GetRecent(recent);
+            try {
+                return this.m_DBHandler.GetRecent(recent);
+            }
+            catch (DatabaseException e) { throw e; }
         }
         /// <summary>
         /// method for getting most recent AbstractActions by Type
@@ -112,7 +122,10 @@ namespace AST.Database
         /// <returns>List of recent AbstractActions by Type</returns>
         public List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type)
         {
-            return this.m_DBHandler.GetRecent(recent, type);
+            try{
+                return this.m_DBHandler.GetRecent(recent, type);
+            }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>
@@ -152,10 +165,7 @@ namespace AST.Database
             try {
                 return this.m_DBHandler.Load(name, type);
             }
-            catch (QueryFailedException e) { throw e; }
-            catch (EmptyQueryResultException e) { throw e; }
-            catch (InvalidTypeException e) { throw e; }
-            catch (ConnectionFailedException e) { throw e; }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>
@@ -169,7 +179,10 @@ namespace AST.Database
             //if we create new action that its name already exist
             if ((isNew) && (this.m_DBHandler.IsExist(a, type))) throw new InvalidNameException("The name " + a.Name + " already exists.");
 
-            this.m_DBHandler.Save(a, type);
+            try {
+                this.m_DBHandler.Save(a, type);
+            }
+            catch (DatabaseException e) { throw e; }
 
             switch (type)
             {
@@ -224,7 +237,10 @@ namespace AST.Database
         {
             //if we create new end-station that its ID already exist
             if ((isNew) && (this.m_DBHandler.IsExist(es))) throw new InvalidNameException("The ID: " + es.ID + " already exists.");
-            this.m_DBHandler.Save(es);
+            try {
+                this.m_DBHandler.Save(es);
+            }
+            catch (DatabaseException e) { throw e; }
 
             if (this.m_endStations.Contains(es.ID)) this.m_endStations.Remove(es.ID);
             this.m_endStations.Add(es.ID, es);
@@ -236,8 +252,11 @@ namespace AST.Database
         /// <param name="es">an End-station object</param>
         public void Delete(EndStation es)
         {
-            this.m_endStations.Remove(es.ID);
-            this.m_DBHandler.Delete(es);
+            try {
+                this.m_endStations.Remove(es.ID);
+                this.m_DBHandler.Delete(es);
+            }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>
@@ -251,7 +270,10 @@ namespace AST.Database
             //if we create new parameter that its name already exist
             if ((isNew) && (this.m_DBHandler.IsExist(p, actionName))) throw new InvalidNameException("The name: " + p.Name + " already exists.");
 
-            this.m_DBHandler.Save(p, actionName);
+            try {
+                this.m_DBHandler.Save(p, actionName);
+            }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>
@@ -261,7 +283,10 @@ namespace AST.Database
         /// <param name="actionName">The Action name</param>
         public void Delete(Parameter p, String actionName)
         {
-            this.m_DBHandler.Delete(p, actionName);
+            try {
+                this.m_DBHandler.Delete(p, actionName);
+            }
+            catch (DatabaseException e) { throw e; }
         }
 
         /// <summary>

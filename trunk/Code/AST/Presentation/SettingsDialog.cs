@@ -72,8 +72,8 @@ namespace AST.Presentation {
             try {
                 allParameters = ASTManager.GetInstance().GetParameters(this.m_action.Name);
             }
-            catch (ConnectionFailedException ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
-            catch (Exception ex) { MessageBox.Show(ex.Message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            catch (ConnectionFailedException ex) { DialogResult = DialogResult.Cancel; }
+            catch (Exception ex) { DialogResult = DialogResult.Cancel; }
 
             //Filling the unselected parameters:
             foreach (Parameter p in allParameters) {
@@ -295,35 +295,44 @@ namespace AST.Presentation {
         }
 
         private void NewEndStationButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(null);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                this.m_endStations.Add(es);
-                ASTManager.GetInstance().AddEndStation(es, true);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            try {
+                EndStationDialog esd = new EndStationDialog(null);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, true);
+                    this.m_endStations.Add(es);
+                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void EditButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                ASTManager.GetInstance().AddEndStation(es, false);
+            try {
+                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, false);
+                    InitEditEndStationTab();
+                    this.EditButton.Enabled = false;
+                    this.DeleteButton.Enabled = false;
+                }
+            }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
+        }
+
+        private void DeleteButton_Click(object sender, EventArgs e) {
+            try {
+                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return;
+                EndStation es = m_endStations[this.EndStationsListBox.SelectedIndex];
+                ASTManager.GetInstance().RemoveEndStation(es);
+                this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
                 InitEditEndStationTab();
                 this.EditButton.Enabled = false;
                 this.DeleteButton.Enabled = false;
             }
-        }
-
-        private void DeleteButton_Click(object sender, EventArgs e) {
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
-            EndStation es = m_endStations[this.EndStationsListBox.SelectedIndex];
-            ASTManager.GetInstance().RemoveEndStation(es);
-            this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-            InitEditEndStationTab();
-            this.EditButton.Enabled = false;
-            this.DeleteButton.Enabled = false;
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void okButton_Click(object sender, EventArgs e) {
