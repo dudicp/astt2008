@@ -21,6 +21,7 @@ namespace AST.Management
         private String m_reportFilename;
         private Color m_defaultColor;
         private List<Result> m_allResults;
+        private bool m_stopExecute;
 
         // This delegate enables asynchronous calls for setting
         // the text property on a TextBox control.
@@ -38,6 +39,7 @@ namespace AST.Management
             InitializeComponent();
             m_endStations = new List<EndStation>();
             m_allResults = new List<Result>();
+            m_stopExecute = false;
             m_currentActionNo = 0;
             m_reportFilename = reportFilename;
             ViewReportLabel.Text = "";
@@ -90,6 +92,9 @@ namespace AST.Management
         /// <param name="e"></param>
         private void MyCancelButton_Click(object sender, EventArgs e)
         {
+            m_stopExecute = true;
+            ASTManager.GetInstance().StopExecution();
+            MyCancelButton.Enabled = false;
         }
         /// <summary>
         /// 
@@ -113,6 +118,9 @@ namespace AST.Management
         {
             if ((progress < 0) || (progress > 100)) return;
             else SetValue(progress, this.ProgressBar, resultsQueue);
+            if (m_stopExecute) {
+                ExecutionFinish();
+            }
         }
         /// <summary>
         /// 
@@ -132,6 +140,10 @@ namespace AST.Management
         public void ExecutionFinish()
         {
             SetExecutionFinish();
+        }
+
+        public void DisplayMessage(String message) {
+            SetText(message, this.MessageLabel);
         }
 
 
@@ -201,6 +213,7 @@ namespace AST.Management
             }
             else
             {
+                MyCancelButton.Enabled = false;
                 OkButton.Enabled = true;
                 ViewReportLabel.Text = "View Report";
                 ViewReportLabel.Enabled = true;

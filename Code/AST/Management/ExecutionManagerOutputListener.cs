@@ -21,5 +21,7 @@ namespace AST.Management
         void UpdateCurrrentAction(String currentActionName, int totalActions);
 
         void ExecutionFinish();
+
+        void DisplayMessage(String message);
     }
 }

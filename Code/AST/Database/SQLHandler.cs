@@ -40,11 +40,14 @@ namespace AST.Database{
         private SqlConnection Connect(){
             try {
                 Debug.WriteLine("Connecting to: " + this.m_connectionString);
-                return new SqlConnection(this.m_connectionString);
+                SqlConnection res = new SqlConnection(this.m_connectionString);
+                //Only to check if the connection establish otherwise we will catch the exception
+                res.Open();
+                return res;
             }
             catch (Exception e){
                 Debug.WriteLine("SQLHandler::Connect::Connecting to: " + this.m_connectionString + " Failed!");
-                throw new ConnectionFailedException("Connection to database: " + this.m_connectionString + " failed.", e);
+                throw new ConnectionFailedException("Connection to database with the connection string: " + this.m_connectionString + " has failed.", e);
             }
         }
 
@@ -259,7 +262,7 @@ namespace AST.Database{
             try {
                 SqlConnection connection = this.Connect(); //Creating Connection
                 dr = SqlHelper.ExecuteReader(connection, "sp_GetActionsInTSC", name);
-            
+
                 while (dr.Read()) {
                     //2.1 Load Action
                     String actionName = (String)dr.GetValue(1);
@@ -269,10 +272,10 @@ namespace AST.Database{
                     a.Delay = delay;
 
                     int executionOrder = (int)dr.GetValue(2);
-                    
+
                     SqlDataReader parameterDR = null;
                     connection = this.Connect();
-                    parameterDR = SqlHelper.ExecuteReader(connection, "sp_GetParametersInTSC", name,actionName,executionOrder);
+                    parameterDR = SqlHelper.ExecuteReader(connection, "sp_GetParametersInTSC", name, actionName, executionOrder);
 
                     //2.2 Load Parameters
                     while (parameterDR.Read()) {
@@ -301,9 +304,30 @@ namespace AST.Database{
                     tsc.AddAction(a); // Adding the action to the tsc.
                 }
 
+                //3. Load TSC's end-stations
+                SqlDataReader endStationsRootDR = null;
+                connection = this.Connect();
+                endStationsRootDR = SqlHelper.ExecuteReader(connection, "sp_GetEndStationsInTSCRoot", tsc.Name);
+
+                List<EndStationSchedule> tscEndStations = new List<EndStationSchedule>();
+
+                while (endStationsRootDR.Read()) {
+                    int esID = (int)endStationsRootDR.GetValue(0);
+                    if (this.m_endStations.Contains(esID)) {
+                        EndStationSchedule ess = new EndStationSchedule((EndStation)m_endStations[esID]);
+                        tscEndStations.Add(ess);
+                    }
+                    else {
+                        Debug.WriteLine("SQLHandler::LoadTSC:: End-Station: " + esID + " not found in the system.");
+                    }
+                }
+
+                tsc.SetEndStations(tscEndStations);
                 return tsc;
             }
             catch (ConnectionFailedException e) { throw e; }
+            catch (QueryFailedException e) { throw e; }
+            catch (EmptyQueryResultException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC " + name + " failed.");
                 throw new QueryFailedException("Loading TSC " + name + " failed.", e);
@@ -380,17 +404,20 @@ namespace AST.Database{
         /// <param name="action">the AbstractAction to save on the DB</param>
         /// <param name="type">the action type (Action\TSC\TP)</param>
         public void Save(AbstractAction action, AbstractAction.AbstractActionTypeEnum type) {
-            switch (type){
-                case AbstractAction.AbstractActionTypeEnum.ACTION:
-                    this.Save((Action)action);
-                    break;
-                case AbstractAction.AbstractActionTypeEnum.TSC:
-                    this.Save((TSC)action);
-                    break;
-                default: 
-                    this.Save((TP)action);
-                    break;
+            try {
+                switch (type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION:
+                        this.Save((Action)action);
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TSC:
+                        this.Save((TSC)action);
+                        break;
+                    default:
+                        this.Save((TP)action);
+                        break;
+                }
             }
+            catch (DatabaseException e) { throw e; }
         }
         /// <summary>
         /// method for Saving End-stations on the SQL database.
@@ -398,18 +425,31 @@ namespace AST.Database{
         /// <param name="es">the end-station to save on the DB</param>
         public void Save(EndStation es) {
             try {
-                String storedProcedureName;
-                if (this.IsExist(es)) storedProcedureName = "sp_UpdateEndStation";
-                else storedProcedureName = "sp_InsertEndStation";
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, es.ID, es.Name, es.IP.ToString(), es.MAC, es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password, es.IsDefault);
+                SqlTransaction transaction = connection.BeginTransaction();
+                try {
+                    String storedProcedureName;
+                    if (this.IsExist(es)) storedProcedureName = "sp_UpdateEndStation";
+                    else storedProcedureName = "sp_InsertEndStation";
+
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, es.ID, es.Name, es.IP.ToString(), es.MAC, es.OSType.ToString(), es.OSVersion.ToString(), es.Username, es.Password, es.IsDefault);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e;
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Save(EndStation):: Saving End-Station " + es.Name + "(" + es.ID + ") failed.");
+                    throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
             catch (ConnectionFailedException e) {
                 throw e;
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(EndStation):: Saving End-Station " + es.Name + "(" + es.ID + ") failed.");
-                throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
             }
         }
         /// <summary>
@@ -418,37 +458,57 @@ namespace AST.Database{
         /// <param name="action">the Action to save on the DB</param>
         private void Save(Action action) {
 
-            // 1. Saving Action
             try {
-                String storedProcedureName;
-                if (this.IsExist(action, AbstractAction.AbstractActionTypeEnum.ACTION)) storedProcedureName = "sp_UpdateAction";
-                else storedProcedureName = "sp_InsertAction";
-
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails, action.Duration);
-            }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(Action):: Saving action: " + action.Name + " failed.");
-                throw new QueryFailedException("Saving action: " + action.Name + " failed.", e);
-            }
+                SqlTransaction transaction = connection.BeginTransaction();
 
-            // 2. Saving Action Content
-            ICollection keys = action.GetAllContents().Keys;
-            foreach (EndStation.OSTypeEnum key in keys) {
+                // 1. Saving Action
                 try {
-                    SqlConnection connection = this.Connect();
-                    String validityString;
-                    if (action.GetValidityString(key) != null) validityString = action.GetValidityString(key);
-                    else validityString = "";
+                    String storedProcedureName;
+                    if (this.IsExist(action, AbstractAction.AbstractActionTypeEnum.ACTION)) storedProcedureName = "sp_UpdateAction";
+                    else storedProcedureName = "sp_InsertAction";
 
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertActionContent", action.Name, key, action.GetContent(key), validityString);
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails, action.Duration);
                 }
-                catch (ConnectionFailedException e) { throw e; }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e; 
+                }
                 catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::Save(Action):: Saving action content: " + key.ToString() + " failed.");
-                    throw new QueryFailedException("Saving action content: " + key.ToString() + " failed.", e);
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Save(Action):: Saving action: " + action.Name + " failed.");
+                    throw new QueryFailedException("Saving action: " + action.Name + " failed.", e);
                 }
+
+                // 2. Saving Action Content
+                ICollection keys = action.GetAllContents().Keys;
+                foreach (EndStation.OSTypeEnum key in keys) {
+                    try {
+                        String validityString;
+                        if (action.GetValidityString(key) != null) validityString = action.GetValidityString(key);
+                        else validityString = "";
+
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertActionContent", action.Name, key, action.GetContent(key), validityString);
+                    }
+                    catch (ConnectionFailedException e) {
+                        transaction.Rollback();
+                        connection.Close();
+                        throw e; 
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        connection.Close();
+                        Debug.WriteLine("SQLHandler::Save(Action):: Saving action content: " + key.ToString() + " failed.");
+                        throw new QueryFailedException("Saving action content: " + key.ToString() + " failed.", e);
+                    }
+                }
+                transaction.Commit();
+                connection.Close();
+            }
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
 
@@ -460,53 +520,68 @@ namespace AST.Database{
         ///     3.1. Update the action in TSC table.
         ///     3.2. Update the parameters in TSC table.
         ///     3.3. Update the end-stations in EndStationInTSC table.
+        /// 4. Saving the TSC end-stations
         /// </summary>
         /// <param name="tsc">The requested TSC</param>
         private void Save(TSC tsc) {
-            
-            // 1. Deleting the old TSC if exists.
+
             try {
+                SqlConnection connection = this.Connect();
+                SqlTransaction transaction = connection.BeginTransaction();
 
-                SqlConnection connection;
+                // 1. Deleting the old TSC if exists.
+                try {
+                    String storedProcedureName;
+                    if (this.IsExist(tsc, AbstractAction.AbstractActionTypeEnum.TSC)) {
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteTSCContent", tsc.Name);
+                        storedProcedureName = "sp_UpdateTSC";
+                    }
+                    else storedProcedureName = "sp_InsertTSC";
 
-                String storedProcedureName;
-                if (this.IsExist(tsc, AbstractAction.AbstractActionTypeEnum.TSC)) {
-                    connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSCContent", tsc.Name);
-                    storedProcedureName = "sp_UpdateTSC";
-                }
-                else storedProcedureName = "sp_InsertTSC";
+                    // 2. Saving the TSC information.
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, tsc.Name, tsc.Description, tsc.CreatorName, tsc.CreationTime);
 
-                // 2. Saving the TSC information.
-                connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, tsc.Name, tsc.Description, tsc.CreatorName, tsc.CreationTime);
+                    // 3. For each action in the TSC
+                    int executionOrder = 0;
+                    foreach (Action a in tsc.GetActions()) {
 
-                // 3. For each action in the TSC
-                int executionOrder = 0;
-                foreach (Action a in tsc.GetActions()) {
+                        //3.1. Update the action in TSC table.
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertActionToTSC", tsc.Name, a.Name, executionOrder, a.Delay);
 
-                    //3.1. Update the action in TSC table.
-                    connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertActionToTSC", tsc.Name, a.Name, executionOrder, a.Delay);
+                        //3.2. Update the parameters in TSC table.
+                        foreach (Parameter p in a.GetParameters()) {
+                            SqlHelper.ExecuteNonQuery(transaction, "sp_InsertParameterToTSC", tsc.Name, a.Name, executionOrder, p.Name, p.Input);
+                        }
 
-                    //3.2. Update the parameters in TSC table.
-                    foreach (Parameter p in a.GetParameters()) {
-                        connection = this.Connect();
-                        SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterToTSC", tsc.Name, a.Name, executionOrder, p.Name, p.Input);
+                        //3.3. Update the end-stations in EndStationInTSC table.
+                        foreach (EndStationSchedule ess in a.GetEndStations()) {
+                            SqlHelper.ExecuteNonQuery(transaction, "sp_InsertEndStationToTSC", tsc.Name, a.Name, executionOrder, ess.EndStation.ID);
+                        }
+                        executionOrder++;
                     }
 
-                    //3.3. Update the end-stations in EndStationInTSC table.
-                    foreach (EndStationSchedule ess in a.GetEndStations()) {
-                        connection = this.Connect();
-                        SqlHelper.ExecuteNonQuery(connection, "sp_InsertEndStationToTSC", tsc.Name, a.Name, executionOrder, ess.EndStation.ID);
+                    // 4. Saving the TSC end-stations
+                    foreach (EndStationSchedule ess in tsc.GetEndStations()) {
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertEndStationToTSCRoot", tsc.Name, ess.EndStation.ID);
                     }
-                    executionOrder++;
+
                 }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e; 
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Save(TSC):: Saving tsc: " + tsc.Name + " failed.");
+                    throw new QueryFailedException("Saving tsc: " + tsc.Name + " failed.", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(TSC):: Saving tsc: " + tsc.Name + " failed.");
-                throw new QueryFailedException("Saving tsc: " + tsc.Name + " failed.", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
 
@@ -518,35 +593,45 @@ namespace AST.Database{
         /// </summary>
         /// <param name="tp">The requested TP</param>
         private void Save(TP tp) {
-
-            // 1. Deleting the old TSC if exists.
             try {
-                SqlConnection connection;
+                SqlConnection connection = this.Connect();
+                SqlTransaction transaction = connection.BeginTransaction();
 
-                String storedProcedureName;
-                if (this.IsExist(tp, AbstractAction.AbstractActionTypeEnum.TP)) {
-                    connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTPContent", tp.Name);
-                    storedProcedureName = "sp_UpdateTP";
+                // 1. Deleting the old TSC if exists.
+                try {
+                    String storedProcedureName;
+                    if (this.IsExist(tp, AbstractAction.AbstractActionTypeEnum.TP)) {
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteTPContent", tp.Name);
+                        storedProcedureName = "sp_UpdateTP";
+                    }
+                    else storedProcedureName = "sp_InsertTP";
+
+                    // 2. Saving the TSC information.
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, tp.Name, tp.Description, tp.CreatorName, tp.CreationTime);
+
+                    // 3. Saving each TSC in the TP.
+                    int executionOrder = 0;
+                    foreach (TSC tsc in tp.GetTSCs()) {
+
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertTSCToTP", tp.Name, tsc.Name, executionOrder++);
+                    }
                 }
-                else storedProcedureName = "sp_InsertTP";
-
-                // 2. Saving the TSC information.
-                connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, tp.Name, tp.Description, tp.CreatorName, tp.CreationTime);
-
-                // 3. Saving each TSC in the TP.
-                int executionOrder = 0;
-                foreach (TSC tsc in tp.GetTSCs()) {
-
-                    connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertTSCToTP", tp.Name, tsc.Name, executionOrder++);
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e; 
                 }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Save(TP):: Saving TP: " + tp.Name + " failed.");
+                    throw new QueryFailedException("Saving TP: " + tp.Name + " failed.", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(TP):: Saving TP: " + tp.Name + " failed.");
-                throw new QueryFailedException("Saving TP: " + tp.Name + " failed.", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
         /// <summary>
@@ -555,34 +640,54 @@ namespace AST.Database{
         /// <param name="p">the parameter to save on the DB</param>
         /// <param name="actionName">the name of the action containing the parameter</param>
         public void Save(Parameter p, String actionName) {
-            // 1. Saving Parameter
-            SqlConnection connection;
             try {
-                String storedProcedureName;
-                if (this.IsExist(p, actionName)) storedProcedureName = "sp_UpdateParameter";
-                else storedProcedureName = "sp_InsertParameter";
+                SqlConnection connection = this.Connect();
+                SqlTransaction transaction = connection.BeginTransaction();
 
-                connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, storedProcedureName, actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp, p.IsDefault);
-            }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Save(Parameter):: Saving paramter: " + p.Name + " failed.");
-                throw new QueryFailedException("Saving paramter: " + p.Name + " failed.", e);
-            }
-
-            // 2. Saving Parameter Value
-            ICollection keys = p.GetAllValues().Keys;
-            foreach (EndStation.OSTypeEnum key in keys) {
+                // 1. Saving Parameter
                 try {
-                    connection = this.Connect();
-                    SqlHelper.ExecuteNonQuery(connection, "sp_InsertParameterContent", actionName, p.Name, key, p.GetValue(key));
+                    String storedProcedureName;
+                    if (this.IsExist(p, actionName)) storedProcedureName = "sp_UpdateParameter";
+                    else storedProcedureName = "sp_InsertParameter";
+
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, actionName, p.Name, p.Description, p.Type.ToString(), p.Input, p.ValidityExp, p.IsDefault);
                 }
-                catch (ConnectionFailedException e) { throw e; }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e; 
+                }
                 catch (Exception e) {
-                    Debug.WriteLine("SQLHandler::Save(Parameter):: Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.");
-                    throw new QueryFailedException("Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.", e);
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Save(Parameter):: Saving paramter: " + p.Name + " failed.");
+                    throw new QueryFailedException("Saving paramter: " + p.Name + " failed.", e);
                 }
+
+                // 2. Saving Parameter Value
+                ICollection keys = p.GetAllValues().Keys;
+                foreach (EndStation.OSTypeEnum key in keys) {
+                    try {
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertParameterContent", actionName, p.Name, key, p.GetValue(key));
+                    }
+                    catch (ConnectionFailedException e) {
+                        transaction.Rollback();
+                        connection.Close();
+                        throw e;
+                    }
+                    catch (Exception e) {
+                        transaction.Rollback();
+                        connection.Close();
+                        Debug.WriteLine("SQLHandler::Save(Parameter):: Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.");
+                        throw new QueryFailedException("Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.", e);
+                    }
+                }
+
+                transaction.Commit();
+                connection.Close();
+            }
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
 
@@ -600,21 +705,22 @@ namespace AST.Database{
         /// <param name="type">the action type (Action\TSC\TP)</param>
         public void Delete(String name, AbstractAction.AbstractActionTypeEnum type)
         {
-            switch (type) {
-                case AbstractAction.AbstractActionTypeEnum.ACTION:
-                    try {
+            try {
+                switch (type) {
+                    case AbstractAction.AbstractActionTypeEnum.ACTION:
                         DeleteAction(name);
-                    }
-                    catch (ConnectionFailedException e) { throw e; }
-                    catch (QueryFailedException e) { throw e; }
-                    break;
-                case AbstractAction.AbstractActionTypeEnum.TSC:
-                    DeleteTSC(name);
-                    break;
-                default: 
-                    DeleteTP(name);
-                    break;
+                        break;
+                    case AbstractAction.AbstractActionTypeEnum.TSC:
+                        DeleteTSC(name);
+                        break;
+                    default:
+                        DeleteTP(name);
+                        break;
+                }
             }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (QueryFailedException e) { throw e; }
+
         }
         /// <summary>
         /// method for deleting End-stations on the SQL database.
@@ -624,14 +730,27 @@ namespace AST.Database{
         {
             try {
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteEndStation", es.ID);
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try {
+                    SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteEndStation", es.ID);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e;
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Delete(EndStation):: Deleting End-Station " + es.Name + "(" + es.ID + ") failed.");
+                    throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
             catch (ConnectionFailedException e) {
                 throw e;
-            }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Delete(EndStation):: Deleting End-Station " + es.Name + "(" + es.ID + ") failed.");
-                throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
             }
         }
         /// <summary>
@@ -641,12 +760,27 @@ namespace AST.Database{
         private void DeleteAction(String name) {
             try {
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteAction", name);
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try {
+                    SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteAction", name);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e;
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::DeleteAction:: Deleting action " + name + " failed.\nThere exists a test scenario that contains " + name + ".");
+                    throw new QueryFailedException("Deleting action " + name + " failed.\nThere exists a test scenario that contains " + name + ".", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::DeleteAction:: Deleting action " + name + " failed.\nThere exists a test scenario that contains "+name+".");
-                throw new QueryFailedException("Deleting action " + name + " failed.\nThere exists a test scenario that contains " + name + ".", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
         /// <summary>
@@ -657,12 +791,27 @@ namespace AST.Database{
         {
             try {
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTSC", name);
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try {
+                    SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteTSC", name);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e;
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::DeleteTSC:: Deleting TSC: " + name + " failed.");
+                    throw new QueryFailedException("Deleting test scenario " + name + " failed.\nThere exists a test plan that contains " + name + ".", e);
+                }
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::DeleteTSC:: Deleting TSC: " + name + " failed.");
-                throw new QueryFailedException("Deleting test scenario " + name + " failed.\nThere exists a test plan that contains " + name + ".", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
         /// <summary>
@@ -673,12 +822,28 @@ namespace AST.Database{
         {
             try {
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteTP", name);
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try {
+                    SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteTP", name);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e;
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::DeleteTP:: Deleting TP: " + name + " failed.");
+                    throw new QueryFailedException("Deleting TP: " + name + " failed.", e);
+                }
+
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::DeleteTP:: Deleting TP: " + name + " failed.");
-                throw new QueryFailedException("Deleting TP: " + name + " failed.", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
         /// <summary>
@@ -689,12 +854,28 @@ namespace AST.Database{
         public void Delete(Parameter p, String actionName) {
             try {
                 SqlConnection connection = this.Connect();
-                SqlHelper.ExecuteNonQuery(connection, "sp_DeleteParameter", actionName, p.Name);
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try {
+                    SqlHelper.ExecuteNonQuery(transaction, "sp_DeleteParameter", actionName, p.Name);
+                }
+                catch (ConnectionFailedException e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    throw e; 
+                }
+                catch (Exception e) {
+                    transaction.Rollback();
+                    connection.Close();
+                    Debug.WriteLine("SQLHandler::Delete(Parameter):: Deleting parameter: " + p.Name + " failed.");
+                    throw new QueryFailedException("Deleting parameter: " + p.Name + " failed.", e);
+                }
+
+                transaction.Commit();
+                connection.Close();
             }
-            catch (ConnectionFailedException e) { throw e; }
-            catch (Exception e) {
-                Debug.WriteLine("SQLHandler::Delete(Parameter):: Deleting parameter: " + p.Name + " failed.");
-                throw new QueryFailedException("Deleting parameter: " + p.Name + " failed.", e);
+            catch (ConnectionFailedException e) {
+                throw e;
             }
         }
 
@@ -943,6 +1124,8 @@ namespace AST.Database{
                 return res;
             }
             catch (ConnectionFailedException e) { throw e; }
+            catch (QueryFailedException e) { throw e; }
+            catch (EmptyQueryResultException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::GetParameters:: Loading parameters of action: " + actionName + " failed.");
                 throw new QueryFailedException("Loading parameters of action " + actionName + " failed.", e);

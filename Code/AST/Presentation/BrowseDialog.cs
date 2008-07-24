@@ -34,12 +34,17 @@ namespace AST.Presentation
         }
 
         private void SetListBoxNames() {
-            this.listBox.Items.Clear();
-            this.m_info = ASTManager.GetInstance().GetInfo(m_selectedType);
+            try {
+                this.listBox.Items.Clear();
+                this.m_info = ASTManager.GetInstance().GetInfo(m_selectedType);
 
-            ICollection names = this.m_info.Keys;
-            foreach (String name in names)
-                this.listBox.Items.Add(name);
+                ICollection names = this.m_info.Keys;
+                foreach (String name in names)
+                    this.listBox.Items.Add(name);
+            }
+            catch (Exception e) {
+                DialogResult = DialogResult.Cancel;
+            }
         }
         /// <summary>
         /// 

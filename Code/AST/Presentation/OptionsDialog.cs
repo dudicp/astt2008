@@ -48,35 +48,44 @@ namespace AST.Presentation {
         }
 
         private void NewEndStationButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(null);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                this.m_endStations.Add(es);
-                ASTManager.GetInstance().AddEndStation(es, true);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            try {
+                EndStationDialog esd = new EndStationDialog(null);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, true);
+                    this.m_endStations.Add(es);
+                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void EditEndStationButton_Click(object sender, EventArgs e) {
-            EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-            if (esd.ShowDialog() == DialogResult.OK) {
-                EndStation es = esd.GetEndStation();
-                ASTManager.GetInstance().AddEndStation(es, false);
-                InitEndStations();
+            try {
+                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                if (esd.ShowDialog() == DialogResult.OK) {
+                    EndStation es = esd.GetEndStation();
+                    ASTManager.GetInstance().AddEndStation(es, false);
+                    InitEndStations();
 
-                this.IPText.Text = es.IP.ToString();
-                this.UsernameText.Text = es.Username;
-                this.OSTypeText.Text = es.OSType.ToString();
+                    this.IPText.Text = es.IP.ToString();
+                    this.UsernameText.Text = es.Username;
+                    this.OSTypeText.Text = es.OSType.ToString();
+                }
             }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void DeleteEndStationButton_Click(object sender, EventArgs e) {
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
+            try {
+                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return;
 
-            ASTManager.GetInstance().RemoveEndStation(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-            this.m_endStations.RemoveAt(this.EndStationsListBox.SelectedIndex);
-            this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                ASTManager.GetInstance().RemoveEndStation(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                this.m_endStations.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+            }
+            catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
 
         private void EndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
@@ -113,7 +122,6 @@ namespace AST.Presentation {
             int res = ConfigurationManager.WriteConfiguration(this.DBConnectionText.Text, this.PSToolsPathText.Text, (int)this.MaxThreadPoolText.Value, this.ReportsFullPathText.Text, reportFormat);
             if (res == ConfigurationManager.SUCCESS) {
                 MessageBox.Show("Configuration file updated successfully.", "Info Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                ASTManager.GetInstance().Init();
                 this.DialogResult = DialogResult.OK;
             }
             else {
