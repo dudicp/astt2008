@@ -24,14 +24,79 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 			    </tr>
 			    <xsl:for-each select="Report/Result">
 				    <tr style="background-color: #FFFFFF; font-family: sans-serif; font-size: 10pt;">
-						<td align="center"><xsl:value-of select="ActionName"/></td>
-						<td align="center">
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="left" bgcolor="#CCEEFF">
+							<b><xsl:value-of select="ActionName"/></b>
+						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="left">
+								<b><xsl:value-of select="ActionName"/></b>
+						</td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="left" bgcolor="#CCEEFF">
 							<xsl:value-of select="EndStationName"/>
 							(<xsl:value-of select="EndStationID"/>)
 						</td>
-						<td align="center"><xsl:value-of select="StartTime"/></td>
-						<td align="center"><xsl:value-of select="EndTime"/></td>
-						<td align="center"><xsl:value-of select="ValidityString"/></td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="left">
+							<xsl:value-of select="EndStationName"/>
+							(<xsl:value-of select="EndStationID"/>)
+						</td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="center" bgcolor="#CCEEFF">
+							<xsl:value-of select="StartTime"/>
+						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="center">
+							<xsl:value-of select="StartTime"/>
+						</td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="center" bgcolor="#CCEEFF">
+							<xsl:value-of select="EndTime"/>
+						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="center">
+							<xsl:value-of select="EndTime"/>
+						</td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="center" bgcolor="#CCEEFF">
+							<xsl:value-of select="ValidityString"/>
+						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="center">
+							<xsl:value-of select="ValidityString"/>
+						</td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="center" bgcolor="#CCEEFF">
+							<xsl:if test="Status='Fail'">
+							<font color="#FF1100">
+								<b><xsl:value-of select="Status"/></b>
+							</font>
+							</xsl:if>
+							<xsl:if test="Status='Success'">
+								<font color="#00EE66">
+									<b><xsl:value-of select="Status"/></b>
+								</font>
+							</xsl:if>
+						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
 						<td align="center">
 							<xsl:if test="Status='Fail'">
 							<font color="#FF1100">
@@ -44,7 +109,10 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 								</font>
 							</xsl:if>
 						</td>
-						<td>
+						</xsl:if>
+						
+						<xsl:if test="ActionType='TEST_SCRIPT'">
+						<td align="left" bgcolor="#CCEEFF">
 							<div class='collapsable'>
 								<p>
 									<xsl:for-each select="Message/Line">							
@@ -54,6 +122,20 @@ xmlns:xsl="http://www.w3.org/1999/XSL/Transform"><xsl:template match="/">
 								</p> 
 							</div> 
 						</td>
+						</xsl:if>
+						<xsl:if test="ActionType!='TEST_SCRIPT'">
+						<td align="left">
+							<div class='collapsable'>
+								<p>
+									<xsl:for-each select="Message/Line">							
+										<xsl:value-of select="."/>
+										<br/>
+									</xsl:for-each>
+								</p> 
+							</div> 
+						</td>
+						</xsl:if>
+
 				    </tr>
 			    </xsl:for-each>
 			</table>

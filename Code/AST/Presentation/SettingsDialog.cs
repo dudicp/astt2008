@@ -38,6 +38,7 @@ namespace AST.Presentation {
             if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION || (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)a).ActionType == Action.ActionTypeEnum.BATCH_FILE)) {
                 this.tabControl.Controls.Remove(this.EditParametersTab);
             }
+
             if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION)
                 this.tabControl.Controls.Remove(this.MiscTab);
             
@@ -46,7 +47,10 @@ namespace AST.Presentation {
                 InitMiscTab();
             }
             
-            InitEditEndStationTab();
+            if(m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)a).ActionType == Action.ActionTypeEnum.TEST_SCRIPT)
+                this.tabControl.Controls.Remove(this.EditEndStationTab);
+            
+            else InitEditEndStationTab();
         }
 
 ////////////////////////////////////////
@@ -87,6 +91,7 @@ namespace AST.Presentation {
         private void ParameterListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.SelectParameterButton.Enabled = false;
             if ((this.ParameterListBox.SelectedIndex < 0) || (this.ParameterListBox.SelectedIndex >= this.m_parameters.Count)) return;
+            this.SelectedParametersListBox.ClearSelected();
             this.SelectParameterButton.Enabled = true;
             this.DescriptionText.Text = this.m_parameters[this.ParameterListBox.SelectedIndex].Description;
             if (!(this.m_parameters[this.ParameterListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) &&
@@ -102,6 +107,7 @@ namespace AST.Presentation {
         private void SelectedParametersListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.UnselectParameterButton.Enabled = false;
             if ((this.SelectedParametersListBox.SelectedIndex < 0) || (this.SelectedParametersListBox.SelectedIndex >= this.m_selectedParameters.Count)) return;
+            this.ParameterListBox.ClearSelected();
             if (this.SelectedParametersListBox.SelectedIndex > 0) this.MoveUpParameterButton.Enabled = true;
             else this.MoveUpParameterButton.Enabled = false;
             if (this.SelectedParametersListBox.SelectedIndex < (this.m_selectedParameters.Count - 1)) this.MoveDownParameterButton.Enabled = true;
@@ -224,11 +230,10 @@ namespace AST.Presentation {
             this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
             this.m_endStations.Remove(es);
             this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
-            if (EndStationsListBox.Items.Count == 0) {
-                this.SelectEndStationButton.Enabled = false;
-                this.EditButton.Enabled = false;
-                this.DeleteButton.Enabled = false;
-            }
+            this.SelectEndStationButton.Enabled = false;
+            this.EditButton.Enabled = false;
+            this.DeleteButton.Enabled = false;
+
         }
 
         private void UnselectEndStationButton_Click(object sender, EventArgs e) {
@@ -279,6 +284,7 @@ namespace AST.Presentation {
         private void EndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.SelectEndStationButton.Enabled = false;
             if ((this.EndStationsListBox.SelectedIndex < 0) || (this.EndStationsListBox.SelectedIndex >= this.m_endStations.Count)) return;
+            this.SelectedEndStationsListBox.ClearSelected();
             this.SelectEndStationButton.Enabled = true;
             this.EditButton.Enabled = true;
             this.DeleteButton.Enabled = true;
@@ -287,6 +293,7 @@ namespace AST.Presentation {
         private void SelectedEndStationsListBox_SelectedIndexChanged(object sender, EventArgs e) {
             this.UnselectEndStationButton.Enabled = false;
             if ((this.SelectedEndStationsListBox.SelectedIndex < 0) || (this.SelectedEndStationsListBox.SelectedIndex >= this.m_selectedEndStations.Count)) return;
+            this.EndStationsListBox.ClearSelected();
             if (this.SelectedEndStationsListBox.SelectedIndex > 0) this.MoveUpEndStationButton.Enabled = true;
             else this.MoveUpEndStationButton.Enabled = false;
             if (this.SelectedEndStationsListBox.SelectedIndex < (this.m_selectedEndStations.Count - 1)) this.MoveDownEndStationButton.Enabled = true;
@@ -309,7 +316,10 @@ namespace AST.Presentation {
 
         private void EditButton_Click(object sender, EventArgs e) {
             try {
-                EndStationDialog esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                EndStationDialog esd = null;
+                if (this.EndStationsListBox.SelectedItem != null) esd = new EndStationDialog(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
+                else if (this.SelectedEndStationsListBox.SelectedItem != null) esd = new EndStationDialog(this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex]);
+                else return;
                 if (esd.ShowDialog() == DialogResult.OK) {
                     EndStation es = esd.GetEndStation();
                     ASTManager.GetInstance().AddEndStation(es, false);
@@ -322,10 +332,15 @@ namespace AST.Presentation {
         }
 
         private void DeleteButton_Click(object sender, EventArgs e) {
-            try {
+            try {            
+                EndStation es = null;
+                if (this.EndStationsListBox.SelectedItem != null) es = m_endStations[this.EndStationsListBox.SelectedIndex];
+                else if (this.SelectedEndStationsListBox.SelectedItem != null) es = m_endStations[this.SelectedEndStationsListBox.SelectedIndex];
+                else return;
+
                 DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
-                EndStation es = m_endStations[this.EndStationsListBox.SelectedIndex];
+
                 ASTManager.GetInstance().RemoveEndStation(es);
                 this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
                 InitEditEndStationTab();
@@ -337,11 +352,12 @@ namespace AST.Presentation {
 
         private void okButton_Click(object sender, EventArgs e) {
             //1. Updating abstract action's end-stations
-            this.m_action.ClearEndStations();
 
-            for (int i = 0; i < this.m_selectedEndStations.Count; i++)
-                this.m_action.AddEndStation(new EndStationSchedule(this.m_selectedEndStations[i]));
-
+            if ((m_type != AbstractAction.AbstractActionTypeEnum.ACTION)||((m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)this.m_action).ActionType != Action.ActionTypeEnum.TEST_SCRIPT))) {
+                this.m_action.ClearEndStations();
+                for (int i = 0; i < this.m_selectedEndStations.Count; i++)
+                    this.m_action.AddEndStation(new EndStationSchedule(this.m_selectedEndStations[i]));
+            }
 
             if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)this.m_action).ActionType != Action.ActionTypeEnum.BATCH_FILE) {
 
@@ -380,6 +396,10 @@ namespace AST.Presentation {
 
             this.Title3.Text = "Misc - " + this.m_action.Name;
 
+            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)m_action).ActionType == Action.ActionTypeEnum.TEST_SCRIPT)
+                this.DurationCheckBox.Enabled = false;
+            else this.DurationCheckBox.Enabled = true;
+
             if (((Action)this.m_action).Delay != 0) {
                 this.DelayCheckBox.Checked = true;
                 this.DelayNumericUpDown.Value = ((Action)this.m_action).Delay;
@@ -404,6 +424,19 @@ namespace AST.Presentation {
             else {
                 this.DurationNumericUpDown.Enabled = false;
                 //((Action)m_action).Duration = 0;
+            }
+        }
+
+        private void SetParameterValue(object sender, EventArgs e) {
+
+            // In case we are in the upper list box.
+            if (this.ParameterListBox.SelectedItem != null) {
+                this.m_parameters[this.ParameterListBox.SelectedIndex].Input = this.InputTextBox.Text;
+            }
+
+            // In case we are in the lower list box.
+            else if (this.SelectedParametersListBox.SelectedItem != null) {
+                this.m_selectedParameters[this.SelectedParametersListBox.SelectedIndex].Input = this.InputTextBox.Text;
             }
         }
     }

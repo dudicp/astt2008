@@ -26,10 +26,6 @@ namespace AST.Management {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ResultsGridView = new System.Windows.Forms.DataGridView();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EndStationComboBox = new System.Windows.Forms.ComboBox();
             this.EndStationLabel = new System.Windows.Forms.Label();
             this.EndStationDetailsBox = new System.Windows.Forms.GroupBox();
@@ -54,6 +50,10 @@ namespace AST.Management {
             this.MessageText = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MessageLabel = new System.Windows.Forms.Label();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -96,39 +96,11 @@ namespace AST.Management {
             this.ResultsGridView.MultiSelect = false;
             this.ResultsGridView.Name = "ResultsGridView";
             this.ResultsGridView.ReadOnly = true;
+            this.ResultsGridView.RowHeadersVisible = false;
             this.ResultsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.ResultsGridView.Size = new System.Drawing.Size(418, 153);
             this.ResultsGridView.TabIndex = 21;
             this.ResultsGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultsGridView_CellContentClick);
-            // 
-            // Action
-            // 
-            this.Action.Frozen = true;
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            // 
-            // EndStation
-            // 
-            this.EndStation.Frozen = true;
-            this.EndStation.HeaderText = "End-Station";
-            this.EndStation.Name = "EndStation";
-            this.EndStation.ReadOnly = true;
-            // 
-            // Status
-            // 
-            this.Status.Frozen = true;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.Width = 70;
-            // 
-            // ValidityString
-            // 
-            this.ValidityString.Frozen = true;
-            this.ValidityString.HeaderText = "Validity String";
-            this.ValidityString.Name = "ValidityString";
-            this.ValidityString.ReadOnly = true;
             // 
             // EndStationComboBox
             // 
@@ -389,6 +361,40 @@ namespace AST.Management {
             this.MessageLabel.TabIndex = 52;
             this.MessageLabel.Text = "             ";
             // 
+            // Action
+            // 
+            this.Action.Frozen = true;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // EndStation
+            // 
+            this.EndStation.Frozen = true;
+            this.EndStation.HeaderText = "End-Station";
+            this.EndStation.Name = "EndStation";
+            this.EndStation.ReadOnly = true;
+            this.EndStation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Status
+            // 
+            this.Status.Frozen = true;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Status.Width = 70;
+            // 
+            // ValidityString
+            // 
+            this.ValidityString.Frozen = true;
+            this.ValidityString.HeaderText = "Validity String";
+            this.ValidityString.Name = "ValidityString";
+            this.ValidityString.ReadOnly = true;
+            this.ValidityString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ValidityString.Width = 150;
+            // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -445,13 +451,13 @@ namespace AST.Management {
         private System.Windows.Forms.Label EndStationNameText;
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
-        private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
-        private System.Windows.Forms.DataGridViewTextBoxColumn ValidityString;
         private System.Windows.Forms.Label ViewReportLabel;
         private System.Windows.Forms.RichTextBox MessageText;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label MessageLabel;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Action;
+        private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Status;
+        private System.Windows.Forms.DataGridViewTextBoxColumn ValidityString;
     }
 }
