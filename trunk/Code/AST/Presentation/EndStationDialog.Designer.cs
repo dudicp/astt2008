@@ -60,7 +60,7 @@ namespace AST.Presentation {
             this.IDTextBox.Location = new System.Drawing.Point(83, 59);
             this.IDTextBox.Name = "IDTextBox";
             this.IDTextBox.Size = new System.Drawing.Size(100, 21);
-            this.IDTextBox.TabIndex = 18;
+            this.IDTextBox.TabIndex = 1;
             // 
             // MyCancelButton
             // 
@@ -68,7 +68,7 @@ namespace AST.Presentation {
             this.MyCancelButton.Location = new System.Drawing.Point(112, 304);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
-            this.MyCancelButton.TabIndex = 19;
+            this.MyCancelButton.TabIndex = 10;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
@@ -79,7 +79,7 @@ namespace AST.Presentation {
             this.okButton.Location = new System.Drawing.Point(27, 304);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(72, 23);
-            this.okButton.TabIndex = 20;
+            this.okButton.TabIndex = 9;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -110,7 +110,7 @@ namespace AST.Presentation {
             this.NameTextBox.Location = new System.Drawing.Point(83, 89);
             this.NameTextBox.Name = "NameTextBox";
             this.NameTextBox.Size = new System.Drawing.Size(100, 21);
-            this.NameTextBox.TabIndex = 23;
+            this.NameTextBox.TabIndex = 2;
             // 
             // IPLabel
             // 
@@ -148,7 +148,7 @@ namespace AST.Presentation {
             this.UsernameTextBox.Location = new System.Drawing.Point(83, 179);
             this.UsernameTextBox.Name = "UsernameTextBox";
             this.UsernameTextBox.Size = new System.Drawing.Size(100, 21);
-            this.UsernameTextBox.TabIndex = 27;
+            this.UsernameTextBox.TabIndex = 5;
             // 
             // PasswordTextBox
             // 
@@ -156,7 +156,7 @@ namespace AST.Presentation {
             this.PasswordTextBox.Location = new System.Drawing.Point(83, 209);
             this.PasswordTextBox.Name = "PasswordTextBox";
             this.PasswordTextBox.Size = new System.Drawing.Size(100, 21);
-            this.PasswordTextBox.TabIndex = 28;
+            this.PasswordTextBox.TabIndex = 6;
             this.PasswordTextBox.UseSystemPasswordChar = true;
             // 
             // IPTextBox
@@ -166,7 +166,7 @@ namespace AST.Presentation {
             this.IPTextBox.MaxLength = 15;
             this.IPTextBox.Name = "IPTextBox";
             this.IPTextBox.Size = new System.Drawing.Size(100, 21);
-            this.IPTextBox.TabIndex = 29;
+            this.IPTextBox.TabIndex = 3;
             // 
             // OSComboBox
             // 
@@ -177,7 +177,7 @@ namespace AST.Presentation {
             this.OSComboBox.Location = new System.Drawing.Point(83, 239);
             this.OSComboBox.Name = "OSComboBox";
             this.OSComboBox.Size = new System.Drawing.Size(100, 21);
-            this.OSComboBox.TabIndex = 30;
+            this.OSComboBox.TabIndex = 7;
             // 
             // OSLabel
             // 
@@ -196,7 +196,7 @@ namespace AST.Presentation {
             this.MACTextBox.MaxLength = 15;
             this.MACTextBox.Name = "MACTextBox";
             this.MACTextBox.Size = new System.Drawing.Size(100, 21);
-            this.MACTextBox.TabIndex = 33;
+            this.MACTextBox.TabIndex = 4;
             // 
             // MACLabel
             // 
@@ -214,7 +214,7 @@ namespace AST.Presentation {
             this.DefaultCheckBox.Location = new System.Drawing.Point(15, 271);
             this.DefaultCheckBox.Name = "DefaultCheckBox";
             this.DefaultCheckBox.Size = new System.Drawing.Size(60, 17);
-            this.DefaultCheckBox.TabIndex = 34;
+            this.DefaultCheckBox.TabIndex = 8;
             this.DefaultCheckBox.Text = "Default";
             this.DefaultCheckBox.UseVisualStyleBackColor = true;
             // 

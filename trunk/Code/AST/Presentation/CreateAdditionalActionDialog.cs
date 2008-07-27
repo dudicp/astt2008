@@ -42,6 +42,7 @@ namespace AST.Presentation {
                 else {
                     m_isNew = true;
                     this.m_parameters = new List<Parameter>();
+                    this.CommandLineRadio.Checked = true;
                     this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
                     Title.Text = "Create Additional Action";
                 }
