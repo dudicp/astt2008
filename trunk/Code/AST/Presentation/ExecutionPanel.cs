@@ -20,6 +20,7 @@ namespace AST.Presentation {
         private AbstractAction m_activeAction;
         private AbstractAction m_rootAction;
         private AbstractAction.AbstractActionTypeEnum m_type;
+        private AbstractAction.AbstractActionTypeEnum m_rootType;
         private String m_reportName;
         /// <summary>
         /// 
@@ -133,6 +134,7 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
             if (this.ActionsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -160,6 +162,7 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TSCsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.m_type = AbstractAction.AbstractActionTypeEnum.TSC;
             if (this.TSCsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -180,6 +183,7 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TPsListBox_SelectedIndexChanged(object sender, EventArgs e) {
+            this.m_type = AbstractAction.AbstractActionTypeEnum.TP;
             if (this.TPsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -886,7 +890,7 @@ namespace AST.Presentation {
             ProgressDialog pd = new ProgressDialog(this.m_reportName);
 
             AbstractAction aa = this.m_rootAction;
-            AbstractAction.AbstractActionTypeEnum type = this.m_type;
+            AbstractAction.AbstractActionTypeEnum type = this.m_rootType;
             //String reportName = this.ReportNameTextBox.Text;
 
             ASTManager.GetInstance().Execute(aa, type, m_reportName);
@@ -915,10 +919,19 @@ namespace AST.Presentation {
         private void DeleteAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
             //Delete Action
             String name = "";
-            if(this.ActionsListBox.SelectedItem != null) name = (String)this.ActionsListBox.SelectedItem;
-            else if (this.TSCsListBox.SelectedItem != null) name = (String)this.TSCsListBox.SelectedItem;
-            else if (this.TPsListBox.SelectedItem != null) name = (String)this.TPsListBox.SelectedItem;
-            
+            AbstractAction.AbstractActionTypeEnum type = AbstractAction.AbstractActionTypeEnum.ACTION;
+            if (this.ActionsListBox.SelectedItem != null) {
+                name = (String)this.ActionsListBox.SelectedItem;
+                type = AbstractAction.AbstractActionTypeEnum.ACTION;
+            }
+            else if (this.TSCsListBox.SelectedItem != null) {
+                name = (String)this.TSCsListBox.SelectedItem;
+                type = AbstractAction.AbstractActionTypeEnum.TSC;
+            }
+            else if (this.TPsListBox.SelectedItem != null) {
+                name = (String)this.TPsListBox.SelectedItem;
+                type = AbstractAction.AbstractActionTypeEnum.TP;
+            }
             
             //String name = this.m_rootAction.Name;
             if ((name == null) || (name.Length == 0)) {
@@ -926,12 +939,18 @@ namespace AST.Presentation {
                 return;
             }
             DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (res == DialogResult.No) return;
+            if (res == DialogResult.No) {
+                this.MessageLabel.Text = "";
+                return;
+            }
 
             ASTManager.GetInstance().DeleteAbstractAction(name, m_type);
             this.SetAbstractActionsInfo();
             this.ClearAll();
-            if (!this.ActionsListBox.Items.Contains(name)) this.MessageLabel.Text = name + " was deleted successfully.";
+            if (type.Equals(AbstractAction.AbstractActionTypeEnum.ACTION) && !this.ActionsListBox.Items.Contains(name)) this.MessageLabel.Text = "Action " + name + " was deleted successfully.";
+            else if (type.Equals(AbstractAction.AbstractActionTypeEnum.TSC) && !this.TSCsListBox.Items.Contains(name)) this.MessageLabel.Text = "Test scenario " + name + " was deleted successfully.";
+            else if (type.Equals(AbstractAction.AbstractActionTypeEnum.TP) && !this.TPsListBox.Items.Contains(name)) this.MessageLabel.Text = "Test plan " + name + " was deleted successfully.";
+            else this.MessageLabel.Text = "";
         }
 
         private void ClearAll() {
@@ -1040,6 +1059,7 @@ namespace AST.Presentation {
                     this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
                     this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ")" + " was added successfully.";
                 }
+                else this.MessageLabel.Text = "";
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
@@ -1059,6 +1079,7 @@ namespace AST.Presentation {
                         this.m_endStations.Add(es);
                         this.MessageLabel.Text = "The end-station "+ es.Name + "(" + es.ID +") was updated successfully.";
                     }
+                    else this.MessageLabel.Text = "";
                 }
 
                 // In case we are in the lower list box.
@@ -1073,6 +1094,7 @@ namespace AST.Presentation {
                         this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
                         this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was updated successfully.";
                     }
+                    else this.MessageLabel.Text = "";
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
@@ -1138,6 +1160,7 @@ namespace AST.Presentation {
 
         private void ActionsListBoxOnDoubleClick(object sender, EventArgs e) {
             if (this.ActionsListBox.SelectedItem == null) return;
+            this.m_rootType = AbstractAction.AbstractActionTypeEnum.ACTION;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.ActionsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.ACTION);
                 m_activeAction = m_rootAction;
@@ -1224,6 +1247,7 @@ namespace AST.Presentation {
 
         private void TSCsListBoxOnDoubleClick(object sender, EventArgs e) {
             if (this.TSCsListBox.SelectedItem == null) return;
+            this.m_rootType = AbstractAction.AbstractActionTypeEnum.TSC;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.TSCsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TSC);
             }
@@ -1254,6 +1278,7 @@ namespace AST.Presentation {
 
         private void TPsListBoxOnDoubleClick(object sender, EventArgs e) {
             if (this.TPsListBox.SelectedItem == null) return;
+            this.m_rootType = AbstractAction.AbstractActionTypeEnum.TP;
             try {
                 m_rootAction = ASTManager.GetInstance().Load((String)this.TPsListBox.SelectedItem, AbstractAction.AbstractActionTypeEnum.TP);
             }
