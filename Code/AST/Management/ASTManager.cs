@@ -109,8 +109,8 @@ namespace AST.Management
             }
 
             // notify the ASTOutputListener
-            foreach (ASTOutputListener o in this.m_outputListeners)
-                o.DisplayInfoMessage(name + " Deleted Successfully.");
+            /*foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayInfoMessage(name + " Deleted Successfully.");*/
         }
 
         /// <summary>
@@ -262,8 +262,8 @@ namespace AST.Management
                 throw e; 
             }
             
-            foreach (ASTOutputListener o in this.m_outputListeners)
-                o.DisplayInfoMessage(a.Name + " Saved Successfully.");
+            /*foreach (ASTOutputListener o in this.m_outputListeners)
+                o.DisplayInfoMessage(a.Name + " Saved Successfully.");*/
         }
 
         /// <summary>
@@ -433,7 +433,7 @@ namespace AST.Management
             foreach (ASTOutputListener o in this.m_outputListeners)
                 o.DisplayErrorMessage(message);
         }
-
+        
         /// <summary>
         /// method for Displaying info message
         /// </summary>

@@ -26,6 +26,7 @@ namespace AST.Presentation {
         public EndStationDialog(EndStation es) {
             this.m_es = es;
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             if (es != null) {
                 this.SetEndStationDetails();
             }else{

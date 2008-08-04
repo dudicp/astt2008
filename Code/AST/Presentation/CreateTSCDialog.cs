@@ -28,6 +28,7 @@ namespace AST.Presentation {
             m_isNew = false;
 
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             SetAttributes();
 
@@ -176,7 +177,7 @@ namespace AST.Presentation {
 
                 this.SelectedTreeView.Nodes[0].Nodes.Add(node);
                 this.SelectedTreeView.Nodes[0].Expand();
-                this.SettingsButton.Enabled = true;
+                //this.SettingsButton.Enabled = true;
             }
             catch (Exception ex) { DialogResult = DialogResult.Cancel; }
         }
@@ -278,6 +279,7 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void SettingsButton_Click(object sender, EventArgs e) {
+            if (this.SelectedTreeView.SelectedNode == null || this.m_type == AbstractAction.AbstractActionTypeEnum.TP) return;
             SettingsDialog sd;
             sd = new SettingsDialog(((ASTNode)(this.SelectedTreeView.SelectedNode)).Value, ((ASTNode)(this.SelectedTreeView.SelectedNode)).Type);
 
@@ -337,10 +339,10 @@ namespace AST.Presentation {
                 message += "Action name\n";
                 res = false;
             }
-            if (this.CreatorNameText.Text.Length == 0) {
+            /*if (this.CreatorNameText.Text.Length == 0) {
                 message += "Creator name\n";
                 res = false;
-            }
+            }*/
             if (this.SelectedTreeView.Nodes[0].Nodes.Count == 0) {
                 if(m_type == AbstractAction.AbstractActionTypeEnum.TP) message += "No Selected Test Scenarios\n";
                 else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) message += "No Selected Actions\n";

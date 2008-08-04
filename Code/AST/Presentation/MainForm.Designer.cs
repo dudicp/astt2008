@@ -42,12 +42,12 @@ namespace AST.Presentation
             this.DeleteAdditionalActionMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteTestScenarioMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.DeleteTestPlanMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.ExitMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.AboutMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.HelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.astPanel = new AST.Presentation.ASTPanel();
-            this.settingsToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -81,7 +81,7 @@ namespace AST.Presentation
             this.NewTestScenarioMenuItem,
             this.NewTestPlanMenuItem});
             this.FileNewStripMenuItem.Name = "FileNewStripMenuItem";
-            this.FileNewStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileNewStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.FileNewStripMenuItem.Text = "New";
             // 
             // NewAdditionalActionMenuItem
@@ -112,7 +112,7 @@ namespace AST.Presentation
             this.OpenTestScenarioMenuItem,
             this.OpenTestPlanMenuItem});
             this.FileOpenStripMenuItem.Name = "FileOpenStripMenuItem";
-            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileOpenStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.FileOpenStripMenuItem.Text = "Open";
             // 
             // OPenAdditionalActionMenuItem
@@ -143,7 +143,7 @@ namespace AST.Presentation
             this.DeleteTestScenarioMenuItem,
             this.DeleteTestPlanMenuItem});
             this.FileDeleteStripMenuItem.Name = "FileDeleteStripMenuItem";
-            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.FileDeleteStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.FileDeleteStripMenuItem.Text = "Delete";
             // 
             // DeleteAdditionalActionMenuItem
@@ -167,10 +167,17 @@ namespace AST.Presentation
             this.DeleteTestPlanMenuItem.Text = "Test Plan";
             this.DeleteTestPlanMenuItem.Click += new System.EventHandler(this.DeleteTestPlanMenuItem_Click);
             // 
+            // settingsToolStripMenuItem1
+            // 
+            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
+            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
+            this.settingsToolStripMenuItem1.Text = "Settings";
+            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
+            // 
             // ExitMenuItem
             // 
             this.ExitMenuItem.Name = "ExitMenuItem";
-            this.ExitMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.ExitMenuItem.Size = new System.Drawing.Size(116, 22);
             this.ExitMenuItem.Text = "Exit";
             this.ExitMenuItem.Click += new System.EventHandler(this.ExitMenuItem_Click);
             // 
@@ -204,18 +211,11 @@ namespace AST.Presentation
             this.astPanel.Size = new System.Drawing.Size(433, 336);
             this.astPanel.TabIndex = 0;
             // 
-            // settingsToolStripMenuItem1
-            // 
-            this.settingsToolStripMenuItem1.Name = "settingsToolStripMenuItem1";
-            this.settingsToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.settingsToolStripMenuItem1.Text = "Settings";
-            this.settingsToolStripMenuItem1.Click += new System.EventHandler(this.SettingsToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(892, 488);
+            this.ClientSize = new System.Drawing.Size(892, 514);
             this.Controls.Add(this.astPanel);
             this.Controls.Add(this.menuStrip);
             this.MainMenuStrip = this.menuStrip;

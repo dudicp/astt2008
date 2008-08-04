@@ -31,6 +31,7 @@ namespace AST.Presentation {
             m_changedParameters = new List<Parameter>();
             m_removedParameters = new List<Parameter>();
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             try {
                 if (a != null) {
@@ -345,9 +346,13 @@ namespace AST.Presentation {
                 message += "Action name\n";
                 res = false;
             }
-            if (this.CreatorNameText.Text.Length == 0)
+            /*if (this.CreatorNameText.Text.Length == 0)
             {
                 message += "Creator name\n";
+                res = false;
+            }*/
+            if (m_action.GetAllContents().Keys.Count == 0) {
+                message += "Action content\n";
                 res = false;
             }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);

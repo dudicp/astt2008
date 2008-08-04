@@ -218,6 +218,7 @@
     <None Include="Resources\ASTBackground.jpg" />
     <None Include="Resources\ASTBackground.png" />
     <Content Include="Resources\coming-soon.gif" />
+    <None Include="Resources\InProgress.gif" />
     <None Include="Resources\none.gif" />
     <None Include="Resources\Frame.jpg" />
   </ItemGroup>

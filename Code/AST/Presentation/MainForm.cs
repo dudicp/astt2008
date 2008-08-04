@@ -30,6 +30,7 @@ namespace AST.Presentation{
             ASTManager.GetInstance().Init();
 
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.astPanel.Dispose();
             this.astPanel = new AST.Presentation.ExecutionPanel();
             this.SuspendLayout();
@@ -192,6 +193,8 @@ namespace AST.Presentation{
             if (d.DialogResult == DialogResult.OK) {
                 this.astPanel.Dispose();
                 this.astPanel = new AST.Presentation.ExecutionPanel();
+                if (a == null) ((ExecutionPanel)astPanel).SetMessage("The action "+d.Action.Name+" was added successfully.");
+                else ((ExecutionPanel)astPanel).SetMessage("The action " + a.Name + " was updated successfully.");
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
@@ -204,6 +207,8 @@ namespace AST.Presentation{
             if (d.DialogResult == DialogResult.OK) {
                 this.astPanel.Dispose();
                 this.astPanel = new AST.Presentation.ExecutionPanel();
+                if (tsc == null) ((ExecutionPanel)astPanel).SetMessage("The test scenario "+d.AbstractAction.Name+" was added successfully.");
+                else ((ExecutionPanel)astPanel).SetMessage("The test scenario " + tsc.Name + " was updated successfully.");
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
@@ -216,6 +221,8 @@ namespace AST.Presentation{
             if (d.DialogResult == DialogResult.OK) {
                 this.astPanel.Dispose();
                 this.astPanel = new AST.Presentation.ExecutionPanel();
+                if (tp == null) ((ExecutionPanel)astPanel).SetMessage("The test plan " + d.AbstractAction.Name + " was added successfully.");
+                else ((ExecutionPanel)astPanel).SetMessage("The test plan " + tp.Name + " was updated successfully.");
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
@@ -271,6 +278,7 @@ namespace AST.Presentation{
 
                 this.astPanel.Dispose();
                 this.astPanel = new AST.Presentation.ExecutionPanel();
+                ((ExecutionPanel)astPanel).SetMessage(name + " was deleted successfully.");
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);

@@ -20,6 +20,7 @@ namespace AST.Presentation {
         /// </summary>
         public OptionsDialog() {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             InitEndStations();
             InitConfiguration();
         }

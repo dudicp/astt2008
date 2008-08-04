@@ -50,11 +50,11 @@ namespace AST.Presentation {
             this.OScomboBox = new System.Windows.Forms.ComboBox();
             this.okButton = new System.Windows.Forms.Button();
             this.actionDetailsBox = new System.Windows.Forms.GroupBox();
+            this.StopIfFailsCheckBox = new System.Windows.Forms.CheckBox();
             this.BatchFileRadio = new System.Windows.Forms.RadioButton();
             this.creatorNameLabel = new System.Windows.Forms.Label();
             this.actionNameLabel = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
-            this.StopIfFailsCheckBox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.TimeoutText)).BeginInit();
             this.ParametersBox.SuspendLayout();
             this.actionContentBox.SuspendLayout();
@@ -68,24 +68,41 @@ namespace AST.Presentation {
             this.BrowseButton.Location = new System.Drawing.Point(303, 61);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(95, 23);
-            this.BrowseButton.TabIndex = 8;
+            this.BrowseButton.TabIndex = 10;
             this.BrowseButton.Text = "Browse";
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
             // 
             // TimeoutText
             // 
-            this.TimeoutText.Location = new System.Drawing.Point(361, 90);
+            this.TimeoutText.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TimeoutText.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.TimeoutText.Location = new System.Drawing.Point(358, 90);
+            this.TimeoutText.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
             this.TimeoutText.Name = "TimeoutText";
-            this.TimeoutText.Size = new System.Drawing.Size(37, 21);
-            this.TimeoutText.TabIndex = 11;
+            this.TimeoutText.Size = new System.Drawing.Size(40, 21);
+            this.TimeoutText.TabIndex = 13;
+            this.TimeoutText.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.TimeoutText.Value = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
             this.TimeoutText.ValueChanged += new System.EventHandler(this.TimeoutText_ValueChanged);
             // 
             // TimeoutLabel
             // 
             this.TimeoutLabel.AutoSize = true;
             this.TimeoutLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TimeoutLabel.Location = new System.Drawing.Point(300, 92);
+            this.TimeoutLabel.Location = new System.Drawing.Point(300, 93);
             this.TimeoutLabel.Name = "TimeoutLabel";
             this.TimeoutLabel.Size = new System.Drawing.Size(55, 15);
             this.TimeoutLabel.TabIndex = 16;
@@ -98,7 +115,7 @@ namespace AST.Presentation {
             this.ValidityCheckBox.Location = new System.Drawing.Point(6, 92);
             this.ValidityCheckBox.Name = "ValidityCheckBox";
             this.ValidityCheckBox.Size = new System.Drawing.Size(103, 19);
-            this.ValidityCheckBox.TabIndex = 9;
+            this.ValidityCheckBox.TabIndex = 11;
             this.ValidityCheckBox.Text = "Validity String:";
             this.ValidityCheckBox.UseVisualStyleBackColor = true;
             this.ValidityCheckBox.CheckedChanged += new System.EventHandler(this.ValidityCheckBox_CheckedChanged);
@@ -110,7 +127,7 @@ namespace AST.Presentation {
             this.ValidityText.Location = new System.Drawing.Point(113, 90);
             this.ValidityText.Name = "ValidityText";
             this.ValidityText.Size = new System.Drawing.Size(181, 24);
-            this.ValidityText.TabIndex = 10;
+            this.ValidityText.TabIndex = 12;
             this.ValidityText.Leave += new System.EventHandler(this.SaveOSValidityString);
             // 
             // ContentText
@@ -119,7 +136,7 @@ namespace AST.Presentation {
             this.ContentText.Location = new System.Drawing.Point(113, 60);
             this.ContentText.Name = "ContentText";
             this.ContentText.Size = new System.Drawing.Size(181, 24);
-            this.ContentText.TabIndex = 7;
+            this.ContentText.TabIndex = 9;
             this.ContentText.Leave += new System.EventHandler(this.SaveOSContent);
             // 
             // RemoveParameterButton
@@ -149,7 +166,7 @@ namespace AST.Presentation {
             this.MyCancelButton.Location = new System.Drawing.Point(215, 503);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
-            this.MyCancelButton.TabIndex = 25;
+            this.MyCancelButton.TabIndex = 19;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
@@ -193,11 +210,13 @@ namespace AST.Presentation {
             // 
             // ParametersComboBox
             // 
+            this.ParametersComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.ParametersComboBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ParametersComboBox.FormattingEnabled = true;
             this.ParametersComboBox.Location = new System.Drawing.Point(113, 25);
             this.ParametersComboBox.Name = "ParametersComboBox";
             this.ParametersComboBox.Size = new System.Drawing.Size(112, 23);
+            this.ParametersComboBox.Sorted = true;
             this.ParametersComboBox.TabIndex = 14;
             // 
             // ContentLabel
@@ -216,17 +235,17 @@ namespace AST.Presentation {
             this.DescriptionText.Location = new System.Drawing.Point(9, 157);
             this.DescriptionText.Name = "DescriptionText";
             this.DescriptionText.Size = new System.Drawing.Size(390, 45);
-            this.DescriptionText.TabIndex = 5;
+            this.DescriptionText.TabIndex = 6;
             this.DescriptionText.Text = "";
             // 
             // TestScriptRadio
             // 
             this.TestScriptRadio.AutoSize = true;
-            this.TestScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TestScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TestScriptRadio.Location = new System.Drawing.Point(225, 114);
             this.TestScriptRadio.Name = "TestScriptRadio";
             this.TestScriptRadio.Size = new System.Drawing.Size(76, 18);
-            this.TestScriptRadio.TabIndex = 4;
+            this.TestScriptRadio.TabIndex = 5;
             this.TestScriptRadio.TabStop = true;
             this.TestScriptRadio.Text = "Test Script";
             this.TestScriptRadio.UseVisualStyleBackColor = true;
@@ -235,7 +254,7 @@ namespace AST.Presentation {
             // ScriptRadio
             // 
             this.ScriptRadio.AutoSize = true;
-            this.ScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ScriptRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ScriptRadio.Location = new System.Drawing.Point(113, 114);
             this.ScriptRadio.Name = "ScriptRadio";
             this.ScriptRadio.Size = new System.Drawing.Size(53, 18);
@@ -248,7 +267,7 @@ namespace AST.Presentation {
             // CommandLineRadio
             // 
             this.CommandLineRadio.AutoSize = true;
-            this.CommandLineRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommandLineRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommandLineRadio.Location = new System.Drawing.Point(113, 90);
             this.CommandLineRadio.Name = "CommandLineRadio";
             this.CommandLineRadio.Size = new System.Drawing.Size(94, 18);
@@ -326,6 +345,7 @@ namespace AST.Presentation {
             // OScomboBox
             // 
             this.OScomboBox.AllowDrop = true;
+            this.OScomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OScomboBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OScomboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.OScomboBox.FormattingEnabled = true;
@@ -336,7 +356,7 @@ namespace AST.Presentation {
             this.OScomboBox.Name = "OScomboBox";
             this.OScomboBox.RightToLeft = System.Windows.Forms.RightToLeft.No;
             this.OScomboBox.Size = new System.Drawing.Size(136, 23);
-            this.OScomboBox.TabIndex = 6;
+            this.OScomboBox.TabIndex = 8;
             this.OScomboBox.SelectedIndexChanged += new System.EventHandler(this.OScomboBox_SelectedIndexChanged);
             // 
             // okButton
@@ -345,7 +365,7 @@ namespace AST.Presentation {
             this.okButton.Location = new System.Drawing.Point(134, 503);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 24;
+            this.okButton.TabIndex = 18;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
@@ -372,14 +392,25 @@ namespace AST.Presentation {
             this.actionDetailsBox.TabStop = false;
             this.actionDetailsBox.Text = "Action Details";
             // 
+            // StopIfFailsCheckBox
+            // 
+            this.StopIfFailsCheckBox.AutoSize = true;
+            this.StopIfFailsCheckBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StopIfFailsCheckBox.Location = new System.Drawing.Point(6, 212);
+            this.StopIfFailsCheckBox.Name = "StopIfFailsCheckBox";
+            this.StopIfFailsCheckBox.Size = new System.Drawing.Size(200, 19);
+            this.StopIfFailsCheckBox.TabIndex = 7;
+            this.StopIfFailsCheckBox.Text = "Stop execution if the action fails.";
+            this.StopIfFailsCheckBox.UseVisualStyleBackColor = true;
+            // 
             // BatchFileRadio
             // 
             this.BatchFileRadio.AutoSize = true;
-            this.BatchFileRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BatchFileRadio.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BatchFileRadio.Location = new System.Drawing.Point(225, 90);
             this.BatchFileRadio.Name = "BatchFileRadio";
             this.BatchFileRadio.Size = new System.Drawing.Size(69, 18);
-            this.BatchFileRadio.TabIndex = 6;
+            this.BatchFileRadio.TabIndex = 4;
             this.BatchFileRadio.TabStop = true;
             this.BatchFileRadio.Text = "Batch File";
             this.BatchFileRadio.UseVisualStyleBackColor = true;
@@ -415,17 +446,6 @@ namespace AST.Presentation {
             this.Title.Size = new System.Drawing.Size(227, 20);
             this.Title.TabIndex = 21;
             this.Title.Text = "Create Additional Action";
-            // 
-            // StopIfFailsCheckBox
-            // 
-            this.StopIfFailsCheckBox.AutoSize = true;
-            this.StopIfFailsCheckBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopIfFailsCheckBox.Location = new System.Drawing.Point(6, 212);
-            this.StopIfFailsCheckBox.Name = "StopIfFailsCheckBox";
-            this.StopIfFailsCheckBox.Size = new System.Drawing.Size(200, 19);
-            this.StopIfFailsCheckBox.TabIndex = 10;
-            this.StopIfFailsCheckBox.Text = "Stop execution if the action fails.";
-            this.StopIfFailsCheckBox.UseVisualStyleBackColor = true;
             // 
             // CreateAdditionalActionDialog
             // 
@@ -466,7 +486,6 @@ namespace AST.Presentation {
         private System.Windows.Forms.GroupBox ParametersBox;
         private System.Windows.Forms.Button NewParameterButton;
         private System.Windows.Forms.Button EditParameterButton;
-        private System.Windows.Forms.ComboBox ParametersComboBox;
         private System.Windows.Forms.Label ContentLabel;
         private System.Windows.Forms.RichTextBox DescriptionText;
         private System.Windows.Forms.RadioButton TestScriptRadio;
@@ -486,5 +505,6 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.RadioButton BatchFileRadio;
         private System.Windows.Forms.CheckBox StopIfFailsCheckBox;
+        private System.Windows.Forms.ComboBox ParametersComboBox;
     }
 }

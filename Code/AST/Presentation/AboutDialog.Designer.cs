@@ -103,16 +103,20 @@ namespace AST.Presentation
             this.LinkLabel.AutoSize = true;
             this.LinkLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.LinkLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.LinkLabel.Location = new System.Drawing.Point(12, 160);
+            this.LinkLabel.Location = new System.Drawing.Point(74, 154);
             this.LinkLabel.Name = "LinkLabel";
-            this.LinkLabel.Size = new System.Drawing.Size(208, 16);
+            this.LinkLabel.Size = new System.Drawing.Size(97, 16);
             this.LinkLabel.TabIndex = 8;
-            this.LinkLabel.Text = "http://www.cs.bgu.ac.il/~adishach";
+            this.LinkLabel.Text = "AST Homepage";
+            this.LinkLabel.MouseLeave += new System.EventHandler(this.LinkLabel_MouseLeave);
+            this.LinkLabel.Click += new System.EventHandler(this.LinkLabel_Click);
+            this.LinkLabel.MouseEnter += new System.EventHandler(this.LinkLabel_MouseEnter);
             // 
             // AboutDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Center;
             this.ClientSize = new System.Drawing.Size(240, 223);
             this.Controls.Add(this.LinkLabel);
             this.Controls.Add(this.label2);
@@ -121,9 +125,9 @@ namespace AST.Presentation
             this.Controls.Add(this.CloseButton);
             this.Controls.Add(this.AboutText);
             this.Controls.Add(this.Title);
+            this.DoubleBuffered = true;
             this.Name = "AboutDialog";
             this.Text = "About";
-            this.Load += new System.EventHandler(this.AboutDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
