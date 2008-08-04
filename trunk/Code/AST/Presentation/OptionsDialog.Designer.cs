@@ -65,7 +65,7 @@ namespace AST.Presentation {
             this.TXTFormatRadioButton.Location = new System.Drawing.Point(268, 168);
             this.TXTFormatRadioButton.Name = "TXTFormatRadioButton";
             this.TXTFormatRadioButton.Size = new System.Drawing.Size(80, 18);
-            this.TXTFormatRadioButton.TabIndex = 42;
+            this.TXTFormatRadioButton.TabIndex = 11;
             this.TXTFormatRadioButton.TabStop = true;
             this.TXTFormatRadioButton.Text = "TXT Format";
             this.TXTFormatRadioButton.UseVisualStyleBackColor = true;
@@ -76,7 +76,7 @@ namespace AST.Presentation {
             this.XMLFormatRadioButton.Location = new System.Drawing.Point(172, 168);
             this.XMLFormatRadioButton.Name = "XMLFormatRadioButton";
             this.XMLFormatRadioButton.Size = new System.Drawing.Size(81, 18);
-            this.XMLFormatRadioButton.TabIndex = 41;
+            this.XMLFormatRadioButton.TabIndex = 10;
             this.XMLFormatRadioButton.TabStop = true;
             this.XMLFormatRadioButton.Text = "XML Format";
             this.XMLFormatRadioButton.UseVisualStyleBackColor = true;
@@ -107,7 +107,7 @@ namespace AST.Presentation {
             this.BrowseButton.Location = new System.Drawing.Point(332, 76);
             this.BrowseButton.Name = "BrowseButton";
             this.BrowseButton.Size = new System.Drawing.Size(57, 23);
-            this.BrowseButton.TabIndex = 37;
+            this.BrowseButton.TabIndex = 6;
             this.BrowseButton.Text = "Browse";
             this.BrowseButton.UseVisualStyleBackColor = true;
             this.BrowseButton.Click += new System.EventHandler(this.BrowseButton_Click);
@@ -118,7 +118,7 @@ namespace AST.Presentation {
             this.ReportsFullPathText.Location = new System.Drawing.Point(172, 106);
             this.ReportsFullPathText.Name = "ReportsFullPathText";
             this.ReportsFullPathText.Size = new System.Drawing.Size(154, 24);
-            this.ReportsFullPathText.TabIndex = 39;
+            this.ReportsFullPathText.TabIndex = 7;
             // 
             // MyCancelButton
             // 
@@ -126,7 +126,7 @@ namespace AST.Presentation {
             this.MyCancelButton.Location = new System.Drawing.Point(218, 492);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
-            this.MyCancelButton.TabIndex = 38;
+            this.MyCancelButton.TabIndex = 13;
             this.MyCancelButton.Text = "Cancel";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
@@ -137,7 +137,7 @@ namespace AST.Presentation {
             this.ReportsBrowseButton.Location = new System.Drawing.Point(332, 106);
             this.ReportsBrowseButton.Name = "ReportsBrowseButton";
             this.ReportsBrowseButton.Size = new System.Drawing.Size(57, 23);
-            this.ReportsBrowseButton.TabIndex = 38;
+            this.ReportsBrowseButton.TabIndex = 8;
             this.ReportsBrowseButton.Text = "Browse";
             this.ReportsBrowseButton.UseVisualStyleBackColor = true;
             this.ReportsBrowseButton.Click += new System.EventHandler(this.ReportsBrowseButton_Click);
@@ -148,17 +148,22 @@ namespace AST.Presentation {
             this.okButton.Location = new System.Drawing.Point(140, 492);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(72, 23);
-            this.okButton.TabIndex = 39;
+            this.okButton.TabIndex = 12;
             this.okButton.Text = "OK";
             this.okButton.UseVisualStyleBackColor = true;
             this.okButton.Click += new System.EventHandler(this.okButton_Click);
             // 
             // MaxThreadPoolText
             // 
+            this.MaxThreadPoolText.Increment = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             this.MaxThreadPoolText.Location = new System.Drawing.Point(172, 136);
             this.MaxThreadPoolText.Name = "MaxThreadPoolText";
             this.MaxThreadPoolText.Size = new System.Drawing.Size(37, 21);
-            this.MaxThreadPoolText.TabIndex = 36;
+            this.MaxThreadPoolText.TabIndex = 9;
             // 
             // PSToolsPathText
             // 
@@ -166,7 +171,7 @@ namespace AST.Presentation {
             this.PSToolsPathText.Location = new System.Drawing.Point(172, 76);
             this.PSToolsPathText.Name = "PSToolsPathText";
             this.PSToolsPathText.Size = new System.Drawing.Size(154, 24);
-            this.PSToolsPathText.TabIndex = 35;
+            this.PSToolsPathText.TabIndex = 5;
             // 
             // DBConnectionText
             // 
@@ -174,7 +179,7 @@ namespace AST.Presentation {
             this.DBConnectionText.Location = new System.Drawing.Point(172, 46);
             this.DBConnectionText.Name = "DBConnectionText";
             this.DBConnectionText.Size = new System.Drawing.Size(218, 24);
-            this.DBConnectionText.TabIndex = 32;
+            this.DBConnectionText.TabIndex = 4;
             // 
             // MaxThreadPoolLabel
             // 
@@ -338,7 +343,7 @@ namespace AST.Presentation {
             this.DeleteEndStationButton.Location = new System.Drawing.Point(12, 113);
             this.DeleteEndStationButton.Name = "DeleteEndStationButton";
             this.DeleteEndStationButton.Size = new System.Drawing.Size(58, 23);
-            this.DeleteEndStationButton.TabIndex = 30;
+            this.DeleteEndStationButton.TabIndex = 2;
             this.DeleteEndStationButton.Text = "Delete";
             this.DeleteEndStationButton.UseVisualStyleBackColor = true;
             this.DeleteEndStationButton.Click += new System.EventHandler(this.DeleteEndStationButton_Click);
@@ -350,7 +355,7 @@ namespace AST.Presentation {
             this.EditEndStationButton.Location = new System.Drawing.Point(12, 86);
             this.EditEndStationButton.Name = "EditEndStationButton";
             this.EditEndStationButton.Size = new System.Drawing.Size(58, 23);
-            this.EditEndStationButton.TabIndex = 25;
+            this.EditEndStationButton.TabIndex = 1;
             this.EditEndStationButton.Text = "Edit";
             this.EditEndStationButton.UseVisualStyleBackColor = true;
             this.EditEndStationButton.Click += new System.EventHandler(this.EditEndStationButton_Click);
@@ -361,7 +366,7 @@ namespace AST.Presentation {
             this.NewEndStationButton.Location = new System.Drawing.Point(12, 57);
             this.NewEndStationButton.Name = "NewEndStationButton";
             this.NewEndStationButton.Size = new System.Drawing.Size(58, 23);
-            this.NewEndStationButton.TabIndex = 24;
+            this.NewEndStationButton.TabIndex = 0;
             this.NewEndStationButton.Text = "New";
             this.NewEndStationButton.UseVisualStyleBackColor = true;
             this.NewEndStationButton.Click += new System.EventHandler(this.NewEndStationButton_Click);
@@ -374,9 +379,10 @@ namespace AST.Presentation {
             this.EndStationsListBox.Location = new System.Drawing.Point(97, 57);
             this.EndStationsListBox.Name = "EndStationsListBox";
             this.EndStationsListBox.Size = new System.Drawing.Size(128, 79);
-            this.EndStationsListBox.TabIndex = 11;
-            this.EndStationsListBox.DoubleClick += new System.EventHandler(this.EditEndStationButton_Click);
+            this.EndStationsListBox.Sorted = true;
+            this.EndStationsListBox.TabIndex = 3;
             this.EndStationsListBox.SelectedIndexChanged += new System.EventHandler(this.EndStationsListBox_SelectedIndexChanged);
+            this.EndStationsListBox.DoubleClick += new System.EventHandler(this.EditEndStationButton_Click);
             // 
             // EndStationsLabel
             // 

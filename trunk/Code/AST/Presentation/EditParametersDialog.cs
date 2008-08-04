@@ -23,6 +23,7 @@ namespace AST.Presentation
         public EditParametersDialog(Parameter param)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             if (param != null)
             {
                 m_param = param;
@@ -37,6 +38,7 @@ namespace AST.Presentation
                 InputCheckBox.Checked = false;
                 ParameterContentBox.Enabled = false;
                 InputBox.Enabled = false;
+                OScomboBox.SelectedIndex = 0;
             }
         }
 
@@ -124,19 +126,6 @@ namespace AST.Presentation
             else ParameterContentBox.Enabled = false;
         }
 
-        private void SaveOSButton_Click(object sender, EventArgs e)
-        {
-            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
-            m_param.AddValue(OSType, ContentText.Text);
-        }
-
-        private void RemoveOSButton_Click(object sender, EventArgs e)
-        {
-            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
-            m_param.RemoveValue(OSType);
-            SetParameterContent(OScomboBox.SelectedIndex);
-        }
-
         private void OScomboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             SetParameterContent(OScomboBox.SelectedIndex);
@@ -147,23 +136,52 @@ namespace AST.Presentation
             m_param.Name = ParameterNameText.Text;
             m_param.Description = DescriptionText.Text;
 
-            if ((InputCheckBox.Checked == true) && (OptionCheckBox.Checked == true))
-                m_param.Type = Parameter.ParameterTypeEnum.Both;
-            else if (InputCheckBox.Checked == true)
-            {
+            if ((InputCheckBox.Checked == true) && (OptionCheckBox.Checked == true)) {
+                if (InputTextBox.Text.Length != 0) {
+                    m_param.Type = Parameter.ParameterTypeEnum.Both;
+                    m_param.Input = InputTextBox.Text;
+                }
+                else {
+                    m_param.Type = Parameter.ParameterTypeEnum.Option;
+                    m_param.Input = "";
+                }
+            }
+            else if (InputCheckBox.Checked == true) {
                 m_param.Type = Parameter.ParameterTypeEnum.Input;
                 m_param.Input = InputTextBox.Text;
                 m_param.ValidityExp = "";
-            }else if(OptionCheckBox.Checked == true)
+            }
+            else if (OptionCheckBox.Checked == true) {
                 m_param.Type = Parameter.ParameterTypeEnum.Option;
-            else m_param.Type = Parameter.ParameterTypeEnum.None;
+                m_param.Input = "";
+            }
+            else {
+                m_param.Type = Parameter.ParameterTypeEnum.None;
+                m_param.Input = "";
+            }
             m_param.IsDefault = DefaultCheckBox.Checked;
+
+            if (m_param.Name != null && m_param.Name.Length != 0) ;
+            else if ((m_param.Name == null || m_param.Name.Length == 0) && m_param.Input != null && m_param.Input.Length != 0) m_param.Name = m_param.Input;
+            else if ((m_param.Name == null || m_param.Name.Length == 0) && ((String)m_param.GetAllValues()[EndStation.OSTypeEnum.WINDOWS]) != null && ((String)m_param.GetAllValues()[EndStation.OSTypeEnum.WINDOWS]).Length != 0) m_param.Name = (String)m_param.GetAllValues()[EndStation.OSTypeEnum.WINDOWS];
+            else {
+                MessageBox.Show("Parameter name is missing.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             DialogResult = DialogResult.OK;
         }
 
         private void CancelButton_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void SaveOSValue(object sender, EventArgs e) {
+            EndStation.OSTypeEnum OSType = CreateAdditionalActionDialog.ConvertSelectionToOSType(OScomboBox.SelectedIndex);
+            if (ContentText.Text.Length == 0) {
+                m_param.RemoveValue(OSType);
+            }
+            else m_param.AddValue(OSType, ContentText.Text);
         }
     }
 }

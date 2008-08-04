@@ -29,8 +29,6 @@ namespace AST.Presentation
         private void InitializeComponent()
         {
             this.ParameterContentBox = new System.Windows.Forms.GroupBox();
-            this.RemoveOSButton = new System.Windows.Forms.Button();
-            this.SaveOSButton = new System.Windows.Forms.Button();
             this.ContentText = new System.Windows.Forms.TextBox();
             this.ValueLabel = new System.Windows.Forms.Label();
             this.OSTypeLabel = new System.Windows.Forms.Label();
@@ -57,8 +55,6 @@ namespace AST.Presentation
             // 
             // ParameterContentBox
             // 
-            this.ParameterContentBox.Controls.Add(this.RemoveOSButton);
-            this.ParameterContentBox.Controls.Add(this.SaveOSButton);
             this.ParameterContentBox.Controls.Add(this.ContentText);
             this.ParameterContentBox.Controls.Add(this.ValueLabel);
             this.ParameterContentBox.Controls.Add(this.OSTypeLabel);
@@ -66,32 +62,10 @@ namespace AST.Presentation
             this.ParameterContentBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ParameterContentBox.Location = new System.Drawing.Point(15, 251);
             this.ParameterContentBox.Name = "ParameterContentBox";
-            this.ParameterContentBox.Size = new System.Drawing.Size(260, 112);
+            this.ParameterContentBox.Size = new System.Drawing.Size(260, 86);
             this.ParameterContentBox.TabIndex = 17;
             this.ParameterContentBox.TabStop = false;
             this.ParameterContentBox.Text = "Parameter Content";
-            // 
-            // RemoveOSButton
-            // 
-            this.RemoveOSButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RemoveOSButton.Location = new System.Drawing.Point(117, 83);
-            this.RemoveOSButton.Name = "RemoveOSButton";
-            this.RemoveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.RemoveOSButton.TabIndex = 7;
-            this.RemoveOSButton.Text = "Remove";
-            this.RemoveOSButton.UseVisualStyleBackColor = true;
-            this.RemoveOSButton.Click += new System.EventHandler(this.RemoveOSButton_Click);
-            // 
-            // SaveOSButton
-            // 
-            this.SaveOSButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SaveOSButton.Location = new System.Drawing.Point(181, 83);
-            this.SaveOSButton.Name = "SaveOSButton";
-            this.SaveOSButton.Size = new System.Drawing.Size(63, 23);
-            this.SaveOSButton.TabIndex = 8;
-            this.SaveOSButton.Text = "Save";
-            this.SaveOSButton.UseVisualStyleBackColor = true;
-            this.SaveOSButton.Click += new System.EventHandler(this.SaveOSButton_Click);
             // 
             // ContentText
             // 
@@ -100,6 +74,7 @@ namespace AST.Presentation
             this.ContentText.Name = "ContentText";
             this.ContentText.Size = new System.Drawing.Size(136, 24);
             this.ContentText.TabIndex = 6;
+            this.ContentText.Leave += new System.EventHandler(this.SaveOSValue);
             // 
             // ValueLabel
             // 
@@ -124,6 +99,7 @@ namespace AST.Presentation
             // OScomboBox
             // 
             this.OScomboBox.AllowDrop = true;
+            this.OScomboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OScomboBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.OScomboBox.ForeColor = System.Drawing.SystemColors.WindowText;
             this.OScomboBox.FormattingEnabled = true;
@@ -140,7 +116,7 @@ namespace AST.Presentation
             // OkButton
             // 
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(66, 438);
+            this.OkButton.Location = new System.Drawing.Point(68, 412);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(75, 23);
             this.OkButton.TabIndex = 12;
@@ -278,7 +254,7 @@ namespace AST.Presentation
             this.InputBox.Controls.Add(this.InputLabel);
             this.InputBox.Controls.Add(this.InputTextBox);
             this.InputBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.InputBox.Location = new System.Drawing.Point(15, 369);
+            this.InputBox.Location = new System.Drawing.Point(17, 343);
             this.InputBox.Name = "InputBox";
             this.InputBox.Size = new System.Drawing.Size(260, 57);
             this.InputBox.TabIndex = 22;
@@ -288,7 +264,7 @@ namespace AST.Presentation
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(147, 438);
+            this.MyCancelButton.Location = new System.Drawing.Point(149, 412);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 13;
@@ -300,7 +276,7 @@ namespace AST.Presentation
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(291, 467);
+            this.ClientSize = new System.Drawing.Size(291, 445);
             this.Controls.Add(this.MyCancelButton);
             this.Controls.Add(this.ParameterContentBox);
             this.Controls.Add(this.OkButton);
@@ -323,8 +299,6 @@ namespace AST.Presentation
         #endregion
 
         private System.Windows.Forms.GroupBox ParameterContentBox;
-        private System.Windows.Forms.Button RemoveOSButton;
-        private System.Windows.Forms.Button SaveOSButton;
         private System.Windows.Forms.TextBox ContentText;
         private System.Windows.Forms.Label ValueLabel;
         private System.Windows.Forms.Label OSTypeLabel;

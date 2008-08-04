@@ -26,6 +26,10 @@ namespace AST.Management {
             this.ProgressBar = new System.Windows.Forms.ProgressBar();
             this.MyCancelButton = new System.Windows.Forms.Button();
             this.ResultsGridView = new System.Windows.Forms.DataGridView();
+            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.EndStationComboBox = new System.Windows.Forms.ComboBox();
             this.EndStationLabel = new System.Windows.Forms.Label();
             this.EndStationDetailsBox = new System.Windows.Forms.GroupBox();
@@ -46,22 +50,21 @@ namespace AST.Management {
             this.CurrentActionText = new System.Windows.Forms.Label();
             this.Title = new System.Windows.Forms.Label();
             this.OkButton = new System.Windows.Forms.Button();
-            this.ViewReportLabel = new System.Windows.Forms.Label();
             this.MessageText = new System.Windows.Forms.RichTextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.MessageLabel = new System.Windows.Forms.Label();
-            this.Action = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.EndStation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Status = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ValidityString = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.InProgressImage = new System.Windows.Forms.PictureBox();
+            this.CloseButton = new System.Windows.Forms.Button();
+            this.ViewReportLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.ResultsGridView)).BeginInit();
             this.EndStationDetailsBox.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.InProgressImage)).BeginInit();
             this.SuspendLayout();
             // 
             // ProgressBar
             // 
-            this.ProgressBar.Location = new System.Drawing.Point(13, 396);
+            this.ProgressBar.Location = new System.Drawing.Point(10, 605);
             this.ProgressBar.Name = "ProgressBar";
             this.ProgressBar.Size = new System.Drawing.Size(613, 23);
             this.ProgressBar.TabIndex = 0;
@@ -70,11 +73,11 @@ namespace AST.Management {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(313, 430);
+            this.MyCancelButton.Location = new System.Drawing.Point(265, 641);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
-            this.MyCancelButton.TabIndex = 20;
-            this.MyCancelButton.Text = "Cancel";
+            this.MyCancelButton.TabIndex = 3;
+            this.MyCancelButton.Text = "Stop";
             this.MyCancelButton.UseVisualStyleBackColor = true;
             this.MyCancelButton.Click += new System.EventHandler(this.MyCancelButton_Click);
             // 
@@ -92,30 +95,66 @@ namespace AST.Management {
             this.Status,
             this.ValidityString});
             this.ResultsGridView.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.ResultsGridView.Location = new System.Drawing.Point(10, 47);
+            this.ResultsGridView.Location = new System.Drawing.Point(10, 53);
             this.ResultsGridView.MultiSelect = false;
             this.ResultsGridView.Name = "ResultsGridView";
             this.ResultsGridView.ReadOnly = true;
             this.ResultsGridView.RowHeadersVisible = false;
             this.ResultsGridView.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.ResultsGridView.Size = new System.Drawing.Size(418, 153);
-            this.ResultsGridView.TabIndex = 21;
+            this.ResultsGridView.TabIndex = 0;
             this.ResultsGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ResultsGridView_CellContentClick);
+            // 
+            // Action
+            // 
+            this.Action.Frozen = true;
+            this.Action.HeaderText = "Action";
+            this.Action.Name = "Action";
+            this.Action.ReadOnly = true;
+            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // EndStation
+            // 
+            this.EndStation.Frozen = true;
+            this.EndStation.HeaderText = "End-Station";
+            this.EndStation.Name = "EndStation";
+            this.EndStation.ReadOnly = true;
+            this.EndStation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
+            // Status
+            // 
+            this.Status.Frozen = true;
+            this.Status.HeaderText = "Status";
+            this.Status.Name = "Status";
+            this.Status.ReadOnly = true;
+            this.Status.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.Status.Width = 70;
+            // 
+            // ValidityString
+            // 
+            this.ValidityString.Frozen = true;
+            this.ValidityString.HeaderText = "Validity String";
+            this.ValidityString.Name = "ValidityString";
+            this.ValidityString.ReadOnly = true;
+            this.ValidityString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ValidityString.Width = 150;
             // 
             // EndStationComboBox
             // 
+            this.EndStationComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.EndStationComboBox.FormattingEnabled = true;
-            this.EndStationComboBox.Location = new System.Drawing.Point(521, 46);
+            this.EndStationComboBox.Location = new System.Drawing.Point(521, 52);
             this.EndStationComboBox.Name = "EndStationComboBox";
             this.EndStationComboBox.Size = new System.Drawing.Size(105, 21);
-            this.EndStationComboBox.TabIndex = 22;
+            this.EndStationComboBox.Sorted = true;
+            this.EndStationComboBox.TabIndex = 1;
             this.EndStationComboBox.SelectedIndexChanged += new System.EventHandler(this.EndStationComboBox_SelectedIndexChanged);
             // 
             // EndStationLabel
             // 
             this.EndStationLabel.AutoSize = true;
             this.EndStationLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationLabel.Location = new System.Drawing.Point(436, 48);
+            this.EndStationLabel.Location = new System.Drawing.Point(436, 54);
             this.EndStationLabel.Name = "EndStationLabel";
             this.EndStationLabel.Size = new System.Drawing.Size(79, 15);
             this.EndStationLabel.TabIndex = 23;
@@ -135,7 +174,7 @@ namespace AST.Management {
             this.EndStationDetailsBox.Controls.Add(this.UsernameLabel);
             this.EndStationDetailsBox.Controls.Add(this.IPLabel);
             this.EndStationDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EndStationDetailsBox.Location = new System.Drawing.Point(439, 73);
+            this.EndStationDetailsBox.Location = new System.Drawing.Point(439, 79);
             this.EndStationDetailsBox.Name = "EndStationDetailsBox";
             this.EndStationDetailsBox.Size = new System.Drawing.Size(187, 127);
             this.EndStationDetailsBox.TabIndex = 24;
@@ -256,7 +295,7 @@ namespace AST.Management {
             // 
             this.CurrentActionLabel.AutoSize = true;
             this.CurrentActionLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionLabel.Location = new System.Drawing.Point(10, 366);
+            this.CurrentActionLabel.Location = new System.Drawing.Point(7, 575);
             this.CurrentActionLabel.Name = "CurrentActionLabel";
             this.CurrentActionLabel.Size = new System.Drawing.Size(105, 15);
             this.CurrentActionLabel.TabIndex = 39;
@@ -266,7 +305,7 @@ namespace AST.Management {
             // 
             this.ActionNoLabel.AutoSize = true;
             this.ActionNoLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoLabel.Location = new System.Drawing.Point(510, 366);
+            this.ActionNoLabel.Location = new System.Drawing.Point(507, 575);
             this.ActionNoLabel.Name = "ActionNoLabel";
             this.ActionNoLabel.Size = new System.Drawing.Size(77, 15);
             this.ActionNoLabel.TabIndex = 40;
@@ -276,7 +315,7 @@ namespace AST.Management {
             // 
             this.ActionNoText.AutoSize = true;
             this.ActionNoText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ActionNoText.Location = new System.Drawing.Point(590, 366);
+            this.ActionNoText.Location = new System.Drawing.Point(587, 575);
             this.ActionNoText.Name = "ActionNoText";
             this.ActionNoText.Size = new System.Drawing.Size(34, 15);
             this.ActionNoText.TabIndex = 41;
@@ -286,7 +325,7 @@ namespace AST.Management {
             // 
             this.CurrentActionText.AutoSize = true;
             this.CurrentActionText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentActionText.Location = new System.Drawing.Point(121, 366);
+            this.CurrentActionText.Location = new System.Drawing.Point(118, 575);
             this.CurrentActionText.Name = "CurrentActionText";
             this.CurrentActionText.Size = new System.Drawing.Size(37, 15);
             this.CurrentActionText.TabIndex = 42;
@@ -296,7 +335,7 @@ namespace AST.Management {
             // 
             this.Title.AutoSize = true;
             this.Title.Font = new System.Drawing.Font("Lucida Sans Unicode", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Title.Location = new System.Drawing.Point(12, 9);
+            this.Title.Location = new System.Drawing.Point(12, 14);
             this.Title.Name = "Title";
             this.Title.Size = new System.Drawing.Size(179, 20);
             this.Title.TabIndex = 43;
@@ -306,25 +345,13 @@ namespace AST.Management {
             // 
             this.OkButton.Enabled = false;
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(236, 430);
+            this.OkButton.Location = new System.Drawing.Point(188, 641);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(71, 23);
-            this.OkButton.TabIndex = 44;
+            this.OkButton.TabIndex = 2;
             this.OkButton.Text = "OK";
             this.OkButton.UseVisualStyleBackColor = true;
             this.OkButton.Click += new System.EventHandler(this.OkButton_Click);
-            // 
-            // ViewReportLabel
-            // 
-            this.ViewReportLabel.AutoSize = true;
-            this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.ViewReportLabel.Location = new System.Drawing.Point(405, 435);
-            this.ViewReportLabel.Name = "ViewReportLabel";
-            this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
-            this.ViewReportLabel.TabIndex = 48;
-            this.ViewReportLabel.Text = "View Report";
-            this.ViewReportLabel.Click += new System.EventHandler(this.ViewReportLabel_Click);
             // 
             // MessageText
             // 
@@ -335,7 +362,7 @@ namespace AST.Management {
             this.MessageText.Location = new System.Drawing.Point(16, 19);
             this.MessageText.Name = "MessageText";
             this.MessageText.ReadOnly = true;
-            this.MessageText.Size = new System.Drawing.Size(585, 94);
+            this.MessageText.Size = new System.Drawing.Size(585, 300);
             this.MessageText.TabIndex = 50;
             this.MessageText.Text = "";
             // 
@@ -343,9 +370,9 @@ namespace AST.Management {
             // 
             this.groupBox1.Controls.Add(this.MessageText);
             this.groupBox1.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.groupBox1.Location = new System.Drawing.Point(10, 202);
+            this.groupBox1.Location = new System.Drawing.Point(10, 208);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(616, 127);
+            this.groupBox1.Size = new System.Drawing.Size(616, 325);
             this.groupBox1.TabIndex = 51;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Message";
@@ -355,54 +382,57 @@ namespace AST.Management {
             this.MessageLabel.AutoSize = true;
             this.MessageLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
             this.MessageLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
-            this.MessageLabel.Location = new System.Drawing.Point(10, 340);
+            this.MessageLabel.Location = new System.Drawing.Point(7, 549);
             this.MessageLabel.Name = "MessageLabel";
             this.MessageLabel.Size = new System.Drawing.Size(73, 16);
             this.MessageLabel.TabIndex = 52;
             this.MessageLabel.Text = "             ";
             // 
-            // Action
+            // InProgressImage
             // 
-            this.Action.Frozen = true;
-            this.Action.HeaderText = "Action";
-            this.Action.Name = "Action";
-            this.Action.ReadOnly = true;
-            this.Action.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.InProgressImage.Image = global::AST.Properties.Resources.InProgress;
+            this.InProgressImage.Location = new System.Drawing.Point(593, 7);
+            this.InProgressImage.Name = "InProgressImage";
+            this.InProgressImage.Size = new System.Drawing.Size(34, 35);
+            this.InProgressImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.InProgressImage.TabIndex = 53;
+            this.InProgressImage.TabStop = false;
             // 
-            // EndStation
+            // CloseButton
             // 
-            this.EndStation.Frozen = true;
-            this.EndStation.HeaderText = "End-Station";
-            this.EndStation.Name = "EndStation";
-            this.EndStation.ReadOnly = true;
-            this.EndStation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.CloseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CloseButton.Location = new System.Drawing.Point(342, 641);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(98, 23);
+            this.CloseButton.TabIndex = 4;
+            this.CloseButton.Text = "Stop and Close";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
-            // Status
+            // ViewReportLabel
             // 
-            this.Status.Frozen = true;
-            this.Status.HeaderText = "Status";
-            this.Status.Name = "Status";
-            this.Status.ReadOnly = true;
-            this.Status.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.Status.Width = 70;
-            // 
-            // ValidityString
-            // 
-            this.ValidityString.Frozen = true;
-            this.ValidityString.HeaderText = "Validity String";
-            this.ValidityString.Name = "ValidityString";
-            this.ValidityString.ReadOnly = true;
-            this.ValidityString.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.ValidityString.Width = 150;
+            this.ViewReportLabel.AutoSize = true;
+            this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
+            this.ViewReportLabel.Location = new System.Drawing.Point(450, 646);
+            this.ViewReportLabel.Name = "ViewReportLabel";
+            this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
+            this.ViewReportLabel.TabIndex = 5;
+            this.ViewReportLabel.Text = "View Report";
+            this.ViewReportLabel.MouseLeave += new System.EventHandler(this.ViewReport_MouseLeave);
+            this.ViewReportLabel.Click += new System.EventHandler(this.ViewReportLabel_Click);
+            this.ViewReportLabel.MouseEnter += new System.EventHandler(this.ViewReport_MouseEnter);
             // 
             // ProgressDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(651, 458);
+            this.ClientSize = new System.Drawing.Size(651, 678);
+            this.Controls.Add(this.ViewReportLabel);
+            this.Controls.Add(this.CloseButton);
+            this.Controls.Add(this.InProgressImage);
             this.Controls.Add(this.MessageLabel);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.ViewReportLabel);
             this.Controls.Add(this.OkButton);
             this.Controls.Add(this.Title);
             this.Controls.Add(this.CurrentActionText);
@@ -421,6 +451,7 @@ namespace AST.Management {
             this.EndStationDetailsBox.ResumeLayout(false);
             this.EndStationDetailsBox.PerformLayout();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.InProgressImage)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -451,7 +482,6 @@ namespace AST.Management {
         private System.Windows.Forms.Label EndStationNameText;
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.Button OkButton;
-        private System.Windows.Forms.Label ViewReportLabel;
         private System.Windows.Forms.RichTextBox MessageText;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label MessageLabel;
@@ -459,5 +489,8 @@ namespace AST.Management {
         private System.Windows.Forms.DataGridViewTextBoxColumn EndStation;
         private System.Windows.Forms.DataGridViewTextBoxColumn Status;
         private System.Windows.Forms.DataGridViewTextBoxColumn ValidityString;
+        private System.Windows.Forms.PictureBox InProgressImage;
+        private System.Windows.Forms.Button CloseButton;
+        private System.Windows.Forms.Label ViewReportLabel;
     }
 }

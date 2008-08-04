@@ -34,6 +34,7 @@ namespace AST.Presentation {
             this.m_action = a;
             this.m_type = type;
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
 
             if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION || (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)a).ActionType == Action.ActionTypeEnum.BATCH_FILE)) {
                 this.tabControl.Controls.Remove(this.EditParametersTab);

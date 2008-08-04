@@ -133,7 +133,6 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void ActionsListBox_SelectedIndexChanged(object sender, EventArgs e) {
-            m_type = AbstractAction.AbstractActionTypeEnum.ACTION;
             if (this.ActionsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -154,13 +153,13 @@ namespace AST.Presentation {
             this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
             //}
         }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TSCsListBox_SelectedIndexChanged(object sender, EventArgs e) {
-            m_type = AbstractAction.AbstractActionTypeEnum.TSC;
             if (this.TSCsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -181,8 +180,6 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void TPsListBox_SelectedIndexChanged(object sender, EventArgs e) {
-
-            m_type = AbstractAction.AbstractActionTypeEnum.TP;
             if (this.TPsListBox.SelectedItem == null) {
                 this.EditAbstractActionToolStripMenuItem.Enabled = false;
                 this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
@@ -860,6 +857,7 @@ namespace AST.Presentation {
 /// <param name="sender"></param>
 /// <param name="e"></param>
         private void ExecuteButton_Click(object sender, EventArgs e) {
+            this.MessageLabel.Text = "";
             if (this.m_rootAction == null) return;
             //Getting report name
             if ((this.ReportNameCheckBox.Checked) && (this.ReportNameTextBox.Text.Length > 0)) m_reportName = this.ReportNameTextBox.Text;
@@ -933,6 +931,7 @@ namespace AST.Presentation {
             ASTManager.GetInstance().DeleteAbstractAction(name, m_type);
             this.SetAbstractActionsInfo();
             this.ClearAll();
+            if (!this.ActionsListBox.Items.Contains(name)) this.MessageLabel.Text = name + " was deleted successfully.";
         }
 
         private void ClearAll() {
@@ -941,6 +940,7 @@ namespace AST.Presentation {
             this.TreeView.Nodes.Clear();
             this.SelectedEndStationsListBox.Items.Clear();
             this.DescriptionText.Text = "";
+            this.MessageLabel.Text = "";
         }
 
         private void EditAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -979,24 +979,39 @@ namespace AST.Presentation {
             CreateAdditionalActionDialog cad = new CreateAdditionalActionDialog(a);
             if (cad.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
-                if (a == null) ActionsListBox.Items.Add(cad.Action.Name);
+                if (a == null) {
+                    ActionsListBox.Items.Add(cad.Action.Name);
+                    this.MessageLabel.Text = "The action " + cad.Action.Name + " was added successfully.";
+                }
+                else this.MessageLabel.Text = "The action " + a.Name + " was updated successfully.";
             }
+            else this.MessageLabel.Text = "";
         }
 
         private void OpenTSC(TSC tsc) {
             CreateTSCDialog ctd = new CreateTSCDialog(tsc, AbstractAction.AbstractActionTypeEnum.TSC);
             if (ctd.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
-                if (tsc == null) TSCsListBox.Items.Add(ctd.AbstractAction.Name);
+                if (tsc == null) {
+                    TSCsListBox.Items.Add(ctd.AbstractAction.Name);
+                    this.MessageLabel.Text = "The test scenario " + ctd.AbstractAction.Name + " was added successfully.";
+                }
+                else this.MessageLabel.Text = "The test scenario " + tsc.Name + " was updated successfully.";
             }
+            else this.MessageLabel.Text = "";
         }
 
         private void OpenTP(TP tp) {
             CreateTSCDialog ctd = new CreateTSCDialog(tp, AbstractAction.AbstractActionTypeEnum.TP);
             if (ctd.ShowDialog() == DialogResult.OK) {
                 this.ClearAll();
-                if (tp == null) TPsListBox.Items.Add(ctd.AbstractAction.Name);
+                if (tp == null) {
+                    TPsListBox.Items.Add(ctd.AbstractAction.Name);
+                    this.MessageLabel.Text = "The test plan " + ctd.AbstractAction.Name + " was added successfully.";
+                }
+                else this.MessageLabel.Text = "The test scenario " + tp.Name + " was added successfully.";
             }
+            else this.MessageLabel.Text = "";
         }
 
         private void NewAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
@@ -1023,6 +1038,7 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().AddEndStation(es, true);
                     this.m_endStations.Add(es);
                     this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ")" + " was added successfully.";
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
@@ -1041,6 +1057,7 @@ namespace AST.Presentation {
                         ASTManager.GetInstance().AddEndStation(es, false);
                         this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
                         this.m_endStations.Add(es);
+                        this.MessageLabel.Text = "The end-station "+ es.Name + "(" + es.ID +") was updated successfully.";
                     }
                 }
 
@@ -1054,6 +1071,7 @@ namespace AST.Presentation {
                         ASTManager.GetInstance().AddEndStation(es, false);
                         this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
                         this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
+                        this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was updated successfully.";
                     }
                 }
             }
@@ -1073,6 +1091,11 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
                     this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was deleted successfully.";
+                    this.IPText.Text = "";
+                    this.UsernameText.Text = "";
+                    this.OSTypeText.Text = "";
+                    this.IsDefaultLabel.Text = "";
                 }
 
                 // In case we are in the lower list box.
@@ -1081,6 +1104,11 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
                     this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
+                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was deleted successfully.";
+                    this.IPText.Text = "";
+                    this.UsernameText.Text = "";
+                    this.OSTypeText.Text = "";
+                    this.IsDefaultLabel.Text = "";
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
@@ -1252,6 +1280,10 @@ namespace AST.Presentation {
 
             //Enable the execute button
             this.ExecuteButton.Enabled = true;
+        }
+
+        public void SetMessage(String msg) {
+            this.MessageLabel.Text = msg;
         }
     }
 }

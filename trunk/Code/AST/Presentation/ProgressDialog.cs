@@ -37,6 +37,7 @@ namespace AST.Management
         public ProgressDialog(String reportFilename)
         {
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             m_endStations = new List<EndStation>();
             m_allResults = new List<Result>();
             m_stopExecute = false;
@@ -214,9 +215,11 @@ namespace AST.Management
             else
             {
                 MyCancelButton.Enabled = false;
+                CloseButton.Enabled = false;
                 OkButton.Enabled = true;
                 ViewReportLabel.Text = "View Report";
                 ViewReportLabel.Enabled = true;
+                InProgressImage.Enabled = false;
             }
         }
         /// <summary>
@@ -235,6 +238,7 @@ namespace AST.Management
                 if (res.Status) this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Success";
                 else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Failed";
                 this.ResultsGridView.Rows[rowNumber].Cells[3].Value = res.GetAction().GetValidityString(AST.Domain.EndStation.OSTypeEnum.WINDOWS);
+                this.MessageText.Text = res.Message;
             }
 
         }
@@ -268,6 +272,16 @@ namespace AST.Management
 
         private void ResultsGridView_CellContentClick(object sender, DataGridViewCellEventArgs e) {
             this.MessageText.Text = this.m_allResults[this.ResultsGridView.SelectedCells[0].RowIndex].Message;
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e) {
+            if (MyCancelButton.Enabled) {
+                m_stopExecute = true;
+                ASTManager.GetInstance().StopExecution();
+                MyCancelButton.Enabled = false;
+            }
+            CloseButton.Enabled = false;
+            DialogResult = DialogResult.OK;
         }
     }
 }

@@ -170,6 +170,7 @@ namespace AST.Presentation {
             // 
             // OSComboBox
             // 
+            this.OSComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.OSComboBox.FormattingEnabled = true;
             this.OSComboBox.Items.AddRange(new object[] {
             "Windows",

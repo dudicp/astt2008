@@ -30,6 +30,7 @@ namespace AST.Presentation
             m_selectedType = selectedType;
             m_info = new Hashtable();
             InitializeComponent();
+            this.StartPosition = FormStartPosition.CenterScreen;
             SetListBoxNames();
         }
 
