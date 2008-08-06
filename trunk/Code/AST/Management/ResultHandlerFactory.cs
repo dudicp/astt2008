@@ -13,6 +13,8 @@ namespace AST.Management
                 return RHSetIP.GetInstance();
             if (action.Name.Equals("ChangeIPAddress") && (action.CreatorName.Equals("System")))
                 return RHChangeIP.GetInstance();
+            if (action.Name.Equals("DynamicChangeIP") && (action.CreatorName.Equals("System")))
+                return RHDynamicChangeIP.GetInstance();
             
             return ResultHandler.GetInstance();
         }

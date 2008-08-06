@@ -91,12 +91,12 @@ namespace AST.Management{
         }
 
 
-        public String ExecuteBatch(IPAddress ip, String username, String password, String filename, int timeout, int duration, out int errorCode) {
+        public String ExecuteBatch(IPAddress ip, String username, String password, String filename, String arguments, int timeout, int duration, out int errorCode) {
             if (!File.Exists(filename)) throw new FileNotExistException("The batch file " + filename + " isn't found.");
 
             String res = "";
             try {
-                String command = " -c "+filename;
+                String command = " -c "+filename+" "+arguments;
                 res = this.ExecuteCmd(ip, username, password, command, timeout, duration, out errorCode);
                 return res;
             }

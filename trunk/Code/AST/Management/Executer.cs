@@ -14,6 +14,9 @@ namespace AST.Management
     /// </summary>
     class Executer
     {
+        private const String DYNAMIC_CHANGE_IP = "DynamicChangeIP";
+        private const String CREATOR_SYSTEM = "System";
+
         private Action m_action;
         private int m_endstationIndex;
         ManualResetEvent m_doneEvent;
@@ -52,6 +55,12 @@ namespace AST.Management
             // generation the command to be executed.
             String command = m_action.GenerateCommand(endstation.OSType);
 
+
+            //Fix to Dynamic Change IP command, to send the ID of the end-station as argument.
+            if ((m_action.Name.Equals(DYNAMIC_CHANGE_IP)) && (m_action.CreatorName.Equals(CREATOR_SYSTEM))) {
+                command = command + " " + endstation.ID;
+            }
+
             DateTime startTime = DateTime.Now;
             DateTime endTime;
             int errorCode;
@@ -64,7 +73,8 @@ namespace AST.Management
                         res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
                         break;
                     case Action.ActionTypeEnum.BATCH_FILE:
-                        msg = provider.ExecuteBatch(endstation.IP, endstation.Username, endstation.Password, command, m_action.Timeout, m_action.Duration, out errorCode);
+                        String batchFilename = m_action.GetContent(endstation.OSType);
+                        msg = provider.ExecuteBatch(endstation.IP, endstation.Username, endstation.Password, batchFilename, command, m_action.Timeout, m_action.Duration, out errorCode);
                         endTime = DateTime.Now;
                         res = resultHandler.CheckResult(m_action, endstation, startTime, endTime, msg, errorCode);
                         break;

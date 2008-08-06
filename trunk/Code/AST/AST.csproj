@@ -65,6 +65,7 @@
     <Compile Include="Management\ResultHandler.cs" />
     <Compile Include="Management\ResultHandlerFactory.cs" />
     <Compile Include="Management\RHChangeIP.cs" />
+    <Compile Include="Management\RHDynamicChangeIP.cs" />
     <Compile Include="Management\RHSetIP.cs" />
     <Compile Include="Presentation\CreateAdditionalActionDialog.cs">
       <SubType>Form</SubType>

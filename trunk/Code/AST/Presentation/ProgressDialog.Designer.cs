@@ -146,7 +146,6 @@ namespace AST.Management {
             this.EndStationComboBox.Location = new System.Drawing.Point(521, 52);
             this.EndStationComboBox.Name = "EndStationComboBox";
             this.EndStationComboBox.Size = new System.Drawing.Size(105, 21);
-            this.EndStationComboBox.Sorted = true;
             this.EndStationComboBox.TabIndex = 1;
             this.EndStationComboBox.SelectedIndexChanged += new System.EventHandler(this.EndStationComboBox_SelectedIndexChanged);
             // 
