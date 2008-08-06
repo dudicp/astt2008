@@ -82,9 +82,10 @@ namespace AST.Presentation {
                 DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
 
-                ASTManager.GetInstance().RemoveEndStation(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
-                this.m_endStations.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
+                int index = this.EndStationsListBox.SelectedIndex;
+                ASTManager.GetInstance().RemoveEndStation(this.m_endStations[index]);
+                this.m_endStations.RemoveAt(index);
+                this.EndStationsListBox.Items.RemoveAt(index);
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
         }
