@@ -1226,23 +1226,6 @@ namespace AST.Presentation {
                 this.DurationCheckBox.Enabled = true;
 
             }
-
-            if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.BATCH_FILE) {
-                this.ParametersListBox.Enabled = false;
-                this.SelectedParametersListBox.Enabled = false;
-                this.UnselectParameterButton.Enabled = false;
-                this.MoveUpParameterButton.Enabled = false;
-                this.MoveDownParameterButton.Enabled = false;
-            }
-            else {
-                this.ParametersListBox.Enabled = true;
-                this.SelectedParametersListBox.Enabled = true;
-                this.UnselectParameterButton.Enabled = true;
-                this.MoveUpParameterButton.Enabled = true;
-                this.MoveDownParameterButton.Enabled = true;
-
-            }
-
         }
 
         private void TSCsListBoxOnDoubleClick(object sender, EventArgs e) {

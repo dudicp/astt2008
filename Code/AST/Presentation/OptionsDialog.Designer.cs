@@ -379,10 +379,9 @@ namespace AST.Presentation {
             this.EndStationsListBox.Location = new System.Drawing.Point(97, 57);
             this.EndStationsListBox.Name = "EndStationsListBox";
             this.EndStationsListBox.Size = new System.Drawing.Size(128, 79);
-            this.EndStationsListBox.Sorted = true;
             this.EndStationsListBox.TabIndex = 3;
-            this.EndStationsListBox.SelectedIndexChanged += new System.EventHandler(this.EndStationsListBox_SelectedIndexChanged);
             this.EndStationsListBox.DoubleClick += new System.EventHandler(this.EditEndStationButton_Click);
+            this.EndStationsListBox.SelectedIndexChanged += new System.EventHandler(this.EndStationsListBox_SelectedIndexChanged);
             // 
             // EndStationsLabel
             // 

@@ -96,6 +96,7 @@ namespace AST.Management
             m_stopExecute = true;
             ASTManager.GetInstance().StopExecution();
             MyCancelButton.Enabled = false;
+            CloseButton.Enabled = false;
         }
         /// <summary>
         /// 
@@ -104,6 +105,17 @@ namespace AST.Management
         /// <param name="e"></param>
         private void OkButton_Click(object sender, EventArgs e)
         {
+            DialogResult = DialogResult.OK;
+        }
+
+        private void CloseButton_Click(object sender, EventArgs e) {
+            if (MyCancelButton.Enabled) {
+                m_stopExecute = true;
+                ASTManager.GetInstance().StopExecution();
+                MyCancelButton.Enabled = false;
+                CloseButton.Enabled = false;
+            }
+            CloseButton.Enabled = false;
             DialogResult = DialogResult.OK;
         }
 
@@ -274,14 +286,5 @@ namespace AST.Management
             this.MessageText.Text = this.m_allResults[this.ResultsGridView.SelectedCells[0].RowIndex].Message;
         }
 
-        private void CloseButton_Click(object sender, EventArgs e) {
-            if (MyCancelButton.Enabled) {
-                m_stopExecute = true;
-                ASTManager.GetInstance().StopExecution();
-                MyCancelButton.Enabled = false;
-            }
-            CloseButton.Enabled = false;
-            DialogResult = DialogResult.OK;
-        }
     }
 }

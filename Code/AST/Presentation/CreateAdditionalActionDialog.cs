@@ -255,7 +255,7 @@ namespace AST.Presentation {
             BrowseButton.Enabled = true;
             TimeoutLabel.Enabled = true;
             TimeoutText.Enabled = true;
-            this.ParametersBox.Enabled = false;
+            this.ParametersBox.Enabled = true;
         }
 
         /// <summary>

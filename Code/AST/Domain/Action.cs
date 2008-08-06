@@ -227,12 +227,7 @@ namespace AST.Domain
                             res = res + " " + p.GetValue(osType) + " " + p.Input;
                         return res;
                     }
-                case ActionTypeEnum.BATCH_FILE:
-                    {
-                        String res = (String)m_content[osType];
-                        return res;
-                    }
-                // for SCRIPT and TEST_SCRIPT
+                // for SCRIPT, TEST_SCRIPT, BATCH_FILE
                 default:
                     {
                         String res = "";
