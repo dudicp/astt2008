@@ -18,6 +18,8 @@ namespace AST.Database{
 
         Hashtable GetInfo(AbstractAction.AbstractActionTypeEnum type);
 
+        Hashtable GetAdditionalActionsInfo();
+
         List<RecentEntry> GetRecent(int recent);
 
         List<RecentEntry> GetRecent(int recent, AbstractAction.AbstractActionTypeEnum type);

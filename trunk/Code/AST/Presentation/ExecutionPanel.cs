@@ -145,15 +145,8 @@ namespace AST.Presentation {
             this.TPsListBox.ClearSelected();
             this.TSCsListBox.ClearSelected();
 
-            //Set the menu strip content
-            /*if (m_rootAction.CreatorName == "System") {
-                this.EditAbstractActionToolStripMenuItem.Enabled = false;
-                this.DeleteAbstractActionToolStripMenuItem.Enabled = false;
-            }
-            else {*/
             this.EditAbstractActionToolStripMenuItem.Enabled = true;
             this.DeleteAbstractActionToolStripMenuItem.Enabled = true;
-            //}
         }
 
         /// <summary>
@@ -208,6 +201,8 @@ namespace AST.Presentation {
         private void SetTreeView() {
             this.TreeView.Nodes.Clear();
             this.TreeView.HideSelection = false;
+            this.MoveUpActionButton.Enabled = false;
+            this.MoveDownActionButton.Enabled = false;
 
             ASTNode node = new ASTNode(this.m_rootAction, m_type);
             this.TreeView.Nodes.Add(node);
@@ -244,8 +239,24 @@ namespace AST.Presentation {
             if (selectedType == AbstractAction.AbstractActionTypeEnum.ACTION) {
                 this.SetParameters((Action)m_activeAction);
                 this.ParametersGroupBox.Enabled = true;
+                this.MoveUpParameterButton.Enabled = false;
+                this.MoveDownParameterButton.Enabled = false;
+                this.SelectParameterButton.Enabled = false;
+                this.UnselectParameterButton.Enabled = false;
+                this.InputTextBox.Text = "";
             }
             else this.ParametersGroupBox.Enabled = false;
+
+            if (selectedType == AbstractAction.AbstractActionTypeEnum.ACTION && this.TreeView.SelectedNode.Level == 1)
+            {
+                this.StopIfFailsCheckBox.Enabled = true;
+                this.DelayCheckBox.Enabled = true;
+            }
+            else
+            {
+                this.StopIfFailsCheckBox.Enabled = false;
+                this.DelayCheckBox.Enabled = false;
+            }
 
             if (selectedType == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
                 this.EndStationsGroupBox.Enabled = false;
@@ -283,30 +294,35 @@ namespace AST.Presentation {
             ASTNode upperNode = ((ASTNode)(this.TreeView.SelectedNode));
             int index = this.TreeView.SelectedNode.Index;
             ASTNode lowerNode = ((ASTNode)this.TreeView.SelectedNode.Parent.Nodes[index - 1]);
+            
+            ASTNode[] nodes = new ASTNode[TreeView.SelectedNode.Parent.Nodes.Count];
+            
+            int i = 0;
+            while (TreeView.SelectedNode.Parent.Nodes.Count > 1){
+                nodes[i] = (ASTNode)TreeView.SelectedNode.Parent.Nodes[0];
+                i++;
+                TreeView.SelectedNode.Parent.Nodes.RemoveAt(0);
+            }
+            nodes[i] = (ASTNode)TreeView.SelectedNode.Parent.Nodes[0];
 
-            if (this.TreeView.SelectedNode.Parent.Nodes.Count == 2) {
-                //if there are only 2 children and we remove them the selected node will be changed to the parent node
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
-                this.TreeView.SelectedNode.Nodes.Insert(index - 1, lowerNode);
-                this.TreeView.SelectedNode.Nodes.Insert(index - 1, upperNode);
-            }
-            else {
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
-                this.TreeView.SelectedNode.Parent.Nodes.Insert(index - 1, lowerNode);
-                this.TreeView.SelectedNode.Parent.Nodes.Insert(index - 1, upperNode);
-            }
+            ASTNode temp = nodes[index];
+            nodes[index] = lowerNode;
+            nodes[index - 1] = temp;
+            this.TreeView.SelectedNode.Parent.Nodes.Clear();
+            for (i = 0; i < nodes.Length; i++)
+                this.TreeView.SelectedNode.Nodes.Add(nodes[i]);
 
             this.TreeView.SelectedNode = upperNode;
             if (this.TreeView.SelectedNode.Index == 0) this.MoveUpActionButton.Enabled = false;
 
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC)
+            {
                 Action tmp = ((TSC)this.m_rootAction).GetActions()[index];
                 ((TSC)this.m_rootAction).GetActions()[index] = ((TSC)this.m_rootAction).GetActions()[index - 1];
                 ((TSC)this.m_rootAction).GetActions()[index - 1] = tmp;
             }
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TP)
+            {
                 TSC tmp = ((TP)this.m_rootAction).GetTSCs()[index];
                 ((TP)this.m_rootAction).GetTSCs()[index] = ((TP)this.m_rootAction).GetTSCs()[index - 1];
                 ((TP)this.m_rootAction).GetTSCs()[index - 1] = tmp;
@@ -318,7 +334,8 @@ namespace AST.Presentation {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void MoveDownActionButton_Click(object sender, EventArgs e) {
+        private void MoveDownActionButton_Click(object sender, EventArgs e)
+        {
             //Checks index validity
             if (this.TreeView.SelectedNode == null) return;
 
@@ -327,28 +344,34 @@ namespace AST.Presentation {
             int index = this.TreeView.SelectedNode.Index;
             ASTNode upperNode = ((ASTNode)this.TreeView.SelectedNode.Parent.Nodes[index + 1]);
 
-            if (this.TreeView.SelectedNode.Parent.Nodes.Count == 2) {
-                //if there are only 2 children and we remove them the selected node will be changed to the parent node
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+            ASTNode[] nodes = new ASTNode[TreeView.SelectedNode.Parent.Nodes.Count];
 
-                this.TreeView.SelectedNode.Nodes.Insert(index, lowerNode);
-                this.TreeView.SelectedNode.Nodes.Insert(index, upperNode);
-            }else{
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
-                this.TreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
-
-                this.TreeView.SelectedNode.Parent.Nodes.Insert(index, lowerNode);
-                this.TreeView.SelectedNode.Parent.Nodes.Insert(index, upperNode);
+            int i = 0;
+            while (TreeView.SelectedNode.Parent.Nodes.Count > 1)
+            {
+                nodes[i] = (ASTNode)TreeView.SelectedNode.Parent.Nodes[0];
+                i++;
+                TreeView.SelectedNode.Parent.Nodes.RemoveAt(0);
             }
+            nodes[i] = (ASTNode)TreeView.SelectedNode.Parent.Nodes[0];
+
+            ASTNode temp = nodes[index+1];
+            nodes[index+1] = lowerNode;
+            nodes[index] = temp;
+            this.TreeView.SelectedNode.Parent.Nodes.Clear();
+            for (i = 0; i < nodes.Length; i++)
+                this.TreeView.SelectedNode.Nodes.Add(nodes[i]);
+
             this.TreeView.SelectedNode = lowerNode;
 
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC)
+            {
                 Action tmp = ((TSC)this.m_rootAction).GetActions()[index];
                 ((TSC)this.m_rootAction).GetActions()[index] = ((TSC)this.m_rootAction).GetActions()[index + 1];
                 ((TSC)this.m_rootAction).GetActions()[index + 1] = tmp;
             }
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
+            if (m_type == AbstractAction.AbstractActionTypeEnum.TP)
+            {
                 TSC tmp = ((TP)this.m_rootAction).GetTSCs()[index];
                 ((TP)this.m_rootAction).GetTSCs()[index] = ((TP)this.m_rootAction).GetTSCs()[index + 1];
                 ((TP)this.m_rootAction).GetTSCs()[index + 1] = tmp;
@@ -919,26 +942,36 @@ namespace AST.Presentation {
         private void DeleteAbstractActionToolStripMenuItem_Click(object sender, EventArgs e) {
             //Delete Action
             String name = "";
+            AbstractAction aa = null;
             AbstractAction.AbstractActionTypeEnum type = AbstractAction.AbstractActionTypeEnum.ACTION;
             if (this.ActionsListBox.SelectedItem != null) {
                 name = (String)this.ActionsListBox.SelectedItem;
                 type = AbstractAction.AbstractActionTypeEnum.ACTION;
+                aa = ASTManager.GetInstance().Load(name,type);
             }
             else if (this.TSCsListBox.SelectedItem != null) {
                 name = (String)this.TSCsListBox.SelectedItem;
                 type = AbstractAction.AbstractActionTypeEnum.TSC;
+                aa = ASTManager.GetInstance().Load(name, type);
             }
             else if (this.TPsListBox.SelectedItem != null) {
                 name = (String)this.TPsListBox.SelectedItem;
                 type = AbstractAction.AbstractActionTypeEnum.TP;
+                aa = ASTManager.GetInstance().Load(name, type);
             }
-            
-            //String name = this.m_rootAction.Name;
-            if ((name == null) || (name.Length == 0)) {
-                MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+            if (type == AbstractAction.AbstractActionTypeEnum.ACTION && aa.CreatorName == "System")
+            {
+                MessageBox.Show("Basic action cannot be removed.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            //String name = this.m_rootAction.Name;
+            if ((name == null) || (name.Length == 0)) {
+                MessageBox.Show("No item selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            DialogResult res = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (res == DialogResult.No) {
                 this.MessageLabel.Text = "";
                 return;
@@ -957,6 +990,7 @@ namespace AST.Presentation {
             this.ParametersListBox.Items.Clear();
             this.SelectedParametersListBox.Items.Clear();
             this.TreeView.Nodes.Clear();
+            this.EndStationsListBox.Items.Clear();
             this.SelectedEndStationsListBox.Items.Clear();
             this.DescriptionText.Text = "";
             this.MessageLabel.Text = "";
@@ -968,13 +1002,17 @@ namespace AST.Presentation {
             else if (this.TSCsListBox.SelectedItem != null) name = (String)this.TSCsListBox.SelectedItem;
             else if (this.TPsListBox.SelectedItem != null) name = (String)this.TPsListBox.SelectedItem;
             if ((name == null) || (name.Length == 0)) {
-                MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("No item selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             try {
                 AbstractAction aa = ASTManager.GetInstance().Load(name, m_type);
-
+                if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && aa.CreatorName == "System")
+                {
+                    MessageBox.Show("Basic action cannot be modified.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
                 switch (m_type) {
                     case AbstractAction.AbstractActionTypeEnum.ACTION:
                         this.OpenAdditionalActionDialog((Action)aa);
@@ -1103,7 +1141,7 @@ namespace AST.Presentation {
         private void DeleteEndStationToolStripMenuItem_Click(object sender, EventArgs e) {
             try {
                 String name = this.m_rootAction.Name;
-                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult res = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
 
 
@@ -1113,7 +1151,7 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
                     this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was deleted successfully.";
+                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
                     this.IPText.Text = "";
                     this.UsernameText.Text = "";
                     this.OSTypeText.Text = "";
@@ -1126,7 +1164,7 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
                     this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
-                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was deleted successfully.";
+                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
                     this.IPText.Text = "";
                     this.UsernameText.Text = "";
                     this.OSTypeText.Text = "";
@@ -1219,13 +1257,15 @@ namespace AST.Presentation {
             if (((Action)this.m_activeAction).ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
                 this.EndStationsGroupBox.Enabled = false;
                 this.DurationCheckBox.Enabled = false;
-
             }
             else {
                 this.EndStationsGroupBox.Enabled = true;
                 this.DurationCheckBox.Enabled = true;
 
             }
+
+            this.StopIfFailsCheckBox.Enabled = false;
+            this.DelayCheckBox.Enabled = false;
         }
 
         private void TSCsListBoxOnDoubleClick(object sender, EventArgs e) {
@@ -1237,6 +1277,8 @@ namespace AST.Presentation {
             catch (Exception ex) {
                 return;
             }
+            
+            this.ClearAll();
 
             //Enable The End-Station GroupBox
             this.EndStationsGroupBox.Enabled = false;
@@ -1268,6 +1310,8 @@ namespace AST.Presentation {
             catch (Exception ex) {
                 return;
             }
+
+            this.ClearAll();
 
             //Enable The End-Station GroupBox
             this.EndStationsGroupBox.Enabled = false;

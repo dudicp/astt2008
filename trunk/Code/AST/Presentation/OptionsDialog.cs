@@ -20,6 +20,7 @@ namespace AST.Presentation {
         /// </summary>
         public OptionsDialog() {
             InitializeComponent();
+            this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             InitEndStations();
             InitConfiguration();
@@ -79,7 +80,7 @@ namespace AST.Presentation {
 
         private void DeleteEndStationButton_Click(object sender, EventArgs e) {
             try {
-                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult res = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
 
                 int index = this.EndStationsListBox.SelectedIndex;
@@ -123,14 +124,14 @@ namespace AST.Presentation {
             else reportFormat = ConfigurationManager.XML_REPORT;
             int res = ConfigurationManager.WriteConfiguration(this.DBConnectionText.Text, this.PSToolsPathText.Text, (int)this.MaxThreadPoolText.Value, this.ReportsFullPathText.Text, reportFormat);
             if (res == ConfigurationManager.SUCCESS) {
-                MessageBox.Show("Configuration file updated successfully.", "Info Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                //MessageBox.Show("Configuration file updated successfully.", "Info Message", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 this.DialogResult = DialogResult.OK;
             }
             else {
                 String message;
                 switch (res) {
                     case ConfigurationManager.ERROR_WRITING:
-                        message = "Failed to write configuration file.";
+                        message = "Failed to write to configuration file.";
                         break;
                     case ConfigurationManager.ERROR_INVALID_ARGUMENTS:
                         message = "Invalid arguments";

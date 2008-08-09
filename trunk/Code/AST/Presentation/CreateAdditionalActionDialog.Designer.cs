@@ -50,7 +50,6 @@ namespace AST.Presentation {
             this.OScomboBox = new System.Windows.Forms.ComboBox();
             this.okButton = new System.Windows.Forms.Button();
             this.actionDetailsBox = new System.Windows.Forms.GroupBox();
-            this.StopIfFailsCheckBox = new System.Windows.Forms.CheckBox();
             this.BatchFileRadio = new System.Windows.Forms.RadioButton();
             this.creatorNameLabel = new System.Windows.Forms.Label();
             this.actionNameLabel = new System.Windows.Forms.Label();
@@ -142,11 +141,11 @@ namespace AST.Presentation {
             // RemoveParameterButton
             // 
             this.RemoveParameterButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RemoveParameterButton.Location = new System.Drawing.Point(228, 25);
+            this.RemoveParameterButton.Location = new System.Drawing.Point(343, 25);
             this.RemoveParameterButton.Name = "RemoveParameterButton";
-            this.RemoveParameterButton.Size = new System.Drawing.Size(63, 23);
+            this.RemoveParameterButton.Size = new System.Drawing.Size(56, 23);
             this.RemoveParameterButton.TabIndex = 15;
-            this.RemoveParameterButton.Text = "Remove";
+            this.RemoveParameterButton.Text = "Delete";
             this.RemoveParameterButton.UseVisualStyleBackColor = true;
             this.RemoveParameterButton.Click += new System.EventHandler(this.RemoveParameterButton_Click);
             // 
@@ -163,7 +162,7 @@ namespace AST.Presentation {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(215, 503);
+            this.MyCancelButton.Location = new System.Drawing.Point(215, 480);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(75, 23);
             this.MyCancelButton.TabIndex = 19;
@@ -179,7 +178,7 @@ namespace AST.Presentation {
             this.ParametersBox.Controls.Add(this.parameterNameLabel);
             this.ParametersBox.Controls.Add(this.ParametersComboBox);
             this.ParametersBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ParametersBox.Location = new System.Drawing.Point(12, 429);
+            this.ParametersBox.Location = new System.Drawing.Point(12, 406);
             this.ParametersBox.Name = "ParametersBox";
             this.ParametersBox.Size = new System.Drawing.Size(405, 59);
             this.ParametersBox.TabIndex = 23;
@@ -189,7 +188,7 @@ namespace AST.Presentation {
             // NewParameterButton
             // 
             this.NewParameterButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.NewParameterButton.Location = new System.Drawing.Point(346, 25);
+            this.NewParameterButton.Location = new System.Drawing.Point(231, 25);
             this.NewParameterButton.Name = "NewParameterButton";
             this.NewParameterButton.Size = new System.Drawing.Size(53, 23);
             this.NewParameterButton.TabIndex = 17;
@@ -200,7 +199,7 @@ namespace AST.Presentation {
             // EditParameterButton
             // 
             this.EditParameterButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.EditParameterButton.Location = new System.Drawing.Point(292, 25);
+            this.EditParameterButton.Location = new System.Drawing.Point(287, 25);
             this.EditParameterButton.Name = "EditParameterButton";
             this.EditParameterButton.Size = new System.Drawing.Size(53, 23);
             this.EditParameterButton.TabIndex = 16;
@@ -216,7 +215,6 @@ namespace AST.Presentation {
             this.ParametersComboBox.Location = new System.Drawing.Point(113, 25);
             this.ParametersComboBox.Name = "ParametersComboBox";
             this.ParametersComboBox.Size = new System.Drawing.Size(112, 23);
-            this.ParametersComboBox.Sorted = true;
             this.ParametersComboBox.TabIndex = 14;
             // 
             // ContentLabel
@@ -325,7 +323,7 @@ namespace AST.Presentation {
             this.actionContentBox.Controls.Add(this.OSTypeLabel);
             this.actionContentBox.Controls.Add(this.OScomboBox);
             this.actionContentBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.actionContentBox.Location = new System.Drawing.Point(12, 297);
+            this.actionContentBox.Location = new System.Drawing.Point(12, 274);
             this.actionContentBox.Name = "actionContentBox";
             this.actionContentBox.Size = new System.Drawing.Size(405, 126);
             this.actionContentBox.TabIndex = 22;
@@ -362,7 +360,7 @@ namespace AST.Presentation {
             // okButton
             // 
             this.okButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.okButton.Location = new System.Drawing.Point(134, 503);
+            this.okButton.Location = new System.Drawing.Point(134, 480);
             this.okButton.Name = "okButton";
             this.okButton.Size = new System.Drawing.Size(75, 23);
             this.okButton.TabIndex = 18;
@@ -372,7 +370,6 @@ namespace AST.Presentation {
             // 
             // actionDetailsBox
             // 
-            this.actionDetailsBox.Controls.Add(this.StopIfFailsCheckBox);
             this.actionDetailsBox.Controls.Add(this.BatchFileRadio);
             this.actionDetailsBox.Controls.Add(this.DescriptionText);
             this.actionDetailsBox.Controls.Add(this.TestScriptRadio);
@@ -387,21 +384,10 @@ namespace AST.Presentation {
             this.actionDetailsBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 6.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.actionDetailsBox.Location = new System.Drawing.Point(12, 52);
             this.actionDetailsBox.Name = "actionDetailsBox";
-            this.actionDetailsBox.Size = new System.Drawing.Size(405, 239);
+            this.actionDetailsBox.Size = new System.Drawing.Size(405, 216);
             this.actionDetailsBox.TabIndex = 20;
             this.actionDetailsBox.TabStop = false;
             this.actionDetailsBox.Text = "Action Details";
-            // 
-            // StopIfFailsCheckBox
-            // 
-            this.StopIfFailsCheckBox.AutoSize = true;
-            this.StopIfFailsCheckBox.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.StopIfFailsCheckBox.Location = new System.Drawing.Point(6, 212);
-            this.StopIfFailsCheckBox.Name = "StopIfFailsCheckBox";
-            this.StopIfFailsCheckBox.Size = new System.Drawing.Size(200, 19);
-            this.StopIfFailsCheckBox.TabIndex = 7;
-            this.StopIfFailsCheckBox.Text = "Stop execution if the action fails.";
-            this.StopIfFailsCheckBox.UseVisualStyleBackColor = true;
             // 
             // BatchFileRadio
             // 
@@ -451,7 +437,7 @@ namespace AST.Presentation {
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(426, 537);
+            this.ClientSize = new System.Drawing.Size(426, 509);
             this.Controls.Add(this.MyCancelButton);
             this.Controls.Add(this.ParametersBox);
             this.Controls.Add(this.actionContentBox);
@@ -504,7 +490,6 @@ namespace AST.Presentation {
         private System.Windows.Forms.Label actionNameLabel;
         private System.Windows.Forms.Label Title;
         private System.Windows.Forms.RadioButton BatchFileRadio;
-        private System.Windows.Forms.CheckBox StopIfFailsCheckBox;
         private System.Windows.Forms.ComboBox ParametersComboBox;
     }
 }

@@ -57,17 +57,17 @@ namespace AST.Management {
                 }
 
                 IPAddress NewIP = IPAddress.Parse(res);
-                message = "Dynamic Change IPAddress to End-Station " + endStation.Name + "(" + endStation.ID + ")" + " from: " + endStation.IP.ToString() + " to: " + res + " Success.";
+                message = "Dynamic change IP address to end-station " + endStation.Name + "(" + endStation.ID + ")" + " from " + endStation.IP.ToString() + " to " + res + " succeeded.";
                 endStation.IP = NewIP;
                 ASTManager.GetInstance().AddEndStation(endStation, false);
                 return new Result(action, endStation, startTime, endTime, true, message, 0);
             }
             catch (FormatException e) {
-                message = "Change IPAddress to End-Station " + endStation.Name + "(" + endStation.ID + ")" + " Failed.";
+                message = "Dynamic change IP address to end-station " + endStation.Name + "(" + endStation.ID + ")" + " failed.";
                 return new Result(action, endStation, startTime, endTime, false, message, errorCode);
             }
             catch (Exception e) {
-                message = "Change IPAddress to End-Station " + endStation.Name + "(" + endStation.ID + ")" + " Success, but couldn't store in the local database.";
+                message = "Dynamic change IP address to end-station " + endStation.Name + "(" + endStation.ID + ")" + " succeeded, but couldn't store in the local database.";
                 return new Result(action, endStation, startTime, endTime, false, message, errorCode);
             }
 

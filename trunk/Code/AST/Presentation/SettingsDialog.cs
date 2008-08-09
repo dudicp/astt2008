@@ -34,6 +34,7 @@ namespace AST.Presentation {
             this.m_action = a;
             this.m_type = type;
             InitializeComponent();
+            this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
 
             if (m_type != AbstractAction.AbstractActionTypeEnum.ACTION) {
@@ -339,7 +340,7 @@ namespace AST.Presentation {
                 else if (this.SelectedEndStationsListBox.SelectedItem != null) es = m_endStations[this.SelectedEndStationsListBox.SelectedIndex];
                 else return;
 
-                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult res = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
 
                 ASTManager.GetInstance().RemoveEndStation(es);
@@ -379,6 +380,9 @@ namespace AST.Presentation {
                 if (this.DurationCheckBox.Checked)
                     ((Action)this.m_action).Duration = (int)this.DurationNumericUpDown.Value;
                 else ((Action)this.m_action).Duration = 0;
+
+                ((Action)this.m_action).StopIfFails = this.StopIfFailsCheckBox.Checked;
+
             }
 
             this.DialogResult = DialogResult.OK;
@@ -410,6 +414,8 @@ namespace AST.Presentation {
                 this.DurationCheckBox.Checked = true;
                 this.DurationNumericUpDown.Value = ((Action)(this.m_action)).Duration;
             }
+
+            this.StopIfFailsCheckBox.Checked = ((Action)this.m_action).StopIfFails;
         }
 
         private void DelayCheckBox_CheckedChanged(object sender, EventArgs e) {

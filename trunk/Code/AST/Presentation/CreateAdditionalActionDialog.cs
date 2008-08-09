@@ -12,6 +12,7 @@ using AST.Database;
 namespace AST.Presentation {
     public partial class CreateAdditionalActionDialog : Form {
 
+        private const int TIMEOUT = 20;
         private Action m_action;
         private List<Parameter> m_parameters;
         private List<Parameter> m_newParameters;
@@ -25,6 +26,7 @@ namespace AST.Presentation {
 /// <param name="a"></param>
         public CreateAdditionalActionDialog(Action a)
         {
+            this.MaximizeBox = false;
             m_action = a;
             m_isNew = false;
             m_newParameters = new List<Parameter>();
@@ -44,7 +46,7 @@ namespace AST.Presentation {
                     m_isNew = true;
                     this.m_parameters = new List<Parameter>();
                     this.CommandLineRadio.Checked = true;
-                    this.m_action = new Action("", "", 0, "", DateTime.Now, 0, Action.ActionTypeEnum.COMMAND_LINE, 0);
+                    this.m_action = new Action("", "", 0, "", DateTime.Now, TIMEOUT, Action.ActionTypeEnum.COMMAND_LINE, 0);
                     Title.Text = "Create Additional Action";
                 }
                 OScomboBox.SelectedIndex = 0;
@@ -74,9 +76,6 @@ namespace AST.Presentation {
             ActionNameText.Text = m_action.Name;
             ActionNameText.Enabled = false;
             CreatorNameText.Text = m_action.CreatorName;
-
-            if (m_action.StopIfFails) StopIfFailsCheckBox.Checked = true;
-            else StopIfFailsCheckBox.Checked = false;
 
             switch (m_action.ActionType)
             {
@@ -304,9 +303,6 @@ namespace AST.Presentation {
 
                 this.m_action.Description = this.DescriptionText.Text;
 
-                if (this.StopIfFailsCheckBox.Checked) m_action.StopIfFails = true;
-                else m_action.StopIfFails = false;
-
                 ASTManager.GetInstance().Save(this.m_action, AbstractAction.AbstractActionTypeEnum.ACTION, m_isNew);//Save Action Created/Modified
 
                 foreach (Parameter p in this.m_newParameters)
@@ -320,6 +316,7 @@ namespace AST.Presentation {
 
                 this.DialogResult = DialogResult.OK;
             }
+            catch (InvalidNameException ex) { return; }
             catch (Exception ex) {
                 this.DialogResult = DialogResult.Cancel;
             }
@@ -373,7 +370,7 @@ namespace AST.Presentation {
             }
             if (this.ContentText.Text.Length == 0 && (this.ValidityCheckBox.Checked && this.ValidityText.Text.Length > 0))
             {
-                message += "Command/script empty with non-empty validity string\n";
+                message += "Command or script empty with non-empty validity string\n";
                 res = false;
             }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);

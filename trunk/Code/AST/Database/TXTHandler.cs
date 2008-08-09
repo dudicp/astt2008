@@ -56,7 +56,7 @@ namespace AST.Database
                 throw new SaveReportException("Insufficient access privileges to create report file.", e);
             }
             catch (Exception e) {
-                throw new SaveReportException("Failed creating report file: " + reportName + ".xml", e);
+                throw new SaveReportException("Failed creating report file " + reportName + ".xml", e);
             }
         }
 
@@ -68,7 +68,7 @@ namespace AST.Database
         {
             if (!File.Exists(reportName + ".txt"))
             {
-                throw new OpenFileFailedException("File: " + reportName + ".txt doesn't exist.");
+                throw new OpenFileFailedException("File " + reportName + ".txt doesn't exist.");
             }
             System.Diagnostics.ProcessStartInfo procFormsBuilderStartInfo = new System.Diagnostics.ProcessStartInfo();
             procFormsBuilderStartInfo.FileName = reportName + ".txt";
@@ -81,7 +81,7 @@ namespace AST.Database
             }
             catch (Exception e)
             {
-                throw new OpenFileFailedException("Unable to open the report file: " + reportName + ".txt", e);
+                throw new OpenFileFailedException("Unable to open the report file " + reportName + ".txt", e);
             }
         }
     }

@@ -27,6 +27,7 @@ namespace AST.Presentation
         /// </summary>
         /// <param name="selectedType"></param>
         public BrowseDialog(AbstractAction.AbstractActionTypeEnum selectedType) {
+            this.MaximizeBox = false;
             m_selectedType = selectedType;
             m_info = new Hashtable();
             InitializeComponent();
@@ -37,7 +38,8 @@ namespace AST.Presentation
         private void SetListBoxNames() {
             try {
                 this.listBox.Items.Clear();
-                this.m_info = ASTManager.GetInstance().GetInfo(m_selectedType);
+                if (m_selectedType == AbstractAction.AbstractActionTypeEnum.ACTION) this.m_info = ASTManager.GetInstance().GetAdditionalActionsInfo();
+                else this.m_info = ASTManager.GetInstance().GetInfo(m_selectedType);
 
                 ICollection names = this.m_info.Keys;
                 foreach (String name in names)
@@ -61,6 +63,11 @@ namespace AST.Presentation
 
         private void okButton_Click(object sender, EventArgs e){
             m_abstractActionName = (String)listBox.SelectedItem;
+            if (m_abstractActionName == null)
+            {
+                MessageBox.Show("No item selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
             DialogResult = DialogResult.OK;
         }
 
