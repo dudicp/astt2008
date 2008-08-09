@@ -113,6 +113,24 @@ namespace AST.Management
                 o.DisplayInfoMessage(name + " Deleted Successfully.");*/
         }
 
+        public Hashtable GetAdditionalActionsInfo()
+        {
+            try
+            {
+                return this.m_databaseManager.GetAdditionalActionsInfo();
+            }
+            catch (DatabaseException e)
+            {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
+            catch (Exception e)
+            {
+                this.DisplayErrorMessage("Unknown error occured during getting info.");
+                throw e;
+            }
+        }
+
         /// <summary>
         /// method for getting AbstractAction Hash table by the type
         /// </summary>
@@ -253,13 +271,17 @@ namespace AST.Management
             try {
                 this.m_databaseManager.Save(a, type, isNew);
             }
+            catch (InvalidNameException e) {
+                this.DisplayErrorMessage(e.Message);
+                throw e;
+            }
             catch (DatabaseException e) {
                 this.DisplayErrorMessage(e.Message);
-                throw e; 
+                throw e;
             }
             catch (Exception e) {
-                this.DisplayErrorMessage("Unknown error occured during saving " +a.Name+ ".");
-                throw e; 
+                this.DisplayErrorMessage("Unknown error occured during saving " + a.Name + ".");
+                throw e;
             }
             
             /*foreach (ASTOutputListener o in this.m_outputListeners)

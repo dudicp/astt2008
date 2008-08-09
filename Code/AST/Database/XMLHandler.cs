@@ -107,7 +107,7 @@ namespace AST.Database{
                 throw new SaveReportException("Insufficient access privileges to create report file.", e);
             }
             catch (Exception e) {
-                throw new SaveReportException("Failed creating report file: " + reportName + ".xml", e);
+                throw new SaveReportException("Failed creating report file " + reportName + ".xml", e);
             }
         }
 
@@ -129,7 +129,7 @@ namespace AST.Database{
                 procFormsBuilder.Start();
             }
             catch (Exception e) {
-                throw new OpenFileFailedException("Unable to open the report file: " + reportName + ".xml", e);
+                throw new OpenFileFailedException("Unable to open the report file " + reportName + ".xml", e);
             }
         }
 

@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using System.Net;
 using AST.Domain;
 using AST.Management;
+using System.Net.NetworkInformation;
 
 
 namespace AST.Presentation {
@@ -26,6 +27,7 @@ namespace AST.Presentation {
         public EndStationDialog(EndStation es) {
             this.m_es = es;
             InitializeComponent();
+            this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             if (es != null) {
                 this.SetEndStationDetails();
@@ -90,12 +92,28 @@ namespace AST.Presentation {
             bool res = true;
             String message = "The following attributes are invalid:\n";
             IPAddress parsed;
+            Ping ping = new Ping();
+            
             if (!IPAddress.TryParse(this.IPTextBox.Text, out parsed)) {
                 message += "IP Address\n";
                 res = false;
             }
+            if (IPAddress.TryParse(this.IPTextBox.Text, out parsed)){
+                IPAddress ip = IPAddress.Parse(IPTextBox.Text);
+                PingReply reply = ping.Send(ip);
+                IPStatus success = System.Net.NetworkInformation.IPStatus.Success;
+                if (!reply.Status.Equals(success)){
+                    message += "IP Address not reachable\n";
+                    res = false;
+                }
+            }
+
             if (this.OSComboBox.SelectedItem == null) {
                 message += "OS Type\n";
+                res = false;
+            }
+            if (NameTextBox.Text == null || NameTextBox.Text.Length == 0) {
+                message += "Name\n";
                 res = false;
             }
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -37,13 +37,13 @@ namespace AST.Management {
 
             try {
                 NewIP = IPAddress.Parse(NewIPStr);
-                message = "Change IPAddress to End-Station " + endStation.Name + "(" + endStation.ID + ")" + " from: " + endStation.IP.ToString() + " to: " + NewIPStr + " Success.";
+                message = "Change IP address to end-station " + endStation.Name + "(" + endStation.ID + ")" + " from " + endStation.IP.ToString() + " to " + NewIPStr + " succeeded.";
                 endStation.IP = NewIP;
                 ASTManager.GetInstance().AddEndStation(endStation, false);
                 return new Result(action, endStation, startTime, endTime, true, message, errorCode);
             }
             catch (Exception e) {
-                message = "Change IPAddress to End-Station " + endStation.Name + "(" + endStation.ID + ")" + " from: " + endStation.IP.ToString() + " to: " + NewIPStr + " Success, but couldn't store in the local database.";
+                message = "Change IPAddress to end-station " + endStation.Name + "(" + endStation.ID + ")" + " from " + endStation.IP.ToString() + " to " + NewIPStr + " succeeded, but couldn't store in the local database.";
                 return new Result(action, endStation, startTime, endTime, false, message, errorCode);
             }
 

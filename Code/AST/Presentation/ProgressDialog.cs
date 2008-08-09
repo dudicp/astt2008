@@ -16,6 +16,7 @@ namespace AST.Management
     public partial class ProgressDialog : Form, ExecutionManagerOutputListener
     {
 
+        private const int CP_NOCLOSE_BUTTON = 0x200;
         private List<EndStation> m_endStations;
         private int m_currentActionNo;
         private String m_reportFilename;
@@ -37,6 +38,7 @@ namespace AST.Management
         public ProgressDialog(String reportFilename)
         {
             InitializeComponent();
+            this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             m_endStations = new List<EndStation>();
             m_allResults = new List<Result>();
@@ -49,6 +51,17 @@ namespace AST.Management
 
             this.Init();
         }
+
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams myCp = base.CreateParams;
+                myCp.ClassStyle = myCp.ClassStyle | CP_NOCLOSE_BUTTON;
+                return myCp;
+            }
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -248,7 +261,7 @@ namespace AST.Management
                 this.ResultsGridView.Rows[rowNumber].Cells[0].Value = res.GetAction().Name;
                 this.ResultsGridView.Rows[rowNumber].Cells[1].Value = res.GetEndStation().Name + "(" + res.GetEndStation().ID + ")";
                 if (res.Status) this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Success";
-                else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Failed";
+                else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Fail";
                 this.ResultsGridView.Rows[rowNumber].Cells[3].Value = res.GetAction().GetValidityString(AST.Domain.EndStation.OSTypeEnum.WINDOWS);
                 this.MessageText.Text = res.Message;
             }

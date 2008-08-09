@@ -16,8 +16,9 @@ namespace AST.Domain
         protected String m_creatorName;
         protected DateTime m_creationTime;
         protected List<EndStationSchedule> m_endStations;
+
         /// <summary>
-        /// CTor for the AbstractAction Object
+        /// Class for the AbstractAction Object
         /// </summary>
         /// <param name="name">the name of the action</param>
         /// <param name="description">the action description</param>
@@ -31,6 +32,7 @@ namespace AST.Domain
             m_creationTime = creationTime;
             m_endStations = new List<EndStationSchedule>();
         }
+
         /// <summary>
         /// Property value for the AbstractAction name
         /// getter + setter for the m_name member
@@ -40,6 +42,7 @@ namespace AST.Domain
             get { return this.m_name; }
             set { this.m_name = value; }
         }
+
         /// <summary>
         /// Property value for the description
         /// getter + setter for the m_description member
@@ -49,6 +52,7 @@ namespace AST.Domain
             get { return this.m_description; }
             set { this.m_description = value; }
         }
+
         /// <summary>
         /// Property value for the creator name
         /// getter + setter for the m_creatorName member
@@ -58,6 +62,7 @@ namespace AST.Domain
             get { return this.m_creatorName; }
             set { this.m_creatorName = value; }
         }
+
         /// <summary>
         /// Property value for the creation time
         /// getter + setter for the m_creationTime member
@@ -67,6 +72,7 @@ namespace AST.Domain
             get { return this.m_creationTime; }
             set { this.m_creationTime = value; }
         }
+
         /// <summary>
         /// method for getting the m_endStations member
         /// </summary>
@@ -79,23 +85,27 @@ namespace AST.Domain
         public void SetEndStations(List<EndStationSchedule> endStations) {
             this.m_endStations = endStations;
         }
+
         /// <summary>
         /// Abstract method for adding an End-station 
         /// to be implemented in the derived classes
         /// </summary>
         /// <param name="es">the end-station object</param>
         public abstract void AddEndStation(EndStationSchedule es);
+
         /// <summary>
         /// Abstract method for removing an End-station 
         /// to be implemented in the derived classes
         /// </summary>
         /// <param name="es">the end-station object</param>
         public abstract void RemoveEndStation(EndStationSchedule es);
+
         /// <summary>
         /// Abstract method for removing all End-station 
         /// to be implemented in the derived classes
         /// </summary>
         public abstract void ClearEndStations();
+
         /// <summary>
         /// Abstract method for getting all the Actions
         /// to be implemented in the derived classes

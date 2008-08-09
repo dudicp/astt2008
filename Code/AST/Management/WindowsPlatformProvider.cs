@@ -15,9 +15,10 @@ namespace AST.Management{
         private const String EXECUTE_COMMAND = "\\psexec.exe";
         private const String KILL_COMMAND = "\\pskill.exe";
         private const String SCRIPT_FILENAME = "ASTScript.vbs";
-        private const int CONNECTION_TIMEOUT1 = 1460;
-        private const int CONNECTION_TIMEOUT2 = 1722;
+        private const int CONNECTION_TIMEOUTE1 = 1460;
+        private const int CONNECTION_TIMEOUTE2 = 1722;
         private const int NOT_REACHABLE = 1006;
+        private const int COMMAND_NOT_EXIST = 2;
         private static WindowsPlatformProvider m_instance = null;
         /// <summary>
         /// 
@@ -69,18 +70,22 @@ namespace AST.Management{
                p.Start();
                if (duration == 0) {
                    p.WaitForExit();
-                   res = p.StandardOutput.ReadToEnd();
-                   errorCode = p.ExitCode;
-                   if ((errorCode == CONNECTION_TIMEOUT1) || (errorCode == CONNECTION_TIMEOUT2))
-                       throw new ExecutionFailedException("Timeout accessing "+ip.ToString());
-                   if (errorCode == NOT_REACHABLE)
-                       throw new ExecutionFailedException("Couldn't access: " + ip.ToString() + "\nThe network path was not found.");
-                   Debug.WriteLine("output:\n" + res);
-                   p.Close();
                }
                else {
-                   if (!p.WaitForExit(duration * 1000)) p.Kill();
+                   if (!p.WaitForExit(duration * 1000))
+                       p.Kill();
                }
+               res = p.StandardOutput.ReadToEnd();
+               res = res.Replace("\r\r\n", "\n");
+               errorCode = p.ExitCode;
+               if ((errorCode == CONNECTION_TIMEOUTE1) || (errorCode == CONNECTION_TIMEOUTE2))
+                   throw new ExecutionFailedException("Timeout accessing " + ip.ToString());
+               if (errorCode == NOT_REACHABLE)
+                   throw new ExecutionFailedException("Couldn't access " + ip.ToString() + ".\nThe network path was not found.");
+               if (errorCode == COMMAND_NOT_EXIST)
+                   throw new ExecutionFailedException("Couldn't execute command.\nCommand " + cmd + " doesn't exist.");
+               Debug.WriteLine("output:\n" + res);
+               p.Close();
            }
            catch (ExecutionFailedException e) { throw e; }
            catch (FileNotExistException e) { throw e; }
@@ -161,16 +166,16 @@ namespace AST.Management{
             p.StartInfo = psi;
             try {
                 if (!p.Start())
-                    throw new ExecutionFailedException("Getting access to: "+ip.ToString()+ " Failed.");
+                    throw new ExecutionFailedException("Getting access to "+ip.ToString()+ " failed.");
                 p.WaitForExit();
-                if(p.ExitCode !=0) throw new ExecutionFailedException("Getting access to: "+ip.ToString()+ " exit with code: "+p.ExitCode);
+                if(p.ExitCode !=0) throw new ExecutionFailedException("Getting access to "+ip.ToString()+ " exited with code "+p.ExitCode);
                 p.Close();
             }
             catch(ExecutionFailedException e){
                 throw e;
             }
             catch (Exception e) {
-                throw new ExecutionFailedException("Getting access to: " + ip.ToString() + " Failed.", e);
+                throw new ExecutionFailedException("Getting access to " + ip.ToString() + " failed.", e);
             }
         }
         /// <summary>
@@ -190,16 +195,16 @@ namespace AST.Management{
             psi.UseShellExecute = false;
             p.StartInfo = psi;
             try {
-                if (!p.Start()) throw new ExecutionFailedException("Deleting access to: " + ip.ToString() + " Failed.");
+                if (!p.Start()) throw new ExecutionFailedException("Deleting access to " + ip.ToString() + " failed.");
                 p.WaitForExit();
-                if (p.ExitCode != 0) throw new ExecutionFailedException("Deleting access to: " + ip.ToString() + " exit with code: " + p.ExitCode);
+                if (p.ExitCode != 0) throw new ExecutionFailedException("Deleting access to " + ip.ToString() + " exited with code: " + p.ExitCode);
                 p.Close();
             }
             catch (ExecutionFailedException e) {
                 throw e;
             }
             catch (Exception e) {
-                throw new ExecutionFailedException("Deleting access to: " + ip.ToString() + " Failed.", e);
+                throw new ExecutionFailedException("Deleting access to " + ip.ToString() + " failed.", e);
             }
         }
         /// <summary>

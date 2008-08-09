@@ -158,7 +158,7 @@ namespace AST.Presentation{
             if (bd.ShowDialog() == DialogResult.OK) {
                 String name = bd.GetAbstractActionName();
                 if ((name == null) || (name.Length == 0)) {
-                    MessageBox.Show("No Item Selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("No item selected.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
                 try {
@@ -271,14 +271,14 @@ namespace AST.Presentation{
                     return;
                 }
 
-                DialogResult res = MessageBox.Show("Are you Sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                DialogResult res = MessageBox.Show("Are you sure?", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return;
                 
                 ASTManager.GetInstance().DeleteAbstractAction(name, type);
 
                 this.astPanel.Dispose();
                 this.astPanel = new AST.Presentation.ExecutionPanel();
-                ((ExecutionPanel)astPanel).SetMessage(name + " was deleted successfully.");
+                ((ExecutionPanel)astPanel).SetMessage(name + " was removed successfully.");
                 this.SuspendLayout();
                 this.Controls.Add(this.astPanel);
                 this.ResumeLayout(false);
@@ -294,8 +294,16 @@ namespace AST.Presentation{
         private void SettingsToolStripMenuItem_Click(object sender, EventArgs e) {
             OptionsDialog d = new OptionsDialog();
             d.ShowDialog();
-            if(d.DialogResult == DialogResult.OK)
+            if (d.DialogResult == DialogResult.OK) {
+                this.astPanel.Dispose();
+                this.astPanel = new AST.Presentation.ExecutionPanel();
                 ASTManager.GetInstance().Init();
+                this.SuspendLayout();
+                this.Controls.Add(this.astPanel);
+                this.ResumeLayout(false);
+                ((ExecutionPanel)astPanel).SetMessage("Configuration file updated successfully.");
+            }
+            else ((ExecutionPanel)astPanel).SetMessage("");
         }
 
         /// <summary>
@@ -328,7 +336,7 @@ namespace AST.Presentation{
                 procFormsBuilder.Start();
             }
             catch (Exception e) {
-                this.DisplayErrorMessage("Unable to open the report file: " + USER_MANUAL_FILE);
+                this.DisplayErrorMessage("Unable to open the user manual.");
             }
         }
 

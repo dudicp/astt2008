@@ -17,6 +17,7 @@ namespace AST.Database
         private Hashtable m_actionInfo;
         private Hashtable m_TSCInfo;
         private Hashtable m_TPInfo;
+        private Hashtable m_additionalActionsInfo;
         private IDatabaseHandler m_DBHandler;
         private IResultHandler m_resultHandler;
 
@@ -31,6 +32,7 @@ namespace AST.Database
             this.m_actionInfo = new Hashtable();
             this.m_TSCInfo = new Hashtable();
             this.m_TPInfo = new Hashtable();
+            this.m_additionalActionsInfo = new Hashtable();
             this.m_DBHandler = DBhandler;
             this.m_resultHandler = resultHandler;
         }
@@ -45,6 +47,7 @@ namespace AST.Database
                 this.m_actionInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.ACTION);
                 this.m_TSCInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TSC);
                 this.m_TPInfo = this.m_DBHandler.GetInfo(AbstractAction.AbstractActionTypeEnum.TP);
+                this.m_additionalActionsInfo = this.m_DBHandler.GetAdditionalActionsInfo();
             }
             catch (DatabaseException e) {
                 throw e;
@@ -84,6 +87,15 @@ namespace AST.Database
             }
         }
 
+        public Hashtable GetAdditionalActionsInfo()
+        {
+            try
+            {
+                return this.m_additionalActionsInfo;
+            }
+            catch (DatabaseException e) { throw e; }
+        }
+
         /// <summary>
         /// method for getting AbstractAction Hash table by the type
         /// </summary>
@@ -96,7 +108,7 @@ namespace AST.Database
                     case AbstractAction.AbstractActionTypeEnum.ACTION: return this.m_actionInfo;
                     case AbstractAction.AbstractActionTypeEnum.TSC: return this.m_TSCInfo;
                     case AbstractAction.AbstractActionTypeEnum.TP: return this.m_TPInfo;
-                    default: throw new InvalidCastException("Unknown type: " + type.ToString());
+                    default: throw new InvalidCastException("Unknown type " + type.ToString());
                 }
             }
             catch (DatabaseException e) { throw e; }

@@ -23,6 +23,7 @@ namespace AST.Presentation
         public EditParametersDialog(Parameter param)
         {
             InitializeComponent();
+            this.MaximizeBox = false;
             this.StartPosition = FormStartPosition.CenterScreen;
             if (param != null)
             {
@@ -142,7 +143,7 @@ namespace AST.Presentation
                     m_param.Input = InputTextBox.Text;
                 }
                 else {
-                    m_param.Type = Parameter.ParameterTypeEnum.Option;
+                    m_param.Type = Parameter.ParameterTypeEnum.Both;
                     m_param.Input = "";
                 }
             }

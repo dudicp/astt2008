@@ -47,7 +47,7 @@ namespace AST.Database{
             }
             catch (Exception e){
                 Debug.WriteLine("SQLHandler::Connect::Connecting to: " + this.m_connectionString + " Failed!");
-                throw new ConnectionFailedException("Connection to database with the connection string: " + this.m_connectionString + " has failed.", e);
+                throw new ConnectionFailedException("Connection to database with the connection string " + this.m_connectionString + " has failed.", e);
             }
         }
 
@@ -118,12 +118,9 @@ namespace AST.Database{
             //Getting the creation time
             DateTime creationTime = (DateTime)dr.GetValue(5);
 
-            bool stopIfFails = (bool)dr.GetValue(6);
-
-            int duration = (int)dr.GetValue(7);
+            int duration = (int)dr.GetValue(6);
 
             Action a = new Action(name, description, 0, creatorName, creationTime, timeout, type, duration);
-            a.StopIfFails = stopIfFails;
 
             ////////////////////
             //2. Set Contents //
@@ -136,7 +133,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadAction:: Loading action contents of: " + name + " failed.");
-                throw new QueryFailedException("Loading action contents of: " + name + " failed.", e);
+                throw new QueryFailedException("Loading action contents of " + name + " failed.", e);
             }
 
             while (dr.Read()) {
@@ -173,10 +170,10 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadParameter:: Loading parameter " + parameterName + " of action: " + actionName + " failed.");
-                throw new QueryFailedException("Loading parameter " + parameterName + " of action: " + actionName + " failed.", e);
+                throw new QueryFailedException("Loading parameter " + parameterName + " of action " + actionName + " failed.", e);
             }
 
-            if (!dr.Read()) throw new EmptyQueryResultException("Parameter: " + parameterName + " doesn't exist.");
+            if (!dr.Read()) throw new EmptyQueryResultException("Parameter " + parameterName + " doesn't exist.");
 
             //Getting the description of the parameter
             String description = (String)dr.GetValue(2);
@@ -242,9 +239,9 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC: " + name + " failed.");
-                throw new QueryFailedException("Loading TSC: " + name + " failed.", e);
+                throw new QueryFailedException("Loading test scenario " + name + " failed.", e);
             }
-            if (!dr.Read()) throw new EmptyQueryResultException("TSC: " + name + " doesn't exist.");
+            if (!dr.Read()) throw new EmptyQueryResultException("Test scenario " + name + " doesn't exist.");
 
             //Getting the description
             String description = (String)dr.GetValue(1);
@@ -273,6 +270,9 @@ namespace AST.Database{
 
                     int executionOrder = (int)dr.GetValue(2);
 
+                    bool stopIfFails = (bool)dr.GetValue(4);
+                    a.StopIfFails = stopIfFails;
+
                     SqlDataReader parameterDR = null;
                     connection = this.Connect();
                     parameterDR = SqlHelper.ExecuteReader(connection, "sp_GetParametersInTSC", name, actionName, executionOrder);
@@ -298,7 +298,7 @@ namespace AST.Database{
                             a.AddEndStation(ess);
                         }
                         else {
-                            Debug.WriteLine("SQLHandler::LoadTSC:: End-Station: " + esID + " not found in the system.");
+                            Debug.WriteLine("SQLHandler::LoadTSC:: End-Station " + esID + " not found in the system.");
                         }
                     }
                     tsc.AddAction(a); // Adding the action to the tsc.
@@ -318,7 +318,7 @@ namespace AST.Database{
                         tscEndStations.Add(ess);
                     }
                     else {
-                        Debug.WriteLine("SQLHandler::LoadTSC:: End-Station: " + esID + " not found in the system.");
+                        Debug.WriteLine("SQLHandler::LoadTSC:: End-Station " + esID + " not found in the system.");
                     }
                 }
 
@@ -330,7 +330,7 @@ namespace AST.Database{
             catch (EmptyQueryResultException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadTSC:: Loading TSC " + name + " failed.");
-                throw new QueryFailedException("Loading TSC " + name + " failed.", e);
+                throw new QueryFailedException("Loading test scenario " + name + " failed.", e);
             }
         }
 
@@ -352,9 +352,9 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadTP:: Loading TP: " + name + " failed.");
-                throw new QueryFailedException("Loading TP: " + name + " failed.", e);
+                throw new QueryFailedException("Loading test plan " + name + " failed.", e);
             }
-            if (!dr.Read()) throw new EmptyQueryResultException("TP: " + name + " doesn't exist.");
+            if (!dr.Read()) throw new EmptyQueryResultException("Test plan " + name + " doesn't exist.");
 
             //Getting the description
             String description = (String)dr.GetValue(1);
@@ -387,7 +387,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::LoadTP:: Loading TP: " + name + " failed.");
-                throw new QueryFailedException("Loading TP: " + name + " failed.", e);
+                throw new QueryFailedException("Loading test plan " + name + " failed.", e);
             }
         }
 
@@ -468,7 +468,7 @@ namespace AST.Database{
                     if (this.IsExist(action, AbstractAction.AbstractActionTypeEnum.ACTION)) storedProcedureName = "sp_UpdateAction";
                     else storedProcedureName = "sp_InsertAction";
 
-                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.StopIfFails, action.Duration);
+                    SqlHelper.ExecuteNonQuery(transaction, storedProcedureName, action.Name, action.Description, action.ActionType.ToString(), action.Timeout, action.CreatorName, action.CreationTime, action.Duration);
                 }
                 catch (ConnectionFailedException e) {
                     transaction.Rollback();
@@ -479,7 +479,7 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Save(Action):: Saving action: " + action.Name + " failed.");
-                    throw new QueryFailedException("Saving action: " + action.Name + " failed.", e);
+                    throw new QueryFailedException("Saving action " + action.Name + " failed.", e);
                 }
 
                 // 2. Saving Action Content
@@ -501,7 +501,7 @@ namespace AST.Database{
                         transaction.Rollback();
                         connection.Close();
                         Debug.WriteLine("SQLHandler::Save(Action):: Saving action content: " + key.ToString() + " failed.");
-                        throw new QueryFailedException("Saving action content: " + key.ToString() + " failed.", e);
+                        throw new QueryFailedException("Saving action content " + key.ToString() + " failed.", e);
                     }
                 }
                 transaction.Commit();
@@ -546,7 +546,7 @@ namespace AST.Database{
                     foreach (Action a in tsc.GetActions()) {
 
                         //3.1. Update the action in TSC table.
-                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertActionToTSC", tsc.Name, a.Name, executionOrder, a.Delay);
+                        SqlHelper.ExecuteNonQuery(transaction, "sp_InsertActionToTSC", tsc.Name, a.Name, executionOrder, a.Delay, a.StopIfFails);
 
                         //3.2. Update the parameters in TSC table.
                         foreach (Parameter p in a.GetParameters()) {
@@ -574,8 +574,8 @@ namespace AST.Database{
                 catch (Exception e) {
                     transaction.Rollback();
                     connection.Close();
-                    Debug.WriteLine("SQLHandler::Save(TSC):: Saving tsc: " + tsc.Name + " failed.");
-                    throw new QueryFailedException("Saving tsc: " + tsc.Name + " failed.", e);
+                    Debug.WriteLine("SQLHandler::Save(TSC):: Saving TSC: " + tsc.Name + " failed.");
+                    throw new QueryFailedException("Saving test scenario " + tsc.Name + " failed.", e);
                 }
                 transaction.Commit();
                 connection.Close();
@@ -625,7 +625,7 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Save(TP):: Saving TP: " + tp.Name + " failed.");
-                    throw new QueryFailedException("Saving TP: " + tp.Name + " failed.", e);
+                    throw new QueryFailedException("Saving test plan " + tp.Name + " failed.", e);
                 }
                 transaction.Commit();
                 connection.Close();
@@ -661,7 +661,7 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Save(Parameter):: Saving paramter: " + p.Name + " failed.");
-                    throw new QueryFailedException("Saving paramter: " + p.Name + " failed.", e);
+                    throw new QueryFailedException("Saving paramter " + p.Name + " failed.", e);
                 }
 
                 // 2. Saving Parameter Value
@@ -679,7 +679,7 @@ namespace AST.Database{
                         transaction.Rollback();
                         connection.Close();
                         Debug.WriteLine("SQLHandler::Save(Parameter):: Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.");
-                        throw new QueryFailedException("Saving content: " + key.ToString() + " of paramter: " + p.Name + " failed.", e);
+                        throw new QueryFailedException("Saving content " + key.ToString() + " of paramter " + p.Name + " failed.", e);
                     }
                 }
 
@@ -836,7 +836,7 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::DeleteTP:: Deleting TP: " + name + " failed.");
-                    throw new QueryFailedException("Deleting TP: " + name + " failed.", e);
+                    throw new QueryFailedException("Deleting test plan " + name + " failed.", e);
                 }
 
                 transaction.Commit();
@@ -868,7 +868,7 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Delete(Parameter):: Deleting parameter: " + p.Name + " failed.");
-                    throw new QueryFailedException("Deleting parameter: " + p.Name + " failed.", e);
+                    throw new QueryFailedException("Deleting parameter " + p.Name + " failed.", e);
                 }
 
                 transaction.Commit();
@@ -961,6 +961,32 @@ namespace AST.Database{
 
             return res;
         }
+
+        public Hashtable GetAdditionalActionsInfo()
+        {
+            Hashtable info = new Hashtable();
+            SqlDataReader dr = null;
+            try
+            {
+                SqlConnection connection = this.Connect(); //Creating Connection
+                dr = SqlHelper.ExecuteReader(connection, "sp_GetAdditionalActionsInfo", null);
+            }
+            catch (ConnectionFailedException e) { throw e; }
+            catch (Exception e)
+            {
+                Debug.WriteLine("SQLHandler::GetActionsInfo:: Load information of all additional actions failed.");
+                throw new QueryFailedException("Load information of all additional actions failed.", e);
+            }
+            while (dr.Read())
+            {
+                String name = (String)dr.GetValue(0);
+                String description = (String)dr.GetValue(1);
+
+                info.Add(name, description);
+            }
+            return info;
+        }
+
         /// <summary>
         /// method for getting all the Actions in the DB
         /// </summary>
@@ -1000,7 +1026,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::GetTSCsInfo:: Load information of all tscs failed.");
-                throw new QueryFailedException("Load information of all tscs failed.", e);
+                throw new QueryFailedException("Load information of all test scenarios failed.", e);
             }
             while (dr.Read()) {
                 String name = (String)dr.GetValue(0);
@@ -1025,7 +1051,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::GetTPsInfo:: Load information of all TP's failed.");
-                throw new QueryFailedException("Load information of all TP's failed.", e);
+                throw new QueryFailedException("Load information of all test plans failed.", e);
             }
             while (dr.Read()) {
                 String name = (String)dr.GetValue(0);
@@ -1171,7 +1197,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::IsExist(AbstractAction):: Loading information of: " + action.Name + " failed.");
-                throw new QueryFailedException("Loading information of of: " + action.Name + " failed.", e);
+                throw new QueryFailedException("Loading information of " + action.Name + " failed.", e);
             }
 
         }
@@ -1193,7 +1219,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::IsExist(EndStation):: Loading information of end-station: " + es.Name + " failed.");
-                throw new QueryFailedException("Loading information of end-station: " + es.Name + " failed.", e);
+                throw new QueryFailedException("Loading information of end-station " + es.Name + " failed.", e);
             }
         }
         /// <summary>
@@ -1213,7 +1239,7 @@ namespace AST.Database{
             catch (ConnectionFailedException e) { throw e; }
             catch (Exception e) {
                 Debug.WriteLine("SQLHandler::IsExist(Parameter):: Loading information of parameter: " + p.Name + " failed.");
-                throw new QueryFailedException("Loading information of parameter: " + p.Name + " failed.", e);
+                throw new QueryFailedException("Loading information of parameter " + p.Name + " failed.", e);
             }
         }
 

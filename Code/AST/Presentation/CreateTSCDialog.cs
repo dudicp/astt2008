@@ -23,6 +23,7 @@ namespace AST.Presentation {
         /// <param name="a"></param>
         /// <param name="type"></param>
         public CreateTSCDialog(AbstractAction a, AbstractAction.AbstractActionTypeEnum type) {
+            this.MaximizeBox = false;
             m_abstractAction = a;
             m_type = type;
             m_isNew = false;
@@ -223,19 +224,23 @@ namespace AST.Presentation {
             int index = this.SelectedTreeView.SelectedNode.Index;
             ASTNode lowerNode = ((ASTNode)this.SelectedTreeView.SelectedNode.Parent.Nodes[index - 1]);
 
-            if (this.SelectedTreeView.SelectedNode.Parent.Nodes.Count == 2) {
-                //if there are only 2 children and we remove them the selected node will be changed to the parent node
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
-                this.SelectedTreeView.SelectedNode.Nodes.Insert(index - 1, lowerNode);
-                this.SelectedTreeView.SelectedNode.Nodes.Insert(index - 1, upperNode);
+            ASTNode[] nodes = new ASTNode[SelectedTreeView.SelectedNode.Parent.Nodes.Count];
+
+            int i = 0;
+            while (SelectedTreeView.SelectedNode.Parent.Nodes.Count > 1)
+            {
+                nodes[i] = (ASTNode)SelectedTreeView.SelectedNode.Parent.Nodes[0];
+                i++;
+                SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(0);
             }
-            else {
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index - 1);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.Insert(index - 1, lowerNode);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.Insert(index - 1, upperNode);
-            }
+            nodes[i] = (ASTNode)SelectedTreeView.SelectedNode.Parent.Nodes[0];
+
+            ASTNode temp = nodes[index];
+            nodes[index] = lowerNode;
+            nodes[index - 1] = temp;
+            this.SelectedTreeView.SelectedNode.Parent.Nodes.Clear();
+            for (i = 0; i < nodes.Length; i++)
+                this.SelectedTreeView.SelectedNode.Nodes.Add(nodes[i]);
 
             this.SelectedTreeView.SelectedNode = upperNode;
             if (this.SelectedTreeView.SelectedNode.Index == 0) this.MoveUpActionButton.Enabled = false;
@@ -255,21 +260,24 @@ namespace AST.Presentation {
             int index = this.SelectedTreeView.SelectedNode.Index;
             ASTNode upperNode = ((ASTNode)this.SelectedTreeView.SelectedNode.Parent.Nodes[index + 1]);
 
-            if (this.SelectedTreeView.SelectedNode.Parent.Nodes.Count == 2) {
-                //if there are only 2 children and we remove them the selected node will be changed to the parent node
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+            ASTNode[] nodes = new ASTNode[SelectedTreeView.SelectedNode.Parent.Nodes.Count];
 
-                this.SelectedTreeView.SelectedNode.Nodes.Insert(index, lowerNode);
-                this.SelectedTreeView.SelectedNode.Nodes.Insert(index, upperNode);
+            int i = 0;
+            while (SelectedTreeView.SelectedNode.Parent.Nodes.Count > 1)
+            {
+                nodes[i] = (ASTNode)SelectedTreeView.SelectedNode.Parent.Nodes[0];
+                i++;
+                SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(0);
             }
-            else {
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index + 1);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.RemoveAt(index);
+            nodes[i] = (ASTNode)SelectedTreeView.SelectedNode.Parent.Nodes[0];
 
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.Insert(index, lowerNode);
-                this.SelectedTreeView.SelectedNode.Parent.Nodes.Insert(index, upperNode);
-            }
+            ASTNode temp = nodes[index + 1];
+            nodes[index + 1] = lowerNode;
+            nodes[index] = temp;
+            this.SelectedTreeView.SelectedNode.Parent.Nodes.Clear();
+            for (i = 0; i < nodes.Length; i++)
+                this.SelectedTreeView.SelectedNode.Nodes.Add(nodes[i]);
+
             this.SelectedTreeView.SelectedNode = lowerNode;
         }
 
@@ -301,31 +309,43 @@ namespace AST.Presentation {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void okButton_Click(object sender, EventArgs e) {
-            //Save the Abstract Action
-            if (!this.CheckForm()) return;
-            this.m_abstractAction.Name = this.ActionNameText.Text;
-            this.m_abstractAction.CreatorName = this.CreatorNameText.Text;
-            this.m_abstractAction.Description = this.DescriptionText.Text;
 
-            //Update the abstract action object with actions/tsc's
-            if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                ((TSC)this.m_abstractAction).ClearActions();
-                foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes) {
-                    Action a = ((Action)(((ASTNode)(node)).Value));
-                    ((TSC)(this.m_abstractAction)).AddAction(a);
-                }
-                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TSC, m_isNew);
-            }
-            else if (m_type == AbstractAction.AbstractActionTypeEnum.TP) {
-                ((TP)this.m_abstractAction).ClearTSCs();
-                foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes) {
-                    TSC tsc = ((TSC)(((ASTNode)(node)).Value));
-                    ((TP)(this.m_abstractAction)).AddTSC(tsc);
-                }
-                ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TP, m_isNew);
-            }
+            try
+            {//Save the Abstract Action
+                if (!this.CheckForm()) return;
+                this.m_abstractAction.Name = this.ActionNameText.Text;
+                this.m_abstractAction.CreatorName = this.CreatorNameText.Text;
+                this.m_abstractAction.Description = this.DescriptionText.Text;
 
-            this.DialogResult = DialogResult.OK;
+                //Update the abstract action object with actions/tsc's
+                if (m_type == AbstractAction.AbstractActionTypeEnum.TSC)
+                {
+                    ((TSC)this.m_abstractAction).ClearActions();
+                    foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes)
+                    {
+                        Action a = ((Action)(((ASTNode)(node)).Value));
+                        ((TSC)(this.m_abstractAction)).AddAction(a);
+                    }
+                    ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TSC, m_isNew);
+                }
+                else if (m_type == AbstractAction.AbstractActionTypeEnum.TP)
+                {
+                    ((TP)this.m_abstractAction).ClearTSCs();
+                    foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes)
+                    {
+                        TSC tsc = ((TSC)(((ASTNode)(node)).Value));
+                        ((TP)(this.m_abstractAction)).AddTSC(tsc);
+                    }
+                    ASTManager.GetInstance().Save(this.m_abstractAction, AbstractAction.AbstractActionTypeEnum.TP, m_isNew);
+                }
+
+                this.DialogResult = DialogResult.OK;
+            }
+            catch (InvalidNameException ex) { return; }
+            catch (Exception ex)
+            {
+                this.DialogResult = DialogResult.Cancel;
+            }
         }
 
         /// <summary>
@@ -336,7 +356,8 @@ namespace AST.Presentation {
             bool res = true;
             String message = "The following attributes are invalid:\n";
             if (this.ActionNameText.Text.Length == 0) {
-                message += "Action name\n";
+                if(this.m_type == AbstractAction.AbstractActionTypeEnum.TSC) message += "Scenario name\n";
+                else message += "Plan name\n";
                 res = false;
             }
             /*if (this.CreatorNameText.Text.Length == 0) {
@@ -344,26 +365,10 @@ namespace AST.Presentation {
                 res = false;
             }*/
             if (this.SelectedTreeView.Nodes[0].Nodes.Count == 0) {
-                if(m_type == AbstractAction.AbstractActionTypeEnum.TP) message += "No Selected Test Scenarios\n";
-                else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) message += "No Selected Actions\n";
+                if(m_type == AbstractAction.AbstractActionTypeEnum.TP) message += "No selected test scenarios\n";
+                else if (m_type == AbstractAction.AbstractActionTypeEnum.TSC) message += "No selected actions\n";
                 res = false;
             }
-
-            // Checks the constrain that each TSC should have at least one test action
-            /*if (this.m_type == AbstractAction.AbstractActionTypeEnum.TSC) {
-                bool hasTest = false;
-                foreach (TreeNode node in this.SelectedTreeView.Nodes[0].Nodes) {
-                    Action a = ((Action)(((ASTNode)(node)).Value));
-                    if (a.ActionType == Action.ActionTypeEnum.TEST_SCRIPT) {
-                        hasTest = true;
-                        break;
-                    }
-                }
-                if (!hasTest) {
-                    message += "TSC missing test action\n";
-                    res = false;
-                }
-            }*/
 
             if (!res) MessageBox.Show(message, "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return res;
