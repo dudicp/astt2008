@@ -1093,7 +1093,7 @@ values
 INSERT INTO Actions
 (Name,Description,Type,Timeout,CreatorName,CreationTime,Duration)
 values
-('ChangeIP','Changes the IP address of an end-station to an IP address specified by the user.','SCRIPT',10,'System','01/01/08',0);
+('ChangeIP','Changes the static IP address of an end-station to an IP address specified by the user.','SCRIPT',10,'System','01/01/08',0);
 
 INSERT INTO ActionContents
 (ActionName,OSType,ActionContent,ValidityString)
@@ -1121,7 +1121,22 @@ values
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('DynamicChangeIP','SharedFolderPath','The path of the shared folder to write the new IP address.','Input','','','True');
+('DynamicChangeIP','ComputerName','The name of the computer holds the shared folder.','Input','','','True');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('DynamicChangeIP','SharedFolderPath','The name of the shared folder to write the new IP address.','Input','','','True');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('DynamicChangeIP','Username','The username for the computer name.','Input','','','True');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('DynamicChangeIP','Password','The password for the computer name.','Input','','','True');
 
 
 -- 3. Logoff
@@ -1359,3 +1374,55 @@ INSERT INTO ParameterValues
 (ActionName,ParameterName,OSType,Value)
 values
 ('Shutdown','Timeout','WINDOWS','-t');
+
+
+-- 7. ViewAll Script
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime,Duration)
+values
+('ViewAll','Gets all information on the remote machine.','SCRIPT',10,'System','01/01/08',0);
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('ViewAll','WINDOWS','Scripts\viewall.vbs','');
+
+-- 8. BatchTest Script
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime,Duration)
+values
+('BatchTest','Batch Test - running ipconfig on the remote machine.','BATCH_FILE',10,'System','01/01/08',0);
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('BatchTest','WINDOWS','Scripts\BatchTest.bat','');
+
+-- 9. BatchTest Script
+
+INSERT INTO Actions
+(Name,Description,Type,Timeout,CreatorName,CreationTime,Duration)
+values
+('BatchParamsTest','Batch Test - running ping on the IP specified at the two first paramters and execute the 3th parameter.','BATCH_FILE',10,'System','01/01/08',0);
+
+INSERT INTO ActionContents
+(ActionName,OSType,ActionContent,ValidityString)
+values
+('BatchParamsTest','WINDOWS','Scripts\Batch_Params.bat','');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('BatchParamsTest','IP1','The first IP.','Input','127.0.0.1','','True');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('BatchParamsTest','IP2','The second IP.','Input','127.0.0.1','','True');
+
+INSERT INTO Parameters
+(ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
+values
+('BatchParamsTest','Command','The command to execute.','Input','ipconfig','','True');

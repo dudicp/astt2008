@@ -1017,11 +1017,11 @@ namespace AST.Presentation {
 
             try {
                 AbstractAction aa = ASTManager.GetInstance().Load(name, m_type);
-                if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && aa.CreatorName == "System")
+                /*if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && aa.CreatorName == "System")
                 {
                     MessageBox.Show("Basic action cannot be modified.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
-                }
+                }*/
                 switch (m_type) {
                     case AbstractAction.AbstractActionTypeEnum.ACTION:
                         this.OpenAdditionalActionDialog((Action)aa);

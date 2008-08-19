@@ -7,6 +7,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections;
 using AST.Domain;
+using System.Diagnostics;
 
 namespace AST.Management
 {
@@ -202,7 +203,12 @@ namespace AST.Management
             }
             else
             {
-                label.Text = text;
+                try {
+                    label.Text = text;
+                }
+                catch (Exception e) {
+                    Debug.WriteLine(e.Message);
+                }
             }
         }
         /// <summary>
