@@ -443,7 +443,8 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Save(EndStation):: Saving End-Station " + es.Name + "(" + es.ID + ") failed.");
-                    throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                    //throw new QueryFailedException("Saving End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                    throw new QueryFailedException("Saving End-Station " + es.Name + " failed.", e);
                 }
                 transaction.Commit();
                 connection.Close();
@@ -744,7 +745,8 @@ namespace AST.Database{
                     transaction.Rollback();
                     connection.Close();
                     Debug.WriteLine("SQLHandler::Delete(EndStation):: Deleting End-Station " + es.Name + "(" + es.ID + ") failed.");
-                    throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                    //throw new QueryFailedException("Deleting End-Station " + es.Name + "(" + es.ID + ") failed.", e);
+                    throw new QueryFailedException("Deleting End-Station " + es.Name + " failed.", e);
                 }
                 transaction.Commit();
                 connection.Close();

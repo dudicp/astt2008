@@ -207,7 +207,8 @@ namespace AST.Presentation {
             List<EndStationSchedule> endStationInAction = this.m_action.GetEndStations();
             foreach (EndStationSchedule ess in endStationInAction) {
                 this.m_selectedEndStations.Add(ess.EndStation);
-                this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name + "(" + ess.EndStation.ID + ")");
+                //this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name + "(" + ess.EndStation.ID + ")");
+                this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name);
             }
 
             ICollection endStations = ASTManager.GetInstance().GetEndStations().Values;
@@ -216,7 +217,8 @@ namespace AST.Presentation {
             foreach (EndStation es in endStations) {
                 if (!this.m_selectedEndStations.Contains(es)) {
                     this.m_endStations.Add(es);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
                 }
             }
         }
@@ -229,9 +231,11 @@ namespace AST.Presentation {
             EndStation es = this.m_endStations[this.EndStationsListBox.SelectedIndex];
 
             this.m_selectedEndStations.Add(es);
-            this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            //this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            this.SelectedEndStationsListBox.Items.Add(es.Name);
             this.m_endStations.Remove(es);
-            this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            //this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            this.EndStationsListBox.Items.Remove(es.Name);
             this.SelectEndStationButton.Enabled = false;
             this.EditButton.Enabled = false;
             this.DeleteButton.Enabled = false;
@@ -245,9 +249,11 @@ namespace AST.Presentation {
             }
 
             EndStation es = this.m_selectedEndStations[this.SelectedEndStationsListBox.SelectedIndex];
-            this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            this.EndStationsListBox.Items.Add(es.Name);
             this.m_endStations.Add(es);
-            this.SelectedEndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            //this.SelectedEndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            this.SelectedEndStationsListBox.Items.Remove(es.Name);
             this.m_selectedEndStations.Remove(es);
             if (SelectedEndStationsListBox.Items.Count == 0)
                 this.UnselectEndStationButton.Enabled = false;
@@ -310,7 +316,8 @@ namespace AST.Presentation {
                     EndStation es = esd.GetEndStation();
                     ASTManager.GetInstance().AddEndStation(es, true);
                     this.m_endStations.Add(es);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }

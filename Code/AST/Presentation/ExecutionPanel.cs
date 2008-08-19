@@ -395,7 +395,8 @@ namespace AST.Presentation {
 
             //Filling the selected end-stations list box:
             foreach (EndStationSchedule ess in a.GetEndStations()){
-                this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name + "(" + ess.EndStation.ID + ")");
+                //this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name + "(" + ess.EndStation.ID + ")");
+                this.SelectedEndStationsListBox.Items.Add(ess.EndStation.Name);
                 selectedEndStations.Add(ess.EndStation);
             }
 
@@ -403,7 +404,8 @@ namespace AST.Presentation {
             foreach (EndStation es in endStations) {
                 if (!selectedEndStations.Contains(es)) {
                     this.m_endStations.Add(es);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
                 }
             }
         }
@@ -419,7 +421,8 @@ namespace AST.Presentation {
                     EndStation es = esd.GetEndStation();
                     this.m_endStations.Add(es);
                     ASTManager.GetInstance().AddEndStation(es, true);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
@@ -439,7 +442,8 @@ namespace AST.Presentation {
                         this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
                         EndStation es = esd.GetEndStation();
                         ASTManager.GetInstance().AddEndStation(es, false);
-                        this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.EndStationsListBox.Items.Add(es.Name);
                         this.m_endStations.Add(es);
                     }
                 }
@@ -452,7 +456,8 @@ namespace AST.Presentation {
                         this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
                         EndStation es = esd.GetEndStation();
                         ASTManager.GetInstance().AddEndStation(es, false);
-                        this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        //this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.SelectedEndStationsListBox.Items.Add(es.Name);
                         this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
                     }
                 }
@@ -473,9 +478,11 @@ namespace AST.Presentation {
 
             this.m_activeAction.AddEndStation(new EndStationSchedule(es));
             System.Diagnostics.Debug.WriteLine("Active action = "+m_activeAction.Name);
-            this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            //this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            this.SelectedEndStationsListBox.Items.Add(es.Name);
             this.m_endStations.Remove(es);
-            this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            //this.EndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            this.EndStationsListBox.Items.Remove(es.Name);
             if (EndStationsListBox.Items.Count == 0) {
                 this.SelectEndStationButton.Enabled = false;
             }
@@ -493,9 +500,11 @@ namespace AST.Presentation {
             EndStationSchedule ess = this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex];
             EndStation es = ess.EndStation;
 
-            this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+            this.EndStationsListBox.Items.Add(es.Name);
             this.m_endStations.Add(es);
-            this.SelectedEndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            //this.SelectedEndStationsListBox.Items.Remove(es.Name + "(" + es.ID + ")");
+            this.SelectedEndStationsListBox.Items.Remove(es.Name);
             this.m_activeAction.RemoveEndStation(ess);
             if (SelectedEndStationsListBox.Items.Count == 0)
                 this.UnselectEndStationButton.Enabled = false;
@@ -1094,8 +1103,10 @@ namespace AST.Presentation {
                     EndStation es = esd.GetEndStation();
                     ASTManager.GetInstance().AddEndStation(es, true);
                     this.m_endStations.Add(es);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
-                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ")" + " was added successfully.";
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
+                    //this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ")" + " was added successfully.";
+                    this.MessageLabel.Text = "The end-station " + es.Name + " was added successfully.";
                 }
                 else this.MessageLabel.Text = "";
             }
@@ -1113,9 +1124,11 @@ namespace AST.Presentation {
                         this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
                         EndStation es = esd.GetEndStation();
                         ASTManager.GetInstance().AddEndStation(es, false);
-                        this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.EndStationsListBox.Items.Add(es.Name);
                         this.m_endStations.Add(es);
-                        this.MessageLabel.Text = "The end-station "+ es.Name + "(" + es.ID +") was updated successfully.";
+                        //this.MessageLabel.Text = "The end-station "+ es.Name + "(" + es.ID +") was updated successfully.";
+                        this.MessageLabel.Text = "The end-station " + es.Name + " was updated successfully.";
                     }
                     else this.MessageLabel.Text = "";
                 }
@@ -1128,9 +1141,10 @@ namespace AST.Presentation {
                         this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
                         EndStation es = esd.GetEndStation();
                         ASTManager.GetInstance().AddEndStation(es, false);
-                        this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        //this.SelectedEndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                        this.SelectedEndStationsListBox.Items.Add(es.Name);
                         this.m_activeAction.GetEndStations().Add(new EndStationSchedule(es));
-                        this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was updated successfully.";
+                        this.MessageLabel.Text = "The end-station " + es.Name + " was updated successfully.";
                     }
                     else this.MessageLabel.Text = "";
                 }
@@ -1151,7 +1165,8 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_endStations.Remove(this.m_endStations[this.EndStationsListBox.SelectedIndex]);
                     this.EndStationsListBox.Items.RemoveAt(this.EndStationsListBox.SelectedIndex);
-                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
+                    //this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
+                    this.MessageLabel.Text = "The end-station " + es.Name + " was removed successfully.";
                     this.IPText.Text = "";
                     this.UsernameText.Text = "";
                     this.OSTypeText.Text = "";
@@ -1164,7 +1179,8 @@ namespace AST.Presentation {
                     ASTManager.GetInstance().RemoveEndStation(es);
                     this.m_activeAction.GetEndStations().Remove(this.m_activeAction.GetEndStations()[this.SelectedEndStationsListBox.SelectedIndex]);
                     this.SelectedEndStationsListBox.Items.RemoveAt(this.SelectedEndStationsListBox.SelectedIndex);
-                    this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
+                    //this.MessageLabel.Text = "The end-station " + es.Name + "(" + es.ID + ") was removed successfully.";
+                    this.MessageLabel.Text = "The end-station " + es.Name + " was removed successfully.";
                     this.IPText.Text = "";
                     this.UsernameText.Text = "";
                     this.OSTypeText.Text = "";

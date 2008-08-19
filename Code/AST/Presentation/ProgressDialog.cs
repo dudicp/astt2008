@@ -77,7 +77,8 @@ namespace AST.Management
             foreach (EndStation es in endStations)
             {
                 this.m_endStations.Add(es);
-                this.EndStationComboBox.Items.Add(es.Name + "(" + es.ID + ")");
+                //this.EndStationComboBox.Items.Add(es.Name + "(" + es.ID + ")");
+                this.EndStationComboBox.Items.Add(es.Name);
             }
         }
 
@@ -93,7 +94,8 @@ namespace AST.Management
             {
                 return;
             }
-            this.EndStationNameText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].Name + "(" + m_endStations[this.EndStationComboBox.SelectedIndex].ID + ")";
+            //this.EndStationNameText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].Name + "(" + m_endStations[this.EndStationComboBox.SelectedIndex].ID + ")";
+            this.EndStationNameText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].Name;
             this.IPText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].IP.ToString();
             this.UsernameText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].Username;
             this.OSTypeText.Text = m_endStations[this.EndStationComboBox.SelectedIndex].OSType.ToString();
@@ -259,7 +261,8 @@ namespace AST.Management
                 this.m_allResults.Add(res);
                 int rowNumber = this.ResultsGridView.Rows.Add();
                 this.ResultsGridView.Rows[rowNumber].Cells[0].Value = res.GetAction().Name;
-                this.ResultsGridView.Rows[rowNumber].Cells[1].Value = res.GetEndStation().Name + "(" + res.GetEndStation().ID + ")";
+                //this.ResultsGridView.Rows[rowNumber].Cells[1].Value = res.GetEndStation().Name + "(" + res.GetEndStation().ID + ")";
+                this.ResultsGridView.Rows[rowNumber].Cells[1].Value = res.GetEndStation().Name;
                 if (res.Status) this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Success";
                 else this.ResultsGridView.Rows[rowNumber].Cells[2].Value = "Fail";
                 this.ResultsGridView.Rows[rowNumber].Cells[3].Value = res.GetAction().GetValidityString(AST.Domain.EndStation.OSTypeEnum.WINDOWS);

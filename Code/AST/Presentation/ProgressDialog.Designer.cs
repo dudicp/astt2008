@@ -73,7 +73,7 @@ namespace AST.Management {
             // MyCancelButton
             // 
             this.MyCancelButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.MyCancelButton.Location = new System.Drawing.Point(265, 641);
+            this.MyCancelButton.Location = new System.Drawing.Point(321, 643);
             this.MyCancelButton.Name = "MyCancelButton";
             this.MyCancelButton.Size = new System.Drawing.Size(71, 23);
             this.MyCancelButton.TabIndex = 3;
@@ -185,7 +185,7 @@ namespace AST.Management {
             this.EndStationNameText.AutoSize = true;
             this.EndStationNameText.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndStationNameText.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.EndStationNameText.Location = new System.Drawing.Point(79, 19);
+            this.EndStationNameText.Location = new System.Drawing.Point(59, 19);
             this.EndStationNameText.Name = "EndStationNameText";
             this.EndStationNameText.Size = new System.Drawing.Size(0, 15);
             this.EndStationNameText.TabIndex = 47;
@@ -206,9 +206,9 @@ namespace AST.Management {
             this.EndStationNameLabel.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.EndStationNameLabel.Location = new System.Drawing.Point(11, 19);
             this.EndStationNameLabel.Name = "EndStationNameLabel";
-            this.EndStationNameLabel.Size = new System.Drawing.Size(63, 15);
+            this.EndStationNameLabel.Size = new System.Drawing.Size(41, 15);
             this.EndStationNameLabel.TabIndex = 45;
-            this.EndStationNameLabel.Text = "Name (ID):";
+            this.EndStationNameLabel.Text = "Name:";
             // 
             // MacText
             // 
@@ -344,7 +344,7 @@ namespace AST.Management {
             // 
             this.OkButton.Enabled = false;
             this.OkButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.OkButton.Location = new System.Drawing.Point(188, 641);
+            this.OkButton.Location = new System.Drawing.Point(244, 643);
             this.OkButton.Name = "OkButton";
             this.OkButton.Size = new System.Drawing.Size(71, 23);
             this.OkButton.TabIndex = 2;
@@ -400,12 +400,13 @@ namespace AST.Management {
             // CloseButton
             // 
             this.CloseButton.Font = new System.Drawing.Font("Lucida Sans Unicode", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CloseButton.Location = new System.Drawing.Point(342, 641);
+            this.CloseButton.Location = new System.Drawing.Point(377, 549);
             this.CloseButton.Name = "CloseButton";
             this.CloseButton.Size = new System.Drawing.Size(98, 23);
             this.CloseButton.TabIndex = 4;
             this.CloseButton.Text = "Stop and Close";
             this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Visible = false;
             this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
             // ViewReportLabel
@@ -413,7 +414,7 @@ namespace AST.Management {
             this.ViewReportLabel.AutoSize = true;
             this.ViewReportLabel.Font = new System.Drawing.Font("Verdana", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.ViewReportLabel.ForeColor = System.Drawing.SystemColors.HotTrack;
-            this.ViewReportLabel.Location = new System.Drawing.Point(450, 646);
+            this.ViewReportLabel.Location = new System.Drawing.Point(399, 648);
             this.ViewReportLabel.Name = "ViewReportLabel";
             this.ViewReportLabel.Size = new System.Drawing.Size(76, 13);
             this.ViewReportLabel.TabIndex = 5;
