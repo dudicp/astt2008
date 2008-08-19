@@ -12,6 +12,7 @@ namespace AST.Management {
 
         //The Parameter which holds the new IP address as input.
         private const String SHARED_FOLDER_PATH = "SharedFolderPath";
+        private const String COMPUTER_NAME = "ComputerName";
 
 
         //in-case the IP address success the psexec return error code 64
@@ -22,15 +23,17 @@ namespace AST.Management {
         private static RHDynamicChangeIP m_instance = null;
 
         public Result CheckResult(Action action, EndStation endStation, DateTime startTime, DateTime endTime, string message, int errorCode) {
-            if ((endStation.OSType == EndStation.OSTypeEnum.WINDOWS) &&
-                (errorCode != PSEXEC_CONNECTION_FAILED))
+                if ((endStation.OSType == EndStation.OSTypeEnum.WINDOWS) &&
+                (errorCode != PSEXEC_CONNECTION_FAILED) && (errorCode != 0/*for local only*/))
 
                 return new Result(action, endStation, startTime, endTime, false, message, errorCode);
 
             String sharedFolderPath = "";
+            String computerName = "";
             List<Parameter> parameters = action.GetParameters();
             foreach (Parameter p in parameters) {
                 if (p.Name == SHARED_FOLDER_PATH) sharedFolderPath = p.Input;
+                if (p.Name == COMPUTER_NAME) computerName = p.Input;
             }
 
             //Fixing the slash problem
@@ -41,11 +44,11 @@ namespace AST.Management {
             }
 
             try {
-                TextReader tr = new StreamReader(sharedFolderPath + endStation.ID + ".txt");
+                TextReader tr = new StreamReader("\\\\"+computerName+"\\"+sharedFolderPath + endStation.ID + ".txt");
                 String res = tr.ReadLine();
                 tr.Close();
                 try {
-                    File.Delete(sharedFolderPath + endStation.ID + ".txt");
+                    File.Delete("\\\\" + computerName + "\\" + sharedFolderPath + endStation.ID + ".txt");
                 }
                 catch (Exception e) {
                     Debug.WriteLine(e.Message);
