@@ -35,7 +35,8 @@ namespace AST.Presentation {
             //Filling the end-stations:
             foreach (EndStation es in endStations) {
                 this.m_endStations.Add(es);
-                this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                this.EndStationsListBox.Items.Add(es.Name);
             }
         }
 
@@ -56,7 +57,8 @@ namespace AST.Presentation {
                     EndStation es = esd.GetEndStation();
                     ASTManager.GetInstance().AddEndStation(es, true);
                     this.m_endStations.Add(es);
-                    this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    //this.EndStationsListBox.Items.Add(es.Name + "(" + es.ID + ")");
+                    this.EndStationsListBox.Items.Add(es.Name);
                 }
             }
             catch (Exception ex) { /*the message displayed and the end-station won't be added.*/ }
