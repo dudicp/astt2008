@@ -1121,22 +1121,22 @@ values
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('DynamicChangeIP','ComputerName','The name of the computer holds the shared folder.','Input','','','True');
+('DynamicChangeIP','1_ComputerName','The name of the computer holds the shared folder.','Input','','','True');
 
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('DynamicChangeIP','SharedFolderPath','The name of the shared folder to write the new IP address.','Input','','','True');
+('DynamicChangeIP','2_SharedFolderPath','The name of the shared folder to write the new IP address.','Input','','','True');
 
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('DynamicChangeIP','Username','The username for the computer name.','Input','','','True');
+('DynamicChangeIP','3_Username','The username for the computer name.','Input','','','True');
 
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('DynamicChangeIP','Password','The password for the computer name.','Input','','','True');
+('DynamicChangeIP','4_Password','The password for the computer name.','Input','','','True');
 
 
 -- 3. Logoff
@@ -1415,14 +1415,14 @@ values
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('BatchParamsTest','IP1','The first IP.','Input','127.0.0.1','','True');
+('BatchParamsTest','1_IP1','The first IP.','Input','127.0.0.1','','True');
 
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('BatchParamsTest','IP2','The second IP.','Input','127.0.0.1','','True');
+('BatchParamsTest','2_IP2','The second IP.','Input','127.0.0.1','','True');
 
 INSERT INTO Parameters
 (ActionName,ParameterName,Description,Type,Input,ValidityExp, IsDefault)
 values
-('BatchParamsTest','Command','The command to execute.','Input','ipconfig','','True');
+('BatchParamsTest','3_Command','The command to execute.','Input','ipconfig','','True');

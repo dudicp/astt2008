@@ -136,6 +136,11 @@ namespace AST.Presentation {
             p.Input = this.InputTextBox.Text;
             this.InputTextBox.Clear();
 
+            if ((p.Type == Parameter.ParameterTypeEnum.Input) && (p.Input.Length == 0)) {
+                MessageBox.Show("Can't add parameter without input.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
             this.m_selectedParameters.Add(p);
             this.SelectedParametersListBox.Items.Add(p.Name);
             this.m_parameters.Remove(p);
@@ -368,7 +373,7 @@ namespace AST.Presentation {
                     this.m_action.AddEndStation(new EndStationSchedule(this.m_selectedEndStations[i]));
             }
 
-            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION && ((Action)this.m_action).ActionType != Action.ActionTypeEnum.BATCH_FILE) {
+            if (m_type == AbstractAction.AbstractActionTypeEnum.ACTION){
 
                 //2. Updating action's parameters
                 ((Action)this.m_action).ClearParameters();
