@@ -11,8 +11,8 @@ namespace AST.Management {
     class RHDynamicChangeIP : IResultHandler {
 
         //The Parameter which holds the new IP address as input.
-        private const String SHARED_FOLDER_PATH = "SharedFolderPath";
-        private const String COMPUTER_NAME = "ComputerName";
+        private const String SHARED_FOLDER_PATH = "2_SharedFolderPath";
+        private const String COMPUTER_NAME = "1_ComputerName";
 
 
         //in-case the IP address success the psexec return error code 64
@@ -35,6 +35,9 @@ namespace AST.Management {
                 if (p.Name == SHARED_FOLDER_PATH) sharedFolderPath = p.Input;
                 if (p.Name == COMPUTER_NAME) computerName = p.Input;
             }
+
+            if ((sharedFolderPath.Length == 0)||(computerName.Length == 0))
+                return new Result(action, endStation, startTime, endTime, false, "The parameters: '" + SHARED_FOLDER_PATH + "' or '" + COMPUTER_NAME + "' doesn't found.", errorCode);
 
             //Fixing the slash problem
             if ((sharedFolderPath[sharedFolderPath.Length - 1] != '\\') &&
