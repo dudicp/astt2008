@@ -32,9 +32,8 @@ obj\Release\AST.Presentation.MainForm.resources
 obj\Release\AST.Presentation.SettingsDialog.resources
 obj\Release\AST.Properties.Resources.resources
 obj\Release\AST.csproj.GenerateResource.Cache
-bin\Debug\AST.XML
 bin\Release\AST.exe
 bin\Release\AST.pdb
-bin\Release\Microsoft.ApplicationBlocks.Data.xml
 obj\Release\AST.exe
 obj\Release\AST.pdb
+bin\Debug\AST.XML

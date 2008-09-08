@@ -770,7 +770,9 @@ namespace AST.Presentation {
             System.Diagnostics.Debug.WriteLine("Down Selected Index = " + this.SelectedParametersListBox.SelectedIndex);
             if ((this.ParametersListBox.SelectedIndex >= 0) && (this.ParametersListBox.SelectedIndex < this.m_parameters.Count)) {
 
-                if ((this.m_parameters[this.ParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) && (this.InputTextBox.Text.Length == 0)) {
+                if (((this.m_parameters[this.ParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) ||
+                    (this.m_parameters[this.ParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both)) && 
+                    (this.InputTextBox.Text.Length == 0)) {
                     MessageBox.Show("Can't add parameter without input.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -781,7 +783,9 @@ namespace AST.Presentation {
             // In case we are in the lower list box.
             else if ((this.SelectedParametersListBox.SelectedIndex >= 0) && (this.SelectedParametersListBox.SelectedIndex < ((Action)this.m_activeAction).GetParameters().Count)) {
 
-                if ((((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) && (this.InputTextBox.Text.Length == 0)) {
+                if (((((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Input) ||
+                    (((Action)this.m_activeAction).GetParameters()[this.SelectedParametersListBox.SelectedIndex].Type == Parameter.ParameterTypeEnum.Both)) && 
+                    (this.InputTextBox.Text.Length == 0)) {
                     MessageBox.Show("Can't add parameter without input.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }

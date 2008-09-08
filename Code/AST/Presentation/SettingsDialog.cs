@@ -136,7 +136,7 @@ namespace AST.Presentation {
             p.Input = this.InputTextBox.Text;
             this.InputTextBox.Clear();
 
-            if ((p.Type == Parameter.ParameterTypeEnum.Input) && (p.Input.Length == 0)) {
+            if (((p.Type == Parameter.ParameterTypeEnum.Input) || (p.Type == Parameter.ParameterTypeEnum.Both)) && (p.Input.Length == 0)) {
                 MessageBox.Show("Can't add parameter without input.", "Error Message", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
