@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include <winsock.h>
+//#include <winsock.h>
 #include <windows.h>
 
 //using namespace std;
